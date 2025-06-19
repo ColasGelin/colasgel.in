@@ -1,32 +1,23 @@
 'use client'
 
 import Scene from "@/components/Scene";
-import { useState, useEffect, useRef } from "react";
-import { animate } from 'animejs';
+import Navigation from "@/components/Navigation";
+import VideoContainer from "@/components/VideoContainer";
+import { useAnimations } from "@/hooks/useAnimations";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [opacity, setOpacity] = useState(1);
   const [isDisplayingVideo, setIsDisplayingVideo] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const animateButtonIn = () => {
-    animate('.website-button', {
-      translateY: [100, 0],
-      opacity: [0, 1],
-      duration: 1000,
-      delay: 500,
-      ease: 'outElastic(1, 0.8)',
-    });
-  };
-
-  const animateButtonOut = () => {
-    animate('.website-button', {
-      opacity: [1, 0],
-      duration: 200,
-      delay: 0,
-      ease: 'easeInOut',
-    });
-  };
+  const [activeTab, setActiveTab] = useState('home');
+  
+  const {
+    videoContainerRef,
+    animateButtonIn,
+    animateButtonOut,
+    slideVideoContainerOut,
+    slideVideoContainerIn
+  } = useAnimations();
 
   const handleWheel = () => {
     animateButtonOut()
@@ -45,47 +36,69 @@ export default function Home() {
     window.open('https://pizzapopote.com', '_blank');
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const previousTab = activeTab;
+    setActiveTab(sectionId);
+    
+    if (previousTab === 'project' && sectionId !== 'project') {
+      slideVideoContainerOut();
+    }
+    
+    if (previousTab !== 'project' && sectionId === 'project') {
+      slideVideoContainerIn();
+    }
+  };
+
+  const navigateToSection = (direction: 'left' | 'right') => {
+    const sections = ['home', 'project', 'contact'];
+    const currentIndex = sections.indexOf(activeTab);
+    
+    let newIndex;
+    if (direction === 'left') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : sections.length - 1;
+    } else {
+      newIndex = currentIndex < sections.length - 1 ? currentIndex + 1 : 0;
+    }
+    
+    const newSection = sections[newIndex];
+    scrollToSection(newSection);
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowLeft') {
+        navigateToSection('left');
+      } else if (event.key === 'ArrowRight') {
+        navigateToSection('right');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [activeTab]);
+
   return (
     <>
-      <div className="min-h-screen bg-[#faedcd] flex items-center justify-center relative overflow-hidden">
-        <div className="absolute flex items-center justify-center">
+      <Navigation activeTab={activeTab} onTabChange={scrollToSection} />
+
+      <div className="flex h-screen overflow-x-auto scroll-smooth snap-x snap-mandatory">
+        <div id="project" className="min-w-full h-screen bg-[#faedcd] flex items-center justify-center relative overflow-hidden pt-20 snap-start">
+          <div className="absolute flex items-center justify-center">
             <h1 className="text-[16rem] font-bold text-[#fefae0] select-none barber-font ">
-            COLAS GELIN
+              COLAS GELIN
             </h1>
+          </div>
+          
+          <VideoContainer
+            ref={videoContainerRef}
+            opacity={opacity}
+            isDisplayingVideo={isDisplayingVideo}
+            onButtonClick={handleButtonClick}
+          />
+          
+          <Scene onWheel={handleWheel} activeTab={activeTab} />
         </div>
-        <div className="absolute top-32 right-78 transform -translate-x-1/2 z-20">
-            <button 
-              className="website-button bg-white text-black px-6 py-3 rounded-3xl font-semibold shadow-lg hover:bg-gray-100 transition-colors opacity-0 z-10 cursor-pointer"
-              onClick={handleButtonClick}
-            >
-            See the website
-            </button>
-          </div>
-          <div 
-            className="absolute right-40 top-1/2 transform -translate-y-1/2 w-160 h-90 rounded-4xl shadow-lg z-20 transition-opacity duration-500 overflow-hidden flex items-center justify-center cursor-none"
-            style={{ 
-              opacity,
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0))',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-            }}
-          >
-            <video
-              ref={videoRef}
-              className={`absolute inset-0 w-full h-full object-cover rounded-4xl transition-opacity duration-1000 ${isDisplayingVideo ? 'opacity-100' : 'opacity-0'}`}
-              muted
-              loop
-              autoPlay
-            >
-              <source src="/your-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        <Scene onWheel={handleWheel} />
       </div>
-      {/* Additional sections to enable scrolling */}
-      <div className="h-screen bg-gray-500"></div>
     </>
   );
 }
