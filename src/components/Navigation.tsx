@@ -12,7 +12,7 @@ export default function Navigation({ activeTab, onTabChange }: NavigationProps) 
         <div className="flex space-x-2">
           {[
             { id: 'home', label: 'Home' },
-            { id: 'project', label: 'Project' },
+            { id: 'projects', label: 'projects' },
             { id: 'contact', label: 'Contact' }
           ].map((tab) => (
             <button
