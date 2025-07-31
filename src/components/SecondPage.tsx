@@ -194,7 +194,7 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
       </button>
 
       {/* Dots Indicator - Bottom Center of Page */}
-      <div className="absolute bottom-10 lg:bottom-30 left-1/2 transform -translate-x-1/2 flex space-x-3 z-30">
+      <div className="absolute bottom-10 lg:bottom-20 left-1/2 transform -translate-x-1/2 flex space-x-3 z-30">
         {projects.map((_, index) => (
           <button
             key={index}
