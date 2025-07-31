@@ -1,9 +1,9 @@
 'use client'
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Sphere } from '@react-three/drei'
-import { useRef, useEffect, useState } from 'react'
-import * as THREE from 'three'
+import { Text, Center, OrbitControls, useGLTF } from '@react-three/drei'
+import { useRef, useState, useEffect } from 'react'
+import { Group } from 'three'
 
 interface SphereData {
   id: number;
@@ -16,368 +16,224 @@ interface SceneProps {
   activeTab?: string;
   sphereData: SphereData[];
   onActiveSphereChange: (sphereIndex: number) => void;
+  isLightOn?: boolean;
+  onScrollUpdate?: (scrollY: number) => void;
+  onModelsLoaded?: (loaded: boolean) => void;
 }
 
-function RotatingSpheres({ activeTab, sphereData, onActiveSphereChange }: SceneProps) {
-    const group = useRef<THREE.Group>(null!)
-    const sphereRefs = useRef<(THREE.Mesh | null)[]>([])
-    const sphereColors = sphereData.map(data => data.color)
-    const [cycleOffset, setCycleOffset] = useState(0)
-    const [animationProgress, setAnimationProgress] = useState(1)
-    const [prevCycleOffset, setPrevCycleOffset] = useState(0)
-    const animationStartTime = useRef(0)
-    const targetScales = useRef<number[]>(sphereColors.map(() => 1))
-    const currentScales = useRef<number[]>(sphereColors.map(() => 1))
-    const targetPositions = useRef<THREE.Vector3[]>(sphereColors.map(() => new THREE.Vector3()))
-    const currentPositions = useRef<THREE.Vector3[]>(sphereColors.map(() => new THREE.Vector3()))
-    
-    // Simplified rotation state for click navigation
-    const [currentRotation, setCurrentRotation] = useState(0)
-    const [isRotating, setIsRotating] = useState(false)
-    const rotationStartTime = useRef(0)
-    const startRotation = useRef(0)
-    const targetRotation = useRef(0)
-    const rotationDuration = 800 // milliseconds
-    
-    const { gl } = useThree()
+interface ModelProps {
+  modelPath: string;
+}
 
-    // Track active sphere and notify parent
-    const [currentActiveSphere, setCurrentActiveSphere] = useState(0)
+function ModelWithText({ modelPath, onModelsLoaded }: ModelProps & { onModelsLoaded?: (loaded: boolean) => void }) {
+  const { scene } = useGLTF(modelPath);
+  const modelRef = useRef<Group>(null!);
+  
+  useEffect(() => {
+    if (scene && onModelsLoaded) {
+      onModelsLoaded(true);
+    }
+  }, [scene, onModelsLoaded]);
+  
+  return (
+    <>
+
+      {/* GLTF Model */}
+      <primitive 
+        ref={modelRef}
+        object={scene} 
+        position={[0, 2, 3]} 
+        rotation={[0, 0, 0]}
+        scale={[0.4, 0.4, 0.4]}
+      />
+      
+      {/* 3D Text */}
+      <Center position={[0.5, 0.8, 3]}>
+        <Text
+          fontSize={1.5}
+          color="#343434"
+          anchorX="center"
+          anchorY="middle"
+          font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+        >
+          Colas Gelin
+          <meshStandardMaterial color="#343434" />
+        </Text>
+      </Center>
+
+      {/* Subtitle */}
+      <Center position={[0.5, 0, 3.05]}>
+        <Text
+          fontSize={0.4}
+          color="#666666"
+          anchorX="center"
+          anchorY="middle"
+          font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+        >
+          Freelance developer & designer
+          <meshStandardMaterial color="#343434" />
+        </Text>
+      </Center>
+
+      {/* Add orbit controls for interaction */}
+      {/* <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} /> */}
+    </>
+  );
+}
+
+function ScrollCameraController({ isLightOn, onScrollUpdate }: { isLightOn: boolean, onScrollUpdate?: (scrollY: number) => void }) {
+  const { camera } = useThree();
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (animationProgress === 1 && !isRotating) {
-        if (event.key === 'e') {
-          // Forward direction
-          setPrevCycleOffset(cycleOffset)
-          setCycleOffset(prev => (prev + 1) % sphereColors.length)
-          setAnimationProgress(0)
-          animationStartTime.current = Date.now()
-        } else if (event.key === 'r') {
-          // Reverse direction
-          setPrevCycleOffset(cycleOffset)
-          setCycleOffset(prev => (prev - 1 + sphereColors.length) % sphereColors.length)
-          setAnimationProgress(0)
-          animationStartTime.current = Date.now()
-        }
+    const handleScroll = () => {
+      if (isLightOn) {
+        setScrollY(window.scrollY);
+        onScrollUpdate?.(window.scrollY);
       }
-    }
-
-    // Click interaction handler
-    const handleClick = (event: MouseEvent) => {
-      if (activeTab === 'home' || isRotating) return;
-      
-      const rect = gl.domElement.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const screenWidth = rect.width;
-      const clickPosition = clickX / screenWidth; // 0 to 1
-      
-      // Determine direction based on click position
-      const anglePerSphere = (Math.PI * 2) / sphereColors.length;
-      
-      if (clickPosition > 0.5) {
-        // Right side - move to next sphere
-        startRotation.current = currentRotation;
-        targetRotation.current = currentRotation + anglePerSphere;
-      } else {
-        // Left side - move to previous sphere
-        startRotation.current = currentRotation;
-        targetRotation.current = currentRotation - anglePerSphere;
-      }
-      
-      setIsRotating(true);
-      rotationStartTime.current = Date.now();
-    }
-
-    document.addEventListener('keydown', handleKeyPress)
-    gl.domElement.addEventListener('click', handleClick)
-
-    // Set cursor style
-    if (activeTab !== 'home') {
-      gl.domElement.style.cursor = 'pointer'
-    } else {
-      gl.domElement.style.cursor = 'default'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyPress)
-      gl.domElement.removeEventListener('click', handleClick)
-    }
-  }, [sphereColors.length, cycleOffset, animationProgress, activeTab, gl, isRotating, currentRotation])
-
-  // Function to calculate which sphere is currently at the front
-  const calculateActiveSphere = (rotation: number): number => {
-    if (activeTab === 'home') {
-      return Math.floor(sphereColors.length / 2); // Middle sphere for home
-    }
-
-    const frontAngle = Math.PI;
-
-    let closestSphereIndex = 0;
-    let minDistance = Infinity;
-    
-    for (let i = 0; i < sphereColors.length; i++) {
-      const oldPositionIndex = (i + prevCycleOffset) % sphereColors.length;
-      const newPositionIndex = (i + cycleOffset) % sphereColors.length;
-      
-      const oldAngle = (oldPositionIndex - 1) * (Math.PI * 2 / sphereColors.length);
-      const newAngle = (newPositionIndex - 1) * (Math.PI * 2 / sphereColors.length);
-      
-      let angleDiff = newAngle - oldAngle;
-      if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-      if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-      
-      const easedProgress = animationProgress;
-      const currentAngle = oldAngle + angleDiff * easedProgress + rotation;
-      const normalizedAngle = ((currentAngle % (Math.PI * 2)) + (Math.PI * 2)) % (Math.PI * 2);
-      
-      const distance = Math.min(
-        Math.abs(normalizedAngle - frontAngle),
-        Math.abs(normalizedAngle - frontAngle + Math.PI * 2),
-        Math.abs(normalizedAngle - frontAngle - Math.PI * 2)
-      );
-      
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestSphereIndex = i;
-      }
-    }
-    
-    return closestSphereIndex;
-  };
-
-  // Function to calculate horizontal positioning for home/projects tabs
-  const calculateHorizontalPosition = (index: number, floatX: number, floatY: number, floatZ: number) => {
-    const spacing = 4;
-    const totalWidth = (sphereColors.length - 1) * spacing;
-    const startX = -totalWidth / 2;
-    
-    return new THREE.Vector3(
-      startX + index * spacing + floatX,
-      -3 + floatY,
-      -10 + floatZ
-    );
-  };
-
-  // Function to calculate circular positioning for other tabs
-  const calculateCircularPosition = (index: number, floatX: number, floatY: number, floatZ: number, easedProgress: number, additionalRotation: number = 0) => {
-    const oldPositionIndex = (index + prevCycleOffset) % sphereColors.length;
-    const newPositionIndex = (index + cycleOffset) % sphereColors.length;
-    
-    const oldAngle = (oldPositionIndex - 1) * (Math.PI * 2 / sphereColors.length);
-    const newAngle = (newPositionIndex - 1) * (Math.PI * 2 / sphereColors.length);
-    
-    let angleDiff = newAngle - oldAngle;
-    if (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-    if (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-    
-    const currentAngle = oldAngle + angleDiff * easedProgress + additionalRotation;
-    
-    const radius = 5;
-    
-    if (activeTab === 'projects') {
-      // Horizontal circle (XZ plane) for projects - centered at camera position
-      const centerX = 0; // Camera is at x=0, so center the circle here
-      const centerZ = -10;
-      const centerY = -3;
-      
-      // Offset by π/2 to put angle 0 at the front (center) instead of right side
-      const adjustedAngle = currentAngle + Math.PI / 2;
-      
-      const baseX = centerX + Math.cos(adjustedAngle) * radius;
-      const baseZ = centerZ + Math.sin(adjustedAngle) * radius;
-      
-      return new THREE.Vector3(
-        baseX + floatX,
-        centerY + floatY,
-        baseZ + floatZ
-      );
-    } else {
-      // Vertical circle (YZ plane) for contact
-      const centerY = 0;
-      const centerZ = -10;
-      
-      const baseY = centerY + Math.sin(currentAngle) * radius;
-      const baseZ = centerZ + Math.cos(currentAngle) * radius;
-      
-      return new THREE.Vector3(
-        0 + floatX, // Also center at x=0 for contact
-        baseY + floatY,
-        baseZ + floatZ
-      );
-    }
-  };
-
-  // Function to calculate floating animation
-  const calculateFloatingAnimation = (time: number, index: number) => {
-    const speedMultiplier = 1;
-    const amplitudeY = 0.3;
-    const amplitudeX = 0.2;
-    const amplitudeZ = 0.15;
-    const phaseOffset = index * Math.PI * 0.7;
-    
-    return {
-      floatY: Math.sin(time * speedMultiplier + phaseOffset) * amplitudeY,
-      floatX: Math.cos(time * 0.8 * speedMultiplier + phaseOffset + 1) * amplitudeX,
-      floatZ: Math.sin(time * 0.6 * speedMultiplier + phaseOffset + 2) * amplitudeZ
     };
-  };
 
-  // Function to calculate cube size based on active tab and position
-  const calculateTargetSphereSize = (index: number) => {
-    if (activeTab === 'home') {
-      const frontSphereIndex = Math.floor(sphereColors.length / 2);
-      if (index === frontSphereIndex) {
-        return 0.8;
-      }
-      return 0.4;
-    } else if (activeTab === 'projects' || activeTab === 'contact') {
-      // When rotating, keep all spheres the same size
-      if (isRotating) {
-        return 0.8;
-      }
-      
-      // Calculate which sphere is currently active
-      const activeSphere = calculateActiveSphere(currentRotation);
-      
-      if (index === activeSphere) {
-        return 1.2;
-      }
-      return 0.6;
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLightOn, onScrollUpdate]);
+
+  useFrame(() => {
+    if (isLightOn) {
+      // Convert scroll to camera Y movement (scroll down = camera goes down)
+      const targetY = -scrollY * 0.01;
+      camera.position.y = targetY;
+      camera.lookAt(0, targetY, 0);
     }
-    return 1;
-  };
+  });
 
-  useFrame((state) => {
-    // Handle click rotation animation
-    if (isRotating) {
-      const elapsed = Date.now() - rotationStartTime.current;
-      const progress = Math.min(elapsed / rotationDuration, 1);
-      
-      // Easing function for smooth rotation
-      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-      const easedProgress = easeOutCubic(progress);
-      
-      const newRotation = startRotation.current + 
-        (targetRotation.current - startRotation.current) * easedProgress;
-      
-      setCurrentRotation(newRotation);
-      
-      if (progress >= 1) {
-        setIsRotating(false);
-        setCurrentRotation(targetRotation.current);
-      }
-    }
-
-    // Update animation progress
-    if (animationProgress < 1) {
-      const elapsed = Date.now() - animationStartTime.current
-      const progress = Math.min(elapsed / 2000, 1) // 1 second animation
-      setAnimationProgress(progress)
-    }
-
-    // Calculate and update active sphere
-    const newActiveSphere = calculateActiveSphere(currentRotation);
-    if (newActiveSphere !== currentActiveSphere) {
-      setCurrentActiveSphere(newActiveSphere);
-      onActiveSphereChange(newActiveSphere);
-    }
-
-    // Easing function for smooth animation
-    const easeInOutCubic = (t: number) => {
-      return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
-    }
-
-    // Animate individual spheres floating
-    sphereRefs.current.forEach((sphere, index) => {
-      if (sphere) {
-        const time = state.clock.getElapsedTime();
-        const { floatX, floatY, floatZ } = calculateFloatingAnimation(time, index);
-        
-        let position;
-        
-        if (activeTab === 'home') {
-          // Horizontal layout for home tab
-          position = calculateHorizontalPosition(index, floatX, floatY, floatZ);
-        } else {
-          // Circular layout for projects and contact tabs with rotation
-          const easedProgress = easeInOutCubic(animationProgress);
-          position = calculateCircularPosition(index, floatX, floatY, floatZ, easedProgress, currentRotation);
-        }
-        
-        sphere.position.copy(position);
-        currentPositions.current[index].copy(position);
-      }
-    });
-
-    // Calculate target positions
-    sphereColors.forEach((_, index) => {
-      const time = state.clock.getElapsedTime();
-      const { floatX, floatY, floatZ } = calculateFloatingAnimation(time, index);
-      
-      if (activeTab === 'home') {
-        targetPositions.current[index] = calculateHorizontalPosition(index, floatX, floatY, floatZ);
-      } else {
-        const easedProgress = easeInOutCubic(animationProgress);
-        targetPositions.current[index] = calculateCircularPosition(index, floatX, floatY, floatZ, easedProgress, currentRotation);
-      }
-    });
-
-    // Update target scales
-    sphereColors.forEach((_, index) => {
-      targetScales.current[index] = calculateTargetSphereSize(index);
-    });
-
-    // Interpolate scales
-    const scaleSpeed = 0.005;
-    sphereRefs.current.forEach((sphere, index) => {
-      if (sphere) {
-        // Interpolate scale
-        currentScales.current[index] = THREE.MathUtils.lerp(
-          currentScales.current[index],
-          targetScales.current[index],
-          scaleSpeed
-        );
-        
-        const scale = currentScales.current[index];
-        sphere.scale.set(scale, scale, scale);
-      }
-    });
-  })
-
-  return (
-    <group ref={group}>
-      {sphereColors.map((color, index) => (
-        <Sphere 
-          key={index} 
-          args={[1, 32, 32]} 
-          ref={(ref) => (sphereRefs.current[index] = ref)}
-        >
-          <meshStandardMaterial color={color} />
-        </Sphere>
-      ))}
-    </group>
-  )
+  return null;
 }
 
-export default function Scene({ activeTab, sphereData, onActiveSphereChange }: SceneProps) {
+export default function Scene({isLightOn = false, onScrollUpdate, onModelsLoaded }: SceneProps) {
+  const [lightIntensity, setLightIntensity] = useState(isLightOn ? 800 : 0);
+  const [currentLightState, setCurrentLightState] = useState(isLightOn);
+
+  // Handle light state changes
+  if (isLightOn !== currentLightState) {
+    setCurrentLightState(isLightOn);
+    
+    if (isLightOn) {
+      // Turning ON - gradual increase with delay
+      setTimeout(() => {
+        const startTime = Date.now();
+        const duration = 1000;
+        const startIntensity = 0;
+        const targetIntensity = 800;
+        
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          const currentIntensity = startIntensity + (targetIntensity - startIntensity) * easeOut;
+          
+          setLightIntensity(currentIntensity);
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        
+        animate();
+      }, 500);
+    } else {
+      // Turning OFF - gradual decrease
+      const startTime = Date.now();
+      const duration = 500;
+      const startIntensity = lightIntensity;
+      const targetIntensity = 0;
+      
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeIn = Math.pow(progress, 2);
+        const currentIntensity = startIntensity + (targetIntensity - startIntensity) * easeIn;
+        
+        setLightIntensity(currentIntensity);
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+      
+      animate();
+    }
+  }
+
   return (
-    <div id="scene-container" className="fixed inset-0 w-full h-screen">
+    <div 
+      id="scene-container" 
+      className="fixed inset-0 w-full h-screen"
+    >
+      
       <Canvas 
-        camera={{ position: [0, -1.5, 6], fov: 45 }}
+        camera={{ position: [0, 0, 9], fov: 45 }}
         style={{ background: 'transparent' }}
-        gl={{ alpha: true }}
+        gl={{ alpha: true, outputColorSpace: 'srgb' }}
         onCreated={({ camera }) => {
-          camera.lookAt(0, -0.8, 0);
+          camera.lookAt(0, 0, 0);
         }}
       >
-        <ambientLight intensity={1} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <ScrollCameraController isLightOn={isLightOn} onScrollUpdate={onScrollUpdate} />
         
-        <RotatingSpheres 
-          activeTab={activeTab} 
-          sphereData={sphereData}
-          onActiveSphereChange={onActiveSphereChange}
+        {lightIntensity > 0 && (
+          <rectAreaLight
+            width={6}
+            height={0.3}
+            color="#ccddff"
+            intensity={lightIntensity}
+            position={[0, 1, 3]}
+            rotation={[-Math.PI / 2.5, 0, 0]}
+            castShadow={false}
+          />
+        )}
+
+        {/* Ground Plane with thickness */}
+        <mesh position={[0, -1.4, -4.2]} receiveShadow>
+          <boxGeometry args={[20, 0.2, 20]} />
+          <meshStandardMaterial color="#111111" />
+        </mesh>
+        {/* Large vertical background plane */}
+        <mesh position={[0, 3.5, -10]} rotation={[0, 0, 0]}>
+          <planeGeometry args={[20, 10]} />
+          <meshBasicMaterial color="#111111" />
+        </mesh>
+        <mesh position={[-10, 3.7, -5]} rotation={[0, Math.PI / 2, 0]}>
+          <planeGeometry args={[20, 10]} />
+          <meshBasicMaterial color="#111111" />
+        </mesh>
+        <mesh position={[10, 3.7, -5]} rotation={[0, -Math.PI / 2, 0]}>
+          <planeGeometry args={[20, 10]} />
+          <meshBasicMaterial color="#111111" />
+        </mesh>
+        <mesh position={[0, -9, 5.85]} rotation={[0, 0, 0]}>
+          <planeGeometry args={[20, 10]} />
+          <shaderMaterial
+            vertexShader={`
+              varying vec2 vUv;
+              void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+              }
+            `}
+            fragmentShader={`
+              varying vec2 vUv;
+              void main() {
+                vec3 topColor = vec3(0.0, 0.0, 0.0); // #000000
+                vec3 bottomColor = vec3(0.5, 0.5, 0.5); //rgb(146, 150, 163)
+                vec3 color = mix(bottomColor, topColor, vUv.y);
+                gl_FragColor = vec4(color, 1.0);
+              }
+            `}
+          />
+        </mesh>
+        <ModelWithText 
+          modelPath="models/low_poly_hanging_light/scene.gltf"
+          onModelsLoaded={onModelsLoaded}
         />
       </Canvas>
     </div>

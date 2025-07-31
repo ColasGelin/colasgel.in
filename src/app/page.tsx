@@ -1,152 +1,114 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react';
 import Scene from '../components/Scene';
-import Navigation from '../components/Navigation';
-import VideoContainer from '../components/VideoContainer';
-import TitleManager from '../components/TitleManager';
+import SecondPage from '../components/SecondPage';
+import { useState, useEffect, Suspense } from 'react';
+import { Power, Loader2 } from 'lucide-react';
+import ThirdPage from '../components/ThirdPage';
 
-// Define page configuration
-const PAGES = [
-  { id: 'home', title: 'COLAS GELIN', bgColor: 'bg-[#faedcd]' },
-  { id: 'projects', title: 'MY WORK', bgColor: 'bg-[#faedcd]' },
-  { id: 'contact', title: 'BUILD\nWITH ME', bgColor: 'bg-[#faedcd]' }
-];
-
-// Define video/website data for each sphere
-const SPHERE_DATA = [
-  {
-    id: 0,
-    videoSrc: '/video1.mp4',
-    website: 'https://pizzapopote.com',
-    color: 'orange'
-  },
-  {
-    id: 1,
-    videoSrc: '/video2.mp4',
-    website: 'https://example1.com',
-    color: 'gray'
-  },
-  {
-    id: 2,
-    videoSrc: '/video3.mp4',
-    website: 'https://example2.com',
-    color: 'gray'
-  }
-];
 
 export default function Home() {
-  const [opacity, setOpacity] = useState(0);
-  const [isDisplayingVideo, setIsDisplayingVideo] = useState(true);
-  const [activeTab, setActiveTab] = useState('home');
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [activeSphereIndex, setActiveSphereIndex] = useState(0); // Track which sphere is active
-  const lastWheelTime = useRef(0);
-  const isNavigating = useRef(false);
-  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-
-  // Get current page index when activeTab changes
-  useEffect(() => {
-    const pageIndex = PAGES.findIndex(page => page.id === activeTab);
-    if (pageIndex !== -1) {
-      setCurrentPageIndex(pageIndex);
-    }
-  }, [activeTab]);
-
-  const scrollToSection = (sectionId: string) => {
-    if (isNavigating.current) return;
-    
-    isNavigating.current = true;
-    setActiveTab(sectionId);
-    
-    setTimeout(() => {
-      isNavigating.current = false;
-    }, 1000);
-  };
-
-  const handleWheel = (event: WheelEvent) => {
-    event.preventDefault();
-    
-    const now = Date.now();
-    if (now - lastWheelTime.current < 100) return;
-    
-    lastWheelTime.current = now;
-    
-    if (wheelTimeoutRef.current) {
-      clearTimeout(wheelTimeoutRef.current);
-    }
-    
-    wheelTimeoutRef.current = setTimeout(() => {
-      if (isNavigating.current) return;
-      
-      const currentIndex = PAGES.findIndex(page => page.id === activeTab);
-      let nextIndex;
-      
-      if (event.deltaY > 0) {
-        nextIndex = Math.min(currentIndex + 1, PAGES.length - 1);
-      } else {
-        nextIndex = Math.max(currentIndex - 1, 0);
-      }
-      
-      if (nextIndex !== currentIndex) {
-        scrollToSection(PAGES[nextIndex].id);
-      }
-    }, 0);
-  };
+  const [isLightOn, setIsLightOn] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
 
   useEffect(() => {
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    // Prevent scrolling when light is off
+    if (!isLightOn) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
     return () => {
-      window.removeEventListener('wheel', handleWheel);
-      if (wheelTimeoutRef.current) {
-        clearTimeout(wheelTimeoutRef.current);
+      document.body.style.overflow = 'auto';
+    };
+  }, [isLightOn]);
+
+  useEffect(() => {
+    let lastScrollY = 0;
+    
+    const handleScroll = () => {
+      if (isLightOn) {
+        const currentScrollY = window.scrollY;
+        console.log('Viewport scrollY:', currentScrollY);
+        setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');
+        setScrollY(currentScrollY);
+        lastScrollY = currentScrollY;
       }
     };
-  }, [activeTab]);
 
-  const handleButtonClick = () => {
-    if (videoContainerRef.current) {
-      if (isDisplayingVideo) {
-        setOpacity(0);
-        setTimeout(() => setIsDisplayingVideo(false), 500);
-      } else {
-        setIsDisplayingVideo(true);
-        setTimeout(() => setOpacity(1), 100);
-      }
-    }
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isLightOn]);
 
-  // Callback to receive active sphere from Scene
-  const handleActiveSphereChange = (sphereIndex: number) => {
-    setActiveSphereIndex(sphereIndex);
-  };
+  // Calculate opacity based on scroll position - only visible at top
+  const buttonOpacity = scrollY === 0 ? 1 : 0;
 
   return (
     <>
-      <Navigation activeTab={activeTab} onTabChange={scrollToSection} />
-
-      <div className="flex h-screen overflow-x-auto scroll-smooth snap-x snap-mandatory">
-        <div className={`min-w-full h-screen ${PAGES[currentPageIndex].bgColor} flex items-center justify-center relative overflow-hidden pt-20 snap-start`}>
-          <TitleManager activeTab={activeTab} pageTitles={PAGES} />
-          
-          {activeTab === 'projects' && (
-            <VideoContainer
-              ref={videoContainerRef}
-              opacity={opacity}
-              isDisplayingVideo={isDisplayingVideo}
-              onButtonClick={handleButtonClick}
-              sphereData={SPHERE_DATA[activeSphereIndex]}
-            />
-          )}
-          
-          <Scene 
-            activeTab={activeTab} 
-            sphereData={SPHERE_DATA}
-            onActiveSphereChange={handleActiveSphereChange}
+      {/* First page - Scene with fixed position when light is on */}
+      <div className={`${isLightOn ? 'fixed inset-0' : 'h-screen'} bg-[#00000000] flex items-center justify-center relative overflow-hidden z-0`}>
+          <Scene
+            activeTab=""
+            sphereData={[]}
+            onActiveSphereChange={() => {}}
+            isLightOn={isLightOn}
+            onModelsLoaded={setModelsLoaded}
           />
-        </div>
       </div>
+
+      {/* Main Power Button - Fixed position */}
+      <div
+        className={`fixed left-1/2 transform -translate-x-1/2 z-30 ${
+          isLightOn 
+        ? 'bottom-8' 
+        : 'bottom-1/2 translate-y-1/2'
+        } ${
+          isLightOn ? 'delay-0' : 'delay-500'
+        }`}
+        style={{ 
+          opacity: isLightOn ? buttonOpacity : 1,
+          transition: `all ${scrollY === 0 && buttonOpacity === 1 ? '1000ms' : '200ms'} ease-out`,
+          transitionDelay: scrollY === 0 && buttonOpacity === 1 ? '500ms' : '0ms'
+        }}
+      >
+        <button
+          className="p-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-105 bg-transparent shadow-none text-white"
+          onClick={() => setIsLightOn(!isLightOn)}
+          disabled={!modelsLoaded}
+        >
+            <Power size={50} className="text-white hover:scale-105 transition-all duration-300 cursor-pointer" />
+        </button>
+      </div>
+      
+      {/* Bottom Button - Fixed position */}
+      <div className={`fixed bottom-40 left-1/2 transform -translate-x-1/2 z-30 ${
+        isLightOn ? 'opacity-100' : 'opacity-0'
+      } ${
+        buttonOpacity < 1 ? 'delay-0' : 'delay-500'
+      }`}
+        style={{ 
+          opacity: isLightOn ? buttonOpacity : 0,
+          transition: `all ${scrollY === 0 && buttonOpacity === 1 ? '1000ms' : '200ms'} ease-out`,
+          transitionDelay: scrollY === 0 && buttonOpacity === 1 ? '500ms' : '0ms'
+        }}
+      >
+        <button 
+          className="text-white text-xl lg:text-2xl font-mono hover:text-gray-300 transition-all duration-300 hover:scale-110 cursor-pointer"
+          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+        >
+          Explore my work
+        </button>
+      </div>
+
+      {/* Content that appears when scrolling - starts right after the first viewport */}
+      {isLightOn && (
+        <div className="relative z-10" style={{ marginTop: '100vh' }}>
+          <SecondPage />
+        </div>
+      )}
     </>
   );
 }

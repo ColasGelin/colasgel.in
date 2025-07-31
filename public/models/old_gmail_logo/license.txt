@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old Gmail Logo
+* source:	https://sketchfab.com/3d-models/old-gmail-logo-f8c066b10d1a475abbd69ebbe9de2b83
+* author:	PhantomXD (https://sketchfab.com/PhantomXD)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old Gmail Logo" (https://sketchfab.com/3d-models/old-gmail-logo-f8c066b10d1a475abbd69ebbe9de2b83) by PhantomXD (https://sketchfab.com/PhantomXD) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

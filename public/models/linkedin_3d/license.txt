@@ -1,0 +1,11 @@
+Model Information:
+* title:	Linkedin 3d
+* source:	https://sketchfab.com/3d-models/linkedin-3d-39ff0961cc1643be814f6dba82468b33
+* author:	studiometa (https://sketchfab.com/studiometa)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Linkedin 3d" (https://sketchfab.com/3d-models/linkedin-3d-39ff0961cc1643be814f6dba82468b33) by studiometa (https://sketchfab.com/studiometa) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Laptop Game Ready (Low Poly)
+* source:	https://sketchfab.com/3d-models/laptop-game-ready-low-poly-ddcd0efcc29d490e882bbaf61a3a0bfc
+* author:	bossdeff (https://sketchfab.com/bossdeff)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Laptop Game Ready (Low Poly)" (https://sketchfab.com/3d-models/laptop-game-ready-low-poly-ddcd0efcc29d490e882bbaf61a3a0bfc) by bossdeff (https://sketchfab.com/bossdeff) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
