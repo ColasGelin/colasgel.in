@@ -224,7 +224,7 @@ export default function Scene({isLightOn = false, onScrollUpdate, onModelsLoaded
               varying vec2 vUv;
               void main() {
                 vec3 topColor = vec3(0.0, 0.0, 0.0); // #000000
-                vec3 bottomColor = vec3(0.5, 0.5, 0.5); //rgb(146, 150, 163)
+                vec3 bottomColor = vec3(0.1, 0.3, 0.6); //rgb(146, 150, 163)
                 vec3 color = mix(bottomColor, topColor, vUv.y);
                 gl_FragColor = vec4(color, 1.0);
               }
