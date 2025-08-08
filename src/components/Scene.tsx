@@ -40,15 +40,6 @@ function ModelWithText({ modelPath, onModelsLoaded }: ModelProps & { onModelsLoa
   return (
     <>
 
-      {/* GLTF Model */}
-      <primitive 
-        ref={modelRef}
-        object={scene} 
-        position={[0, 2, 3]} 
-        rotation={[0, 0, 0]}
-        scale={[0.4, 0.4, 0.4]}
-      />
-      
       {/* 3D Text */}
       <Center position={[0.5, 0.8, 3]}>
         <Text
@@ -122,12 +113,12 @@ function ChainlinkModel() {
   // Initialize particles only once
   useEffect(() => {
     if (!particlePositions.current) {
-      const particleCount = 100;
+      const particleCount = 300;
       const positions = new Float32Array(particleCount * 3);
       
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
-        const radius = Math.random() * 2;
+        const radius = Math.random() * 10 + 1;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.random() * Math.PI;
         
@@ -363,7 +354,7 @@ export default function Scene({isLightOn = false, onScrollUpdate, onModelsLoaded
           />
 
         <ModelWithText 
-          modelPath="models/low_poly_hanging_light/scene.gltf"
+          modelPath="models/WIP.glb"
           onModelsLoaded={onModelsLoaded}
         />
 

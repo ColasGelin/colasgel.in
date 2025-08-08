@@ -50,7 +50,6 @@ function FloatingModel() {
 export default function ThirdPage({ className = '', onHoveredIconChange }: ThirdPageProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isAtBottom, setIsAtBottom] = useState(false);
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const pageRef = useRef<HTMLDivElement>(null);
 
@@ -86,21 +85,25 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
   // Add scroll-based transition effect
   useEffect(() => {
     const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      
-      // Check if we're at the bottom (within 100px)
-      const isNearBottom = scrollTop + windowHeight >= documentHeight - 100;
-      setIsAtBottom(isNearBottom);
-
       if (pageRef.current) {
         const rect = pageRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
         
-        // Calculate scroll progress (0 to 1) based on element position
-        const progress = Math.max(0, Math.min(1, 
-          (windowHeight - rect.top) / (windowHeight + rect.height * 0.3)
-        ));
+        // Calculate how much of the ThirdPage section has been scrolled through
+        // 0 = section just entering viewport from bottom
+        // 1 = section completely passed through viewport
+        const sectionTop = rect.top;
+        const sectionHeight = rect.height;
+        
+        let progress = 0;
+        
+        if (sectionTop <= windowHeight && sectionTop > -sectionHeight) {
+          // Section is in viewport - calculate progress based on how much has been revealed
+          progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight * 0.5)));
+        } else if (sectionTop <= -sectionHeight) {
+          // Section has completely passed through
+          progress = 1;
+        }
         
         setScrollProgress(progress);
       }
@@ -112,10 +115,9 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Calculate transform values based on scroll progress
-  const translateY = (1 - scrollProgress);
-  const opacity = Math.min(1, scrollProgress * 1.5);
-  const scale = 0.8 + (scrollProgress * 0.15); // This already goes from 0.8 to 1.0
+  // Calculate opacity and blur based on scroll progress
+  const overlayOpacity = scrollProgress < 0.6 ? 0 : Math.min(1, (scrollProgress - 0.6) * 20); // Opacity starts at 0.5 progress, reaches 1 at 1.0 progress
+  const blurAmount = scrollProgress * 8; // Blur: 0px → 8px
 
   const handleIconHover = (icon: string | null) => {
     setHoveredIcon(icon);
@@ -135,33 +137,33 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
 
       {/* Contact Information Overlay */}
       <div 
-        className={`louis-george-font fixed inset-0 flex items-center justify-center pointer-events-none z-50 transition-all duration-1000 ${
-          isAtBottom ? 'opacity-100' : 'opacity-0'
-        }`}
+        className="louis-george-font fixed inset-0 flex items-center justify-center z-50"
         style={{
-          backdropFilter: isAtBottom ? 'blur(8px)' : 'blur(0px)',
-          WebkitBackdropFilter: isAtBottom ? 'blur(8px)' : 'blur(0px)',
-          transition: 'opacity 1000ms ease-in-out, backdrop-filter 1000ms ease-in-out, -webkit-backdrop-filter 1000ms ease-in-out'
+          opacity: overlayOpacity,
+          backdropFilter: `blur(${blurAmount}px)`,
+          WebkitBackdropFilter: `blur(${blurAmount}px)`,
+          transition: 'none', // Remove transitions for immediate scroll response
+          pointerEvents: overlayOpacity > 0 ? 'auto' : 'none'
         }}
       >
         <div 
-          className="p-12 pointer-events-auto max-w-4xl mx-4 transition-all duration-1000"
+          className="p-12 max-w-4xl mx-4"
           style={{
-            backdropFilter: isAtBottom ? 'blur(4px)' : 'blur(0px)',
-            WebkitBackdropFilter: isAtBottom ? 'blur(4px)' : 'blur(0px)',
+            backdropFilter: `blur(${blurAmount * 0.5}px)`,
+            WebkitBackdropFilter: `blur(${blurAmount * 0.5}px)`,
           }}
         >
           <div className="text-center mb-12">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4 drop-shadow-lg">
+            <h1 className="text</div>-4xl lg:text-5xl font-bold text-white mb-4" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>
               Let's <span className="text-blue-400">Connect</span>
             </h1>
-            <p className="text-lg text-blue-400 drop-shadow-lg font-bold">
+            <p className="text-lg text-blue-400 font-bold" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>
               Ready to collaborate? Let's create something new together.
             </p>
           </div>
 
           {/* Contact Items */}
-          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto drop-shadow-lg">
+          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
             <a 
               href="mailto:cgelin.pro@gmail.com"
               className="flex flex-col items-center space-y-4 group cursor-pointer hover:transform hover:scale-105 transition-transform p-4 rounded-xl"
@@ -172,8 +174,8 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
                 <Mail className="w-8 h-8 text-blue-400" />
               </div>
               <div className="text-center">
-                <p className="text-white font-medium text-lg mb-2 drop-shadow-lg">Email</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm break-all drop-shadow-lg">cgelin.pro@gmail.com</p>
+                <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>Email</p>
+                <p className="text-blue-400 group-hover:text-white transition-colors text-sm break-all" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>cgelin.pro@gmail.com</p>
               </div>
             </a>
 
@@ -189,8 +191,8 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
                 <Github className="w-8 h-8 text-blue-400" />
               </div>
               <div className="text-center">
-                <p className="text-white font-medium text-lg mb-2 drop-shadow-lg">GitHub</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm drop-shadow-lg">@ColasGelin</p>
+                <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>GitHub</p>
+                <p className="text-blue-400 group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
               </div>
             </a>
 
@@ -206,8 +208,8 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
                 <Linkedin className="w-8 h-8 text-blue-400" />
               </div>
               <div className="text-center">
-                <p className="text-white font-medium text-lg mb-2 drop-shadow-lg">LinkedIn</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm drop-shadow-lg">@ColasGelin</p>
+                <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>LinkedIn</p>
+                <p className="text-blue-400 group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
               </div>
             </a>
           </div>

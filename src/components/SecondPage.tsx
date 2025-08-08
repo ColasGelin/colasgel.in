@@ -18,34 +18,37 @@ interface Project {
   scale: [number, number, number];
   offsetY?: number;
   website?: string;
+  baseRotation?: [number, number, number];
 }
 
 const projects: Project[] = [
   {
     id: 1,
-    modelPath: '/models/low_poly_hanging_light/scene.gltf',
+    modelPath: '/models/WholePlanetRendered.glb',
     title: 'Pizza Popote',
-    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a dignissim ante. Aenean et sem egestas, dictum felis in, posuere risus. Ut id augue eget leo vulputate sagittis vel nec augue. Vivamus vitae odio posuere, usenectus et netus et malesuada fames ac turpis egestas. Vestibulum auctor massa ac imperdiet condimentum. Vestibulum porttitor diam vitae vulputate feugiat. ',
-    scale: [0.2, 0.2, 0.2],
-    offsetY: -0.5,
-    website: 'https://click.com'
+    description: 'Crafted a warm, inviting web universe where artisanal cuisine meets playful 3D design—a charming low-poly world that transforms food truck browsing into a delightful spatial journey. \nThe platform combines intuitive content management with a cozy atmosphere, letting owners easily update content while users explore a thoughtfully crafted, cross-platform friendly digital space. \nThis project celebrates the joy of good food and good living, creating a memorable brand experience that radiates warmth and conviviality. \n(On pause - business hiatus)',
+    scale: [0.014, 0.014, 0.014],
+    offsetY: 0.9,
+    website: 'https://deploy-pizza-popote.vercel.app',
+    baseRotation: [0, 0, 0]
   },
   {
     id: 2,
-    modelPath: '/models/mug/scene.gltf',
-    title: 'Long Distance Games', 
-    description: 'Aenean iaculis blandit sapien, sit amet congue quam elementum quis. Sed a condimentum enim. Nulla tortor sapien, eleifend in velit sed, elementum sagittis mi. Praesent porta iaculis ex sit amet elementum. Nulla ornare orci ac augueroin at elit purus. Nulla risus augue, molestie ac erat nec, iaculis imperdiet nisl. Vestibulum condimentum arcu ac nisl aliquet malesuada. Donec tempor urna at augue fermentum fringilla. ',
-    scale: [0.005, 0.005, 0.005],
+    modelPath: '/models/WIP.glb',
+    title: 'Work in progress',
+    description: 'Currently exploring new frontiers in interactive web design.',
+    scale: [1, 1, 1],
     offsetY: 0,
-    website: 'https://google.com'
+    baseRotation: [0, 0, 0]
   },
   {
     id: 3,
-    modelPath: '/models/laptop_game_ready_low_poly/scene.gltf',
+    modelPath: '/models/WIP.glb',
     title: 'Work in progress',
-    description: 'Donec rhoncus, orci quis mollis mattis, nibh est matti. ',
-    scale: [0.5, 0.5, 0.5],
+    description: 'Currently exploring new frontiers in interactive web design.',
+    scale: [1, 1, 1],
     offsetY: 0,
+    baseRotation: [0, Math.PI / 2, 0]
   }
 ];
 
@@ -54,24 +57,33 @@ projects.forEach(project => {
   useGLTF.preload(project.modelPath);
 });
 
-function Simple3DModel({ modelPath, projectId, scale, offsetY = 0, visible }: { 
+function Simple3DModel({ modelPath, projectId, scale, offsetY = 0, baseRotation = [0, 0, 0], visible }: { 
   modelPath: string, 
   projectId: number, 
   scale: [number, number, number],
   offsetY?: number,
+  baseRotation?: [number, number, number],
   visible: boolean 
 }) {
   const { scene } = useGLTF(modelPath);
   const modelRef = useRef<Group>(null!);
   
+  // Set base rotation once when component mounts or baseRotation changes
+  useEffect(() => {
+    if (modelRef.current) {
+      modelRef.current.rotation.x = baseRotation[0];
+      modelRef.current.rotation.z = baseRotation[2];
+    }
+  }, [baseRotation]);
+  
   // Animation using useFrame
   useFrame((state) => {
     if (modelRef.current && visible) {
       // Floating animation (up and down movement) with custom offset
-      modelRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.3 + offsetY;
+      modelRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.05 + offsetY;
       
-      // Slow rotation around Y axis
-      modelRef.current.rotation.y = state.clock.elapsedTime * 0.2 + projectId * 0.5;
+      // Only animate Y rotation
+      modelRef.current.rotation.y = state.clock.elapsedTime * 0.2 + projectId * 0.5 + baseRotation[1];
     }
   });
   
@@ -149,10 +161,11 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
                 projectId={project.id} 
                 scale={project.scale}
                 offsetY={project.offsetY}
+                baseRotation={project.baseRotation}
                 visible={index === currentProjectIndex}
               />
             ))}
-            <OrbitControls enablePan={false} enableZoom={false} enableRotate={false} />
+            {/* <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} /> */}
           </Canvas>
         </div>
 
@@ -161,7 +174,12 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
           <div className="w-full max-w-md text-center">
             <h2 className="text-white text-3xl lg:text-4xl font-bold mb-6">{currentProject.title}</h2>
             <p className="text-gray-400 text-base lg:text-lg mb-8 leading-relaxed">
-              {currentProject.description}
+              {currentProject.description.split('\n').map((line, index) => (
+                <span key={index}>
+                  {line}
+                  {index < currentProject.description.split('\n').length - 1 && <br />}
+                </span>
+              ))}
             </p>
             {currentProject.website && (
               <button 

@@ -11,8 +11,11 @@ export default function Home() {
   const [isLightOn, setIsLightOn] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [modelsRendered, setModelsRendered] = useState(false);
+  const [showPowerButton, setShowPowerButton] = useState(false);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     // Prevent scrolling when light is off
@@ -33,10 +36,19 @@ export default function Home() {
     const handleScroll = () => {
       if (isLightOn) {
         const currentScrollY = window.scrollY;
-        // console.log('Viewport scrollY:', currentScrollY);
         setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');
         setScrollY(currentScrollY);
         lastScrollY = currentScrollY;
+
+        // Update current page based on scroll position
+        const viewportHeight = window.innerHeight;
+        if (currentScrollY < viewportHeight * 0.5) {
+          setCurrentPage(1);
+        } else if (currentScrollY < viewportHeight * 1.5) {
+          setCurrentPage(2);
+        } else {
+          setCurrentPage(3);
+        }
       }
     };
 
@@ -44,11 +56,41 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isLightOn]);
 
+  useEffect(() => {
+    if (modelsLoaded) {
+      // Wait a few frames for GPU processing to complete
+      const timer = setTimeout(() => {
+        setModelsRendered(true);
+        // Then show the power button after models are fully rendered
+        setTimeout(() => {
+          setShowPowerButton(true);
+        }, 100);
+      }, 500); // Give GPU time to process
+      return () => clearTimeout(timer);
+    }
+  }, [modelsLoaded]);
+
   // Calculate opacity based on scroll position - only visible at top
   const buttonOpacity = scrollY === 0 ? 1 : 0;
 
   return (
     <>
+      {/* Vertical Page Dots - Fixed top right */}
+      {isLightOn && (
+        <div className="fixed top-8 right-8 flex flex-col space-y-2 z-40">
+          {[1, 2, 3].map((page) => (
+            <button
+              key={page}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                page === currentPage 
+                  ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' 
+                  : 'bg-white/30 hover:bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
+      )}
+
       {/* First page - Scene with fixed position when light is on */}
       <div className={`${isLightOn ? 'fixed inset-0' : 'h-screen'} bg-[#00000000] flex items-center justify-center relative overflow-hidden z-0`}>
           <Scene
@@ -58,10 +100,11 @@ export default function Home() {
             isLightOn={isLightOn}
             onModelsLoaded={setModelsLoaded}
             hoveredIcon={hoveredIcon}
+            visible={modelsRendered}
           />
       </div>
 
-      {/* Main Power Button - Fixed position */}
+      {/* Main Power Button / Loading Icon - Fixed position */}
       <div
         className={`fixed left-1/2 transform -translate-x-1/2 z-30 ${
           isLightOn 
@@ -76,13 +119,31 @@ export default function Home() {
           transitionDelay: scrollY === 0 && buttonOpacity === 1 ? '500ms' : '0ms'
         }}
       >
-        <button
-          className="p-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-105 bg-transparent shadow-none text-white drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]"
-          onClick={() => setIsLightOn(!isLightOn)}
-          disabled={!modelsLoaded}
-        >
-            <Power size={50} className="text-white hover:scale-105 transition-all duration-300 cursor-pointer" />
-        </button>
+        <div className="relative">
+          {/* Loading Spinner */}
+          <div 
+            className={`absolute inset-0 p-4 rounded-full bg-transparent shadow-none text-white drop-shadow-[0_0_8px_rgba(59,130,246,0.9)] transition-opacity duration-500 ${
+              modelsRendered ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            <Loader2 size={50} className="text-white animate-spin" />
+          </div>
+          
+          {/* Power Button */}
+          <div 
+            className={`p-4 rounded-full bg-transparent shadow-none text-white drop-shadow-[0_0_8px_rgba(59,130,246,0.9)] transition-opacity duration-500 ${
+              showPowerButton ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <button
+              className="cursor-pointer transition-all duration-300 hover:scale-105"
+              onClick={() => setIsLightOn(!isLightOn)}
+              disabled={!showPowerButton}
+            >
+              <Power size={50} className="text-white hover:scale-105 transition-all duration-300 cursor-pointer" />
+            </button>
+          </div>
+        </div>
       </div>
       
       {/* Bottom Button - Fixed position */}
@@ -107,7 +168,7 @@ export default function Home() {
 
       {/* Content that appears when scrolling - starts right after the first viewport */}
       {isLightOn && (
-        <div className="relative z-10" style={{ marginTop: '100vh' }}>
+        <div className="relative z-10 min-h-screen" style={{ marginTop: '100vh' }}>
           <SecondPage />
           <ThirdPage onHoveredIconChange={setHoveredIcon} />
         </div>
