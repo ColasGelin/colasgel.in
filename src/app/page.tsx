@@ -12,6 +12,7 @@ export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
+  const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
 
   useEffect(() => {
     // Prevent scrolling when light is off
@@ -32,7 +33,7 @@ export default function Home() {
     const handleScroll = () => {
       if (isLightOn) {
         const currentScrollY = window.scrollY;
-        console.log('Viewport scrollY:', currentScrollY);
+        // console.log('Viewport scrollY:', currentScrollY);
         setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');
         setScrollY(currentScrollY);
         lastScrollY = currentScrollY;
@@ -56,6 +57,7 @@ export default function Home() {
             onActiveSphereChange={() => {}}
             isLightOn={isLightOn}
             onModelsLoaded={setModelsLoaded}
+            hoveredIcon={hoveredIcon}
           />
       </div>
 
@@ -75,7 +77,7 @@ export default function Home() {
         }}
       >
         <button
-          className="p-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-105 bg-transparent shadow-none text-white"
+          className="p-4 rounded-full cursor-pointer transition-all duration-300 hover:scale-105 bg-transparent shadow-none text-white drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]"
           onClick={() => setIsLightOn(!isLightOn)}
           disabled={!modelsLoaded}
         >
@@ -107,6 +109,7 @@ export default function Home() {
       {isLightOn && (
         <div className="relative z-10" style={{ marginTop: '100vh' }}>
           <SecondPage />
+          <ThirdPage onHoveredIconChange={setHoveredIcon} />
         </div>
       )}
     </>
