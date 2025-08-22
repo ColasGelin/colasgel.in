@@ -1,7 +1,7 @@
 'use client'
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Text, Center, OrbitControls, useGLTF } from '@react-three/drei'
+import { Text, Center, useGLTF, OrbitControls} from '@react-three/drei'
 import { useRef, useState, useEffect } from 'react'
 import { Group } from 'three'
 import * as THREE from 'three'
@@ -29,7 +29,6 @@ interface ModelProps {
 
 function ModelWithText({ modelPath, onModelsLoaded }: ModelProps & { onModelsLoaded?: (loaded: boolean) => void }) {
   const { scene } = useGLTF(modelPath);
-  const modelRef = useRef<Group>(null!);
   
   useEffect(() => {
     if (scene && onModelsLoaded) {
@@ -69,7 +68,7 @@ function ModelWithText({ modelPath, onModelsLoaded }: ModelProps & { onModelsLoa
       </Center>
 
       {/* Add orbit controls for interaction */}
-      {/* <OrbitControls enablePan={true} enableZoom={true} enableRotate={true} /> */}
+      <OrbitControls enablePan={false} enableZoom={false} enableRotate={false} />
     </>
   );
 }
@@ -108,7 +107,7 @@ function ChainlinkModel() {
   const particlesRef = useRef<THREE.Points>(null!);
   
   // Move particle creation to useRef so it's only created once
-  const particlePositions = useRef<Float32Array>();
+  const particlePositions = useRef<Float32Array | null>(null);
   
   // Initialize particles only once
   useEffect(() => {
@@ -180,6 +179,7 @@ function ChainlinkModel() {
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
+            args={[particlePositions.current, 3]}
             count={particlePositions.current.length / 3}
             array={particlePositions.current}
             itemSize={3}

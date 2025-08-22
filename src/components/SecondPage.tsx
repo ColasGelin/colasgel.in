@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls } from '@react-three/drei'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Group } from 'three'
 import { ChevronLeft, ChevronRight, FolderOpen, GraduationCap, RotateCcw } from 'lucide-react'
 
@@ -161,21 +161,21 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
   const currentIndex = activeTab === 'projects' ? currentProjectIndex : currentExperienceIndex;
   const currentItem = activeTab === 'projects' ? currentProject : currentExperience;
 
-  const nextItem = () => {
+  const nextItem = useCallback(() => {
     if (activeTab === 'projects') {
       setCurrentProjectIndex((prev) => (prev + 1) % projects.length);
     } else {
       setCurrentExperienceIndex((prev) => (prev + 1) % experiences.length);
     }
-  };
+  }, [activeTab]);
 
-  const prevItem = () => {
+  const prevItem = useCallback(() => {
     if (activeTab === 'projects') {
       setCurrentProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
     } else {
       setCurrentExperienceIndex((prev) => (prev - 1 + experiences.length) % experiences.length);
     }
-  };
+  }, [activeTab]);
 
   const goToItem = (index: number) => {
     if (activeTab === 'projects') {
@@ -202,7 +202,7 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [activeTab]);
+  }, [activeTab, nextItem, prevItem]);
 
   return (
     <div className={`h-screen bg-[#00000000] ${className} relative overflow-hidden`}>

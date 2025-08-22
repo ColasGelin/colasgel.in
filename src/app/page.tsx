@@ -2,7 +2,7 @@
 
 import Scene from '../components/Scene';
 import SecondPage from '../components/SecondPage';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect} from 'react';
 import { Power, Loader2 } from 'lucide-react';
 import ThirdPage from '../components/ThirdPage';
 
@@ -13,7 +13,6 @@ export default function Home() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [modelsRendered, setModelsRendered] = useState(false);
   const [showPowerButton, setShowPowerButton] = useState(false);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('down');
   const [hoveredIcon, setHoveredIcon] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -31,14 +30,11 @@ export default function Home() {
   }, [isLightOn]);
 
   useEffect(() => {
-    let lastScrollY = 0;
     
     const handleScroll = () => {
       if (isLightOn) {
         const currentScrollY = window.scrollY;
-        setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');
         setScrollY(currentScrollY);
-        lastScrollY = currentScrollY;
 
         // Update current page based on scroll position
         const viewportHeight = window.innerHeight;
@@ -100,7 +96,6 @@ export default function Home() {
             isLightOn={isLightOn}
             onModelsLoaded={setModelsLoaded}
             hoveredIcon={hoveredIcon}
-            visible={modelsRendered}
           />
       </div>
 
