@@ -155,29 +155,15 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
         >
           <div className="text-center mb-12">
             <h1 className="text</div>-4xl lg:text-5xl font-bold text-white mb-4" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>
-              Let's <span className="text-blue-400">Connect</span>
+              Let's <span className="text-blue-300">Connect</span>
             </h1>
-            <p className="text-lg text-blue-400 font-bold" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>
+            <p className="text-lg text-white font-bold" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>
               Ready to collaborate? Let's create something new together.
             </p>
           </div>
 
           {/* Contact Items */}
           <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-            <a 
-              href="mailto:cgelin.pro@gmail.com"
-              className="flex flex-col items-center space-y-4 group cursor-pointer hover:transform hover:scale-105 transition-transform p-4 rounded-xl"
-              onMouseEnter={() => handleIconHover('email')}
-              onMouseLeave={() => handleIconHover(null)}
-            >
-              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl group-hover:bg-white/20 transition-colors w-20 h-20 flex items-center justify-center border border-white/20">
-                <Mail className="w-8 h-8 text-blue-400" />
-              </div>
-              <div className="text-center">
-                <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>Email</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm break-all" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>cgelin.pro@gmail.com</p>
-              </div>
-            </a>
 
             <a 
               href="https://github.com/ColasGelin"
@@ -188,13 +174,30 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
               onMouseLeave={() => handleIconHover(null)}
             >
               <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl group-hover:bg-white/20 transition-colors w-20 h-20 flex items-center justify-center border border-white/20">
-                <Github className="w-8 h-8 text-blue-400" />
+                <Github className="w-8 h-8 text-blue-300" />
               </div>
               <div className="text-center">
                 <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>GitHub</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
+                <p className="text-white group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
               </div>
             </a>
+
+            <a 
+              href="mailto:cgelin.pro@gmail.com"
+              className="flex flex-col items-center space-y-4 group cursor-pointer hover:transform hover:scale-105 transition-transform p-4 rounded-xl"
+              onMouseEnter={() => handleIconHover('email')}
+              onMouseLeave={() => handleIconHover(null)}
+            >
+              <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl group-hover:bg-white/20 transition-colors w-20 h-20 flex items-center justify-center border border-white/20">
+                <Mail className="w-8 h-8 text-blue-300" />
+              </div>
+              <div className="text-center">
+                <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>Email</p>
+                <p className="text-white group-hover:text-white transition-colors text-sm break-all" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>cgelin.pro@gmail.com</p>
+              </div>
+            </a>
+
+            
 
             <a 
               href="https://www.linkedin.com/in/colas-gelin-8931b3189/"
@@ -205,11 +208,11 @@ export default function ThirdPage({ className = '', onHoveredIconChange }: Third
               onMouseLeave={() => handleIconHover(null)}
             >
               <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl group-hover:bg-white/20 transition-colors w-20 h-20 flex items-center justify-center border border-white/20">
-                <Linkedin className="w-8 h-8 text-blue-400" />
+                <Linkedin className="w-8 h-8 text-blue-300" />
               </div>
               <div className="text-center">
                 <p className="text-white font-medium text-lg mb-2" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>LinkedIn</p>
-                <p className="text-blue-400 group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
+                <p className="text-white group-hover:text-white transition-colors text-sm" style={{ textShadow: '0 4px 8px rgba(0, 0, 0, 0.8), 0 6px 20px rgba(0, 0, 0, 0.6)' }}>@ColasGelin</p>
               </div>
             </a>
           </div>

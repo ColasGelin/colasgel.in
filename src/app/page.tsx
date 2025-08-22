@@ -160,7 +160,7 @@ export default function Home() {
       >
         <button 
           className="text-white text-xl lg:text-2xl font-mono hover:text-gray-300 transition-all duration-300 hover:scale-110 cursor-pointer"
-          onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: window.innerHeight * 1.05, behavior: 'smooth' })}
         >
           Explore my work
         </button>
