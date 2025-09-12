@@ -103,7 +103,7 @@ export default function Home() {
       <div
         className={`fixed left-1/2 transform -translate-x-1/2 z-30 ${
           isLightOn 
-        ? 'bottom-8' 
+        ? 'bottom-2 lg:bottom-8' 
         : 'bottom-1/2 translate-y-1/2'
         } ${
           isLightOn ? 'delay-0' : 'delay-500'
@@ -142,7 +142,7 @@ export default function Home() {
       </div>
       
       {/* Bottom Button - Fixed position */}
-      <div className={`fixed bottom-40 left-1/2 transform -translate-x-1/2 z-30 ${
+      <div className={`fixed bottom-24 lg:bottom-40 left-1/2 transform -translate-x-1/2 z-30 ${
         isLightOn ? 'opacity-100' : 'opacity-0'
       } ${
         buttonOpacity < 1 ? 'delay-0' : 'delay-500'

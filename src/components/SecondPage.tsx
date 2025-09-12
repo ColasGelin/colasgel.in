@@ -205,10 +205,10 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
   }, [activeTab, nextItem, prevItem]);
 
   return (
-    <div className={`h-screen bg-[#00000000] ${className} relative overflow-hidden`}>
+    <div className={`h-screen bg-[#00000000] ${className} relative`}>
       {/* Page Title */}
-      <div className="absolute top-8 lg:top-20 left-1/2 transform -translate-x-1/2 z-10">
-        <h1 className="text-white text-3xl lg:text-6xl tracking-wider text-center champagne-font">
+      <div className="absolute top-8 lg:top-10 left-1/2 transform -translate-x-1/2 z-10 whitespace-nowrap">
+        <h1 className="text-white text-3xl lg:text-6xl text-center champagne-font">
           Build memorable experiences
         </h1>
       </div>
@@ -281,7 +281,6 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
 
               </OrbitControls>
           </Canvas>
-          
           {/* Rotation Hint */}
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 text-white/60 text-sm group">
             <RotateCcw size={16} className="animate-pulse" />
@@ -319,6 +318,36 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
             )}
           </div>
         </div>
+
+        {/* Dots Indicator - In container for mobile/tablet */}
+        <div className="block lg:hidden w-full mt-6">
+          <div className="flex flex-col items-center space-y-2">
+            <div className="flex space-x-3">
+              {currentItems.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToItem(index)}
+                  className={`w-3 h-3 transition-all duration-500 ease-in-out outline-none focus:outline-none ${
+                    index === currentIndex 
+                      ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' 
+                      : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                  style={{
+                    borderRadius: activeTab === 'education' ? '0%' : '50%',
+                    transform: 'rotate(45deg)',
+                  }}
+                />
+              ))}
+            </div>
+            <div className="flex items-center justify-center">
+              {activeTab === 'projects' ? (
+                <FolderOpen size={16} className="text-white/60" />
+              ) : (
+                <GraduationCap size={16} className="text-white/60" />
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Navigation Arrows */}
@@ -326,18 +355,18 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
         onClick={prevItem}
         className="absolute left-4 lg:left-8 top-1/2 transform -translate-y-1/2 z-30 hover:scale-150 transition-all duration-300 cursor-pointer outline-none focus:outline-none"
       >
-        <ChevronLeft size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300" />
+        <ChevronLeft size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300 active:text-gray-400 transition-colors duration-200" />
       </button>
 
       <button 
         onClick={nextItem}
         className="absolute right-4 lg:right-8 top-1/2 transform -translate-y-1/2 z-30 hover:scale-150 transition-all duration-300 cursor-pointer outline-none focus:outline-none"
       >
-        <ChevronRight size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300" />
+        <ChevronRight size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300 active:text-gray-400 transition-colors duration-400" />
       </button>
 
-      {/* Dots Indicator - Bottom Center of Page */}
-      <div className="absolute bottom-2 lg:bottom-10 left-1/2 transform -translate-x-1/2 z-30">
+      {/* Dots Indicator - Bottom Center of Page (large screens only) */}
+      <div className="hidden lg:block absolute bottom-2 left-1/2 transform -translate-x-1/2 z-30">
         <div className="flex flex-col items-center space-y-2">
           <div className="flex space-x-3">
             {currentItems.map((_, index) => (

@@ -29,43 +29,108 @@ interface ModelProps {
 
 function ModelWithText({ modelPath, onModelsLoaded }: ModelProps & { onModelsLoaded?: (loaded: boolean) => void }) {
   const { scene } = useGLTF(modelPath);
+  const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
     if (scene && onModelsLoaded) {
       onModelsLoaded(true);
     }
   }, [scene, onModelsLoaded]);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1170);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   return (
     <>
-
       {/* 3D Text */}
-      <Center position={[0.5, 0.8, 3]}>
-        <Text
-          fontSize={1.5}
-          color="#343434"
-          anchorX="center"
-          anchorY="middle"
-          font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
-        >
-          Colas Gelin
-          <meshStandardMaterial color="#343434" />
-        </Text>
-      </Center>
+      {isMobile ? (
+        <>
+          <Center position={[0.5, 1.1, 3]}>
+            <Text
+              fontSize={.8}
+              color="#343434"
+              anchorX="center"
+              anchorY="middle"
+              font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+            >
+              Colas
+              <meshStandardMaterial color="#343434" />
+            </Text>
+          </Center>
+          <Center position={[0.5, 0.4, 3]}>
+            <Text
+              fontSize={.9}
+              color="#343434"
+              anchorX="center"
+              anchorY="middle"
+              font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+            >
+              Gelin
+              <meshStandardMaterial color="#343434" />
+            </Text>
+          </Center>
+        </>
+      ) : (
+        <Center position={[0.5, 0.8, 3]}>
+          <Text
+            fontSize={1.5}
+            color="#343434"
+            anchorX="center"
+            anchorY="middle"
+            font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+          >
+            Colas Gelin
+            <meshStandardMaterial color="#343434" />
+          </Text>
+        </Center>
+      )}
 
       {/* Subtitle */}
-      <Center position={[0.5, 0, 3.05]}>
-        <Text
-          fontSize={0.4}
-          color="#666666"
-          anchorX="center"
-          anchorY="middle"
-          font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
-        >
-          Freelance developer & designer
-          <meshStandardMaterial color="#343434" />
-        </Text>
-      </Center>
+      {isMobile ? (
+        <>
+          <Center position={[0.5, -0.1, 3.05]}>
+            <Text
+              fontSize={0.25}
+              color="#666666"
+              anchorX="center"
+              anchorY="middle"
+              font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+            >
+              Freelance developer
+              <meshStandardMaterial color="#343434" />
+            </Text>
+          </Center>
+          <Center position={[0.5, -0.4, 3.05]}>
+            <Text
+              fontSize={0.25}
+              color="#666666"
+              anchorX="center"
+              anchorY="middle"
+              font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+            >
+              & designer
+              <meshStandardMaterial color="#343434" />
+            </Text>
+          </Center>
+        </>
+      ) : (
+        <Center position={[0.5, 0, 3.05]}>
+          <Text
+            fontSize={0.4}
+            color="#666666"
+            anchorX="center"
+            anchorY="middle"
+            font="/fonts/louis_george_cafe/Louis George Cafe.ttf"
+          >
+            Freelance developer & designer
+            <meshStandardMaterial color="#343434" />
+          </Text>
+        </Center>
+      )}
 
       {/* Add orbit controls for interaction */}
       <OrbitControls enablePan={false} enableZoom={false} enableRotate={false} />
@@ -91,8 +156,20 @@ function ScrollCameraController({ isLightOn, onScrollUpdate }: { isLightOn: bool
 
   useFrame(() => {
     if (isLightOn) {
-      // Convert scroll to camera Y movement (scroll down = camera goes down)
-      const targetY = -scrollY * 0.01;
+      // Get total scrollable content height
+      const totalScrollHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      const maxScrollY = totalScrollHeight - viewportHeight;
+      
+      // Calculate scroll progress (0 to 1)
+      const scrollProgress = maxScrollY > 0 ? Math.min(Math.max(scrollY / maxScrollY, 0), 1) : 0;
+      
+      // Map scroll progress to camera Y range: 0 (top) to -15.3 (chainlink model level)
+      const minCameraY = 0;
+      const maxCameraY = -15.3;
+      const targetY = minCameraY + (maxCameraY - minCameraY) * scrollProgress;
+      
+      // Smooth camera movement
       camera.position.y = targetY;
       camera.lookAt(0, targetY, 0);
     }
