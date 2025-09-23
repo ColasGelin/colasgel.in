@@ -217,26 +217,26 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
       <div className="absolute top-24 lg:top-40 left-1/2 transform -translate-x-1/2 z-20">
         <div className="flex space-x-8">
           <button
-            onClick={() => setActiveTab('projects')}
-            className={`flex items-center space-x-2 text-lg lg:text-2xl font-semibold transition-all duration-300 outline-none focus:outline-none ${
-              activeTab === 'projects'
-                ? 'text-white border-b-2 border-white pb-1'
-                : 'text-gray-400 hover:text-gray-200'
-            }`}
+        onClick={() => setActiveTab('projects')}
+        className={`flex items-center space-x-2 text-lg lg:text-2xl font-semibold transition-all duration-300 outline-none focus:outline-none cursor-pointer ${
+          activeTab === 'projects'
+            ? 'text-white border-b-2 border-white pb-1'
+            : 'text-gray-400 hover:text-gray-200'
+        }`}
           >
-            <FolderOpen size={24} className="lg:w-[28px] lg:h-[28px]" />
-            <span>Projects</span>
+        <FolderOpen size={24} className="lg:w-[28px] lg:h-[28px]" />
+        <span>Projects</span>
           </button>
           <button
-            onClick={() => setActiveTab('education')}
-            className={`flex items-center space-x-2 text-lg lg:text-2xl font-semibold transition-all duration-300 outline-none focus:outline-none ${
-              activeTab === 'education'
-                ? 'text-white border-b-2 border-white pb-1'
-                : 'text-gray-400 hover:text-gray-200'
-            }`}
+        onClick={() => setActiveTab('education')}
+        className={`flex items-center space-x-2 text-lg lg:text-2xl font-semibold transition-all duration-300 outline-none focus:outline-none cursor-pointer ${
+          activeTab === 'education'
+            ? 'text-white border-b-2 border-white pb-1'
+            : 'text-gray-400 hover:text-gray-200'
+        }`}
           >
-            <GraduationCap size={24} className="lg:w-[28px] lg:h-[28px]" />
-            <span>Journey</span>
+        <GraduationCap size={24} className="lg:w-[28px] lg:h-[28px]" />
+        <span>Journey</span>
           </button>
         </div>
       </div>
@@ -355,14 +355,14 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
         onClick={prevItem}
         className="absolute left-4 lg:left-8 top-1/2 transform -translate-y-1/2 z-30 hover:scale-150 transition-all duration-300 cursor-pointer outline-none focus:outline-none"
       >
-        <ChevronLeft size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300 active:text-gray-400 transition-colors duration-200" />
+        <ChevronLeft size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300" />
       </button>
 
       <button 
         onClick={nextItem}
         className="absolute right-4 lg:right-8 top-1/2 transform -translate-y-1/2 z-30 hover:scale-150 transition-all duration-300 cursor-pointer outline-none focus:outline-none"
       >
-        <ChevronRight size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300 active:text-gray-400 transition-colors duration-400" />
+        <ChevronRight size={40} className="lg:w-[60px] lg:h-[60px] text-white hover:text-gray-300" />
       </button>
 
       {/* Dots Indicator - Bottom Center of Page (large screens only) */}
