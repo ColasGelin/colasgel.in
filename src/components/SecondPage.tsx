@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF, OrbitControls } from '@react-three/drei'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { Group } from 'three'
-import { ChevronLeft, ChevronRight, FolderOpen, GraduationCap, RotateCcw } from 'lucide-react'
+import { ChevronLeft, ChevronRight, FolderOpen, GraduationCap, RotateCcw, Trophy } from 'lucide-react'
 
 interface SecondPageProps {
   className?: string;
@@ -33,7 +33,20 @@ interface Experience {
   baseRotation?: [number, number, number];
 }
 
-type TabType = 'projects' | 'education';
+interface Prize {
+  id: number;
+  modelPath: string;
+  title: string;
+  description: string;
+  scale: [number, number, number];
+  offsetY?: number;
+  period?: string;
+  location?: string;
+  website?: string;
+  baseRotation?: [number, number, number];
+}
+
+type TabType = 'projects' | 'education' | 'prizes';
 
 const projects: Project[] = [
   {
@@ -43,7 +56,7 @@ const projects: Project[] = [
     description: 'By combining fun with functionality, PizzaPopote’s website succeeds in working to both consumer preferences and client needs. The platform creates an engaging customer experience through the 3D-world format and boasts a set-up that enables easeful updates to content. \n(On pause - business hiatus)',
     scale: [0.014, 0.014, 0.014],
     offsetY: 0.9,
-    website: 'https://deploy-pizza-popote.vercel.app',
+    website: 'https://pizzapopote.colasgel.in',
     baseRotation: [0, 0, 0]
   },
   {
@@ -80,19 +93,8 @@ const experiences: Experience[] = [
     location: 'CumarAI',
     baseRotation: [0, Math.PI / 4, 0]
   },
-   {
-    id: 3,
-    modelPath: '/models/hackathon.glb',
-    title: 'Social Innovation Hackathon Winner',
-    description: 'Developed award-winning AI assistant mobile app for visually impaired users. Created real-time image recognition system that captures photos and provides detailed audio descriptions, enhancing accessibility and independence.',
-    scale: [1, 1, 1],
-    offsetY: 0.3,
-    period: 'June 2025',
-    location: 'La Noria, Málaga',
-    baseRotation: [0, 0, 0]
-  },
   {
-    id: 4,
+    id: 3,
     modelPath: '/models/WIP.glb',
     title: 'Master in Database architecture and data',
     description: 'Backend systems architecture and database optimization with AI/data science applications. Focus on scalable web backends and data processing systems.',
@@ -104,8 +106,34 @@ const experiences: Experience[] = [
   }
 ];
 
+const prizes: Prize[] = [
+  {
+    id: 1,
+    modelPath: '/models/hackathon.glb',
+    title: 'Social Innovation Hackathon Winner',
+    description: 'Developed award-winning AI assistant mobile app for visually impaired users. Created real-time image recognition system that captures photos and provides detailed audio descriptions, enhancing accessibility and independence.',
+    scale: [1, 1, 1],
+    offsetY: 0.3,
+    period: 'June 2025',
+    location: 'La Noria, Málaga',
+    baseRotation: [0, 0, 0]
+  },
+  {
+    id: 2,
+    modelPath: '/models/malaga/scene.glb',
+    title: 'NASA Space App Challenge 2025 Winner',
+    description: 'Won first place at NASA Space Apps Challenge with Re-Fresh, an innovative green space city simulator. Built a platform that helps urban planners simulate and visualize the impact of green zones on air quality and temperatures across seasons and years, using real environmental data to support sustainable city development.',
+    scale: [0.05, 0.05, 0.05],
+    offsetY: -0.5,
+    period: 'October 2025',
+    location: '42 Málaga',
+    website: 'https://re-fresh.earth/theproject',
+    baseRotation: [0, 0, 0]
+  }
+];
+
 // Preload all models
-[...projects, ...experiences].forEach(item => {
+[...projects, ...experiences, ...prizes].forEach(item => {
   useGLTF.preload(item.modelPath);
 });
 
@@ -154,34 +182,42 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
   const [activeTab, setActiveTab] = useState<TabType>('projects');
   const [currentProjectIndex, setCurrentProjectIndex] = useState(0);
   const [currentExperienceIndex, setCurrentExperienceIndex] = useState(0);
+  const [currentPrizeIndex, setCurrentPrizeIndex] = useState(0);
   
   const currentProject = projects[currentProjectIndex];
   const currentExperience = experiences[currentExperienceIndex];
-  const currentItems = activeTab === 'projects' ? projects : experiences;
-  const currentIndex = activeTab === 'projects' ? currentProjectIndex : currentExperienceIndex;
-  const currentItem = activeTab === 'projects' ? currentProject : currentExperience;
+  const currentPrize = prizes[currentPrizeIndex];
+  const currentItems = activeTab === 'projects' ? projects : activeTab === 'education' ? experiences : prizes;
+  const currentIndex = activeTab === 'projects' ? currentProjectIndex : activeTab === 'education' ? currentExperienceIndex : currentPrizeIndex;
+  const currentItem = activeTab === 'projects' ? currentProject : activeTab === 'education' ? currentExperience : currentPrize;
 
   const nextItem = useCallback(() => {
     if (activeTab === 'projects') {
       setCurrentProjectIndex((prev) => (prev + 1) % projects.length);
-    } else {
+    } else if (activeTab === 'education') {
       setCurrentExperienceIndex((prev) => (prev + 1) % experiences.length);
+    } else {
+      setCurrentPrizeIndex((prev) => (prev + 1) % prizes.length);
     }
   }, [activeTab]);
 
   const prevItem = useCallback(() => {
     if (activeTab === 'projects') {
       setCurrentProjectIndex((prev) => (prev - 1 + projects.length) % projects.length);
-    } else {
+    } else if (activeTab === 'education') {
       setCurrentExperienceIndex((prev) => (prev - 1 + experiences.length) % experiences.length);
+    } else {
+      setCurrentPrizeIndex((prev) => (prev - 1 + prizes.length) % prizes.length);
     }
   }, [activeTab]);
 
   const goToItem = (index: number) => {
     if (activeTab === 'projects') {
       setCurrentProjectIndex(index);
-    } else {
+    } else if (activeTab === 'education') {
       setCurrentExperienceIndex(index);
+    } else {
+      setCurrentPrizeIndex(index);
     }
   };
 
@@ -238,13 +274,24 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
         <GraduationCap size={24} className="lg:w-[28px] lg:h-[28px]" />
         <span>Journey</span>
           </button>
+          <button
+        onClick={() => setActiveTab('prizes')}
+        className={`flex items-center space-x-2 text-lg lg:text-2xl font-semibold transition-all duration-300 outline-none focus:outline-none cursor-pointer ${
+          activeTab === 'prizes'
+            ? 'text-white border-b-2 border-white pb-1'
+            : 'text-gray-400 hover:text-gray-200'
+        }`}
+          >
+        <Trophy size={24} className="lg:w-[28px] lg:h-[28px]" />
+        <span>Prizes</span>
+          </button>
         </div>
       </div>
 
       {/* Main Content Container */}
       <div className="flex flex-col lg:flex-row items-center justify-center h-full px-4 lg:px-16 pt-32 lg:pt-48">
         {/* Left side - 3D Model */}
-        <div className="w-full lg:w-[40%] h-[50vh] lg:h-[70vh] relative z-20">
+        <div className="w-full lg:w-[30%] h-[40vh] lg:h-[50vh] relative z-20">
           <Canvas 
             camera={{ position: [0, 0, 5], fov: 45 }}
             style={{ background: 'transparent' }}
@@ -274,6 +321,17 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
                 visible={index === currentExperienceIndex}
               />
             ))}
+            {activeTab === 'prizes' && prizes.map((prize, index) => (
+              <Simple3DModel 
+                key={prize.id}
+                modelPath={prize.modelPath} 
+                projectId={prize.id} 
+                scale={prize.scale}
+                offsetY={prize.offsetY}
+                baseRotation={prize.baseRotation}
+                visible={index === currentPrizeIndex}
+              />
+            ))}
             <OrbitControls 
               enableZoom={false}
               enablePan={false}
@@ -293,10 +351,10 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
         <div className="w-full lg:w-[40%] flex items-center justify-center">
           <div className="w-full max-w-md text-center">
             <h2 className="text-white text-3xl lg:text-4xl font-bold mb-6">{currentItem.title}</h2>
-            {activeTab === 'education' && 'period' in currentItem && (
+            {(activeTab === 'education' || activeTab === 'prizes') && 'period' in currentItem && (
               <p className="text-blue-400 text-lg lg:text-xl font-semibold">{currentItem.period}</p>
             )}
-            {activeTab === 'education' && 'location' in currentItem && currentItem.location && (
+            {(activeTab === 'education' || activeTab === 'prizes') && 'location' in currentItem && currentItem.location && (
               <p className="text-gray-300 text-base lg:text-lg mb-4 italic">{currentItem.location}</p>
             )}
             <p className="text-gray-400 text-base lg:text-lg mb-8 leading-relaxed">
@@ -307,7 +365,7 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
                 </span>
               ))}
             </p>
-            {activeTab === 'projects' && 'website' in currentItem && currentItem.website && (
+            {(activeTab === 'projects' || activeTab === 'prizes') && 'website' in currentItem && currentItem.website && (
               <button 
                 onClick={() => window.open(currentItem.website, '_blank')}
                 className="text-white text-xl lg:text-2xl font-mono hover:text-gray-300 transition-all duration-300 hover:scale-110 cursor-pointer"
@@ -328,13 +386,13 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
                   key={index}
                   onClick={() => goToItem(index)}
                   className={`w-3 h-3 transition-all duration-500 ease-in-out outline-none focus:outline-none ${
-                    index === currentIndex 
-                      ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' 
-                      : 'bg-white/30 hover:bg-white/50'
+                  index === currentIndex 
+                    ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' 
+                    : 'bg-white/30 hover:bg-white/50'
                   }`}
                   style={{
-                    borderRadius: activeTab === 'education' ? '0%' : '50%',
-                    transform: 'rotate(45deg)',
+                    borderRadius: activeTab === 'projects' ? '50%' : '0%',
+                    transform: activeTab === 'prizes' ? 'none' : 'rotate(45deg)',
                   }}
                 />
               ))}
@@ -342,8 +400,10 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
             <div className="flex items-center justify-center">
               {activeTab === 'projects' ? (
                 <FolderOpen size={16} className="text-white/60" />
-              ) : (
+              ) : activeTab === 'education' ? (
                 <GraduationCap size={16} className="text-white/60" />
+              ) : (
+                <Trophy size={16} className="text-white/60" />
               )}
             </div>
           </div>
@@ -379,8 +439,8 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
                     : 'bg-white/30 hover:bg-white/50'
                 }`}
                 style={{
-                  borderRadius: activeTab === 'education' ? '0%' : '50%',
-                  transform: 'rotate(45deg)',
+                  borderRadius: activeTab === 'projects' ? '50%' : '0%',
+                  transform: activeTab === 'prizes' ? 'none' : 'rotate(45deg)',
                 }}
               />
             ))}
@@ -388,8 +448,10 @@ export default function SecondPage({ className = '' }: SecondPageProps) {
           <div className="flex items-center justify-center">
             {activeTab === 'projects' ? (
               <FolderOpen size={16} className="text-white/60" />
-            ) : (
+            ) : activeTab === 'education' ? (
               <GraduationCap size={16} className="text-white/60" />
+            ) : (
+              <Trophy size={16} className="text-white/60" />
             )}
           </div>
         </div>
