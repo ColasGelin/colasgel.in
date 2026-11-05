@@ -19,7 +19,11 @@ export function EntryList({
       {entries.map((entry) => {
         const selected = entry.id === selectedId;
         return (
-          <li key={entry.id} className="border-b border-line">
+          <li
+            key={entry.id}
+            id={`entry-${entry.id}`}
+            className="scroll-mt-2 border-b border-line"
+          >
             <button
               type="button"
               aria-pressed={selected}

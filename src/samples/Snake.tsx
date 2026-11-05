@@ -35,6 +35,8 @@ export default function Snake({
   onError,
 }: SampleProps<Extract<SampleSpec, { kind: "snake" }>>) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const game = useRef<Game | null>(null);
+  const pausedTicks = useRef(0);
   const [checkpoint, setCheckpoint] = useState(CHECKPOINTS.length - 1);
   const [weights, setWeights] = useState<Weights | null>(null);
   const [score, setScore] = useState({ current: 3, best: 3 });
@@ -65,28 +67,32 @@ export default function Snake({
 
   useEffect(() => {
     if (!weights) return;
-    let game = createGame(Math.random);
-    let pausedTicks = 0;
-    draw(canvas.current, game);
-    if (!playing) return;
+    game.current = createGame(Math.random);
+    pausedTicks.current = 0;
+    draw(canvas.current, game.current);
+  }, [weights]);
+
+  useEffect(() => {
+    if (!weights || !playing) return;
 
     const timer = setInterval(() => {
-      if (game.over) {
-        pausedTicks += 1;
-        if (pausedTicks >= PAUSE_TICKS) {
-          game = createGame(Math.random);
-          pausedTicks = 0;
+      const current = game.current!;
+      if (current.over) {
+        pausedTicks.current += 1;
+        if (pausedTicks.current >= PAUSE_TICKS) {
+          game.current = createGame(Math.random);
+          pausedTicks.current = 0;
           setScore((s) => ({ ...s, current: 3 }));
         }
       } else {
-        game = step(game, nextAction(weights, game));
-        const length = game.length;
+        game.current = step(current, nextAction(weights, current));
+        const length = game.current.length;
         setScore((s) => ({
           current: length,
           best: Math.max(s.best, length),
         }));
       }
-      draw(canvas.current, game);
+      draw(canvas.current, game.current!);
     }, TICK_MS);
     return () => clearInterval(timer);
   }, [weights, playing]);

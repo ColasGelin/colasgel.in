@@ -78,6 +78,77 @@ describe("ReFresh", () => {
     expect(screen.getByText(/Couldn't load that month/)).toBeInTheDocument();
   });
 
+  test("the picker shows a new month while it loads", async () => {
+    render(<ReFresh spec={spec} onError={vi.fn()} />);
+    await settle();
+    let finish: (value: unknown) => void = () => {};
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise((resolve) => (finish = resolve))),
+    );
+    fireEvent.change(screen.getByLabelText("Month"), {
+      target: { value: "2023-06" },
+    });
+    await settle();
+    expect(screen.getByLabelText("Month")).toHaveValue("2023-06");
+    await act(async () => {
+      finish({ ok: true, text: async () => "lat,lon,temp\n34,47,10\n" });
+    });
+    expect(screen.getByText(/10\.0 °C/)).toBeInTheDocument();
+  });
+
+  test("the latest pick wins when months finish out of order", async () => {
+    render(<ReFresh spec={spec} onError={vi.fn()} />);
+    await settle();
+    const pending: ((value: unknown) => void)[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise((resolve) => pending.push(resolve))),
+    );
+    const grid = (temp: number) => ({
+      ok: true,
+      text: async () => `lat,lon,temp\n34,47,${temp}\n`,
+    });
+    const select = screen.getByLabelText("Month");
+    fireEvent.change(select, { target: { value: "2023-06" } });
+    fireEvent.change(select, { target: { value: "2023-07" } });
+    await act(async () => pending[1](grid(30)));
+    await act(async () => pending[0](grid(10)));
+    expect(screen.getByText(/30\.0 °C/)).toBeInTheDocument();
+    expect(select).toHaveValue("2023-07");
+  });
+
+  test("a stale failure shows no message", async () => {
+    render(<ReFresh spec={spec} onError={vi.fn()} />);
+    await settle();
+    const pending: ((value: unknown) => void)[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => new Promise((resolve) => pending.push(resolve))),
+    );
+    const select = screen.getByLabelText("Month");
+    fireEvent.change(select, { target: { value: "2023-06" } });
+    fireEvent.change(select, { target: { value: "2023-07" } });
+    await act(async () =>
+      pending[1]({ ok: true, text: async () => "lat,lon,temp\n34,47,30\n" }),
+    );
+    await act(async () => pending[0]({ ok: false, status: 500 }));
+    expect(
+      screen.queryByText(/Couldn't load that month/),
+    ).not.toBeInTheDocument();
+  });
+
+  test("a failed pick puts the picker back on the loaded month", async () => {
+    render(<ReFresh spec={spec} onError={vi.fn()} />);
+    await settle();
+    stubFetch(["a.csv"]);
+    fireEvent.change(screen.getByLabelText("Month"), {
+      target: { value: "2023-06" },
+    });
+    await settle();
+    expect(screen.getByLabelText("Month")).toHaveValue("2023-07");
+  });
+
   test("a failed first load reports an error", async () => {
     stubFetch(["b.csv"]);
     const onError = vi.fn();

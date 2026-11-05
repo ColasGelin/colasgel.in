@@ -1,8 +1,15 @@
 // Fails if the built site contains private data or secrets.
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { extname, join } from "node:path";
 
+// .check-export-terms is gitignored, so the private values never enter this repo.
+const TERMS_FILE = ".check-export-terms";
 const BANNED = ["API_KEY", "sk-ant"];
+if (existsSync(TERMS_FILE)) {
+  BANNED.push(...readFileSync(TERMS_FILE, "utf8").split("\n").filter(Boolean));
+} else {
+  console.warn(`${TERMS_FILE} not found: checking generic secrets only`);
+}
 const TEXT = new Set([".html", ".js", ".json", ".css", ".txt"]);
 
 function* files(dir) {

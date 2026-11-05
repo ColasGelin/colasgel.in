@@ -31,9 +31,8 @@ describe("entries", () => {
 describe("content rules", () => {
   test("no private data", () => {
     const text = JSON.stringify(entries) + JSON.stringify(profile);
-    for (const banned of ["salary"]) {
-      expect(text).not.toContain(banned);
-    }
+    expect(text).not.toMatch(/salary/i);
+    expect(text).not.toMatch(/\+\d{2}[\s\d]{7,}/);
   });
 
   test("Master only appears as RNCP 7 (Master's level)", () => {

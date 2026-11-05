@@ -65,6 +65,14 @@ describe("Portfolio", () => {
     expect(screen.getByRole("heading", { name: "CumarAI" })).toBeVisible();
   });
 
+  test("selecting a row on desktop does not scroll", async () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    render(<Portfolio />);
+    await userEvent.click(screen.getByRole("button", { name: /CumarAI/ }));
+    expect(scroll).not.toHaveBeenCalled();
+  });
+
   test("filters work from the keyboard", async () => {
     render(<Portfolio />);
     screen.getByRole("button", { name: "All" }).focus();
@@ -146,6 +154,20 @@ describe("Portfolio on a phone", () => {
     expect(
       within(list).getByRole("heading", { name: "CumarAI" }),
     ).toBeVisible();
+  });
+
+  test("opening a row scrolls that row to the top", async () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    render(<Portfolio />);
+    expect(scroll).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole("button", { name: /Re-Fresh/ }));
+    await userEvent.click(screen.getByRole("button", { name: /Lanoria/ }));
+    expect(scroll).toHaveBeenCalledTimes(2);
+    expect(scroll.mock.contexts[1]).toBe(
+      screen.getByRole("button", { name: /Lanoria/ }).closest("li"),
+    );
+    expect(scroll).toHaveBeenLastCalledWith({ block: "start" });
   });
 
   test("tapping the open row closes it", async () => {

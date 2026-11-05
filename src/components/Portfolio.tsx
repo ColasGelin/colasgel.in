@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { entries } from "@/content/entries";
 import { profile } from "@/content/profile";
 import { filterEntries, resolveSelection } from "@/content/select";
@@ -17,6 +17,13 @@ export function Portfolio() {
   const [closed, setClosed] = useState(true);
 
   const selected = entries.find((entry) => entry.id === selectedId)!;
+
+  useEffect(() => {
+    if (!isPhone || closed) return;
+    document
+      .getElementById(`entry-${selectedId}`)
+      ?.scrollIntoView({ block: "start" });
+  }, [isPhone, closed, selectedId]);
 
   function changeFilter(next: Filter) {
     setFilter(next);

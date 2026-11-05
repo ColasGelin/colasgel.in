@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SampleSpec } from "@/content/types";
 import type { SampleProps } from ".";
 import { averageTemp, type Cell, type Zone } from "./refresh/cooling";
@@ -20,6 +20,8 @@ export default function ReFresh({
   const [cells, setCells] = useState<Cell[] | null>(null);
   const [zones, setZones] = useState<Zone[]>([]);
   const [monthFailed, setMonthFailed] = useState(false);
+  const [pendingMonthId, setPendingMonthId] = useState<string | null>(null);
+  const latestRequest = useRef(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,14 +45,19 @@ export default function ReFresh({
 
   async function changeMonth(id: string) {
     const month = months.find((m) => m.id === id)!;
+    const request = ++latestRequest.current;
+    setPendingMonthId(id);
+    setMonthFailed(false);
     try {
       const grid = await fetchGrid(month);
+      if (request !== latestRequest.current) return;
       setCells(grid);
       setMonthId(id);
-      setMonthFailed(false);
     } catch {
+      if (request !== latestRequest.current) return;
       setMonthFailed(true);
     }
+    setPendingMonthId(null);
   }
 
   if (!cells) {
@@ -72,7 +79,7 @@ export default function ReFresh({
         <label className="flex items-center gap-2 text-muted">
           Month
           <select
-            value={monthId}
+            value={pendingMonthId ?? monthId}
             onChange={(event) => changeMonth(event.target.value)}
             className={controls}
           >

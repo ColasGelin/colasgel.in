@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, type ThreeEvent } from "@react-three/fiber";
+import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { Color, Object3D, type InstancedMesh } from "three";
 import {
@@ -24,6 +24,7 @@ function hue(normalized: number): number {
 
 function Cells({ cells, zones, onPlace }: SceneProps) {
   const mesh = useRef<InstancedMesh>(null);
+  const invalidate = useThree((state) => state.invalidate);
   const [min, max] = useMemo(() => {
     const temps = cells.map((cell) => cell.temp);
     return [Math.min(...temps), Math.max(...temps)];
@@ -47,7 +48,8 @@ function Cells({ cells, zones, onPlace }: SceneProps) {
     });
     mesh.current!.instanceMatrix.needsUpdate = true;
     mesh.current!.instanceColor!.needsUpdate = true;
-  }, [cells, zones, min, max]);
+    invalidate();
+  }, [cells, zones, min, max, invalidate]);
 
   return (
     <instancedMesh
@@ -74,6 +76,7 @@ type SceneProps = {
 export default function HeatScene({ cells, zones, onPlace }: SceneProps) {
   return (
     <Canvas
+      frameloop="demand"
       camera={{ position: [0, 235, 205], fov: 45 }}
       className="aspect-[4/3] w-full rounded border border-line bg-surface"
     >

@@ -1,6 +1,12 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import Snake from "./Snake";
+import { createGame } from "./snake/engine";
+
+vi.mock("./snake/engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./snake/engine")>();
+  return { ...actual, createGame: vi.fn(actual.createGame) };
+});
 
 const spec = { kind: "snake", caption: "c" } as const;
 const weights = {
@@ -19,6 +25,7 @@ const tick = (ms: number) =>
 describe("Snake", () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.mocked(createGame).mockClear();
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
     vi.stubGlobal(
       "fetch",
@@ -27,7 +34,7 @@ describe("Snake", () => {
   });
   afterEach(() => {
     vi.useRealTimers();
-    vi.restoreAllMocks();
+    vi.mocked(HTMLCanvasElement.prototype.getContext).mockRestore();
   });
 
   test("loads the most trained checkpoint first", async () => {
@@ -51,6 +58,24 @@ describe("Snake", () => {
     await tick(0);
     expect(fetch).toHaveBeenCalledWith("/samples/snake/sess-1.json");
     expect(screen.getByText("1 session")).toBeInTheDocument();
+  });
+
+  test("pausing and resuming keeps the current game", async () => {
+    render(<Snake spec={spec} onError={vi.fn()} />);
+    await tick(0);
+    expect(createGame).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    await tick(0);
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    await tick(0);
+    expect(createGame).toHaveBeenCalledTimes(1);
+  });
+
+  test("a finished game restarts by itself", async () => {
+    render(<Snake spec={spec} onError={vi.fn()} />);
+    await tick(0);
+    await tick(10000);
+    expect(vi.mocked(createGame).mock.calls.length).toBeGreaterThan(1);
   });
 
   test("a failed weights fetch reports an error", async () => {
