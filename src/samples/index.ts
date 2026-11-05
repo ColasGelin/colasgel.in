@@ -22,7 +22,7 @@ const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
   replay: sample<"replay">(() => import("./Replay")),
   gallery: sample<"gallery">(() => import("./Gallery")),
   snake: sample<"snake">(() => import("./Snake")),
-  refresh: dynamic(() => import("./Stub"), { ssr: false }),
+  refresh: sample<"refresh">(() => import("./ReFresh")),
 };
 
 export function loadSample(spec: SampleSpec) {
