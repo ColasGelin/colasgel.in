@@ -1,306 +1,32 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #171717;
+  --bg: #0a0b0d;
+  --surface: #121418;
+  --line: #24272e;
+  --text: #e8eaed;
+  --muted: #8f96a3;
+  --accent: #6ee7b7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  /* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
 }
 
-/* Hide scrollbar for WebKit browsers */
-body::-webkit-scrollbar {
-  display: none;
-}
-
-/* Also hide scrollbars for any other scrollable elements */
-html {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
-}
-
-html::-webkit-scrollbar {
-  display: none;
-}
-
-/* BarberChop Font */
-@font-face {
-  font-family: 'BarberChop';
-  src: url('/fonts/barber_chop/BarberChop.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Brunson Fonts */
-@font-face {
-  font-family: 'Brunson';
-  src: url('/fonts/brunson/Brunson.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'BrunsonRough';
-  src: url('/fonts/brunson/Brunson Rough.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Catchye Font */
-@font-face {
-  font-family: 'Catchye';
-  src: url('/fonts/catchye/Catchye.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Champagne & Limousines Fonts */
-@font-face {
-  font-family: 'ChampagneLimousines';
-  src: url('/fonts/champagne_limousines/Champagne & Limousines.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'ChampagneLimousines';
-  src: url('/fonts/champagne_limousines/Champagne & Limousines Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'ChampagneLimousines';
-  src: url('/fonts/champagne_limousines/Champagne & Limousines Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'ChampagneLimousines';
-  src: url('/fonts/champagne_limousines/Champagne & Limousines Bold Italic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-/* Dream Orphans Fonts */
-@font-face {
-  font-family: 'DreamOrphans';
-  src: url('/fonts/dream_orphans/Dream Orphans.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DreamOrphans';
-  src: url('/fonts/dream_orphans/Dream Orphans Bd.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'DreamOrphans';
-  src: url('/fonts/dream_orphans/Dream Orphans It.otf') format('opentype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'DreamOrphans';
-  src: url('/fonts/dream_orphans/Dream Orphans Bd It.otf') format('opentype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-/* Kiona Fonts */
-@font-face {
-  font-family: 'Kiona';
-  src: url('/fonts/kiona_2/Kiona-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Kiona';
-  src: url('/fonts/kiona_2/Kiona-Itallic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-/* Louis George Cafe Fonts */
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe Italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe Light Italic.ttf') format('truetype');
-  font-weight: 300;
-  font-style: italic;
-}
-
-@font-face {
-  font-family: 'LouisGeorgeCafe';
-  src: url('/fonts/louis_george_cafe/Louis George Cafe Bold Italic.ttf') format('truetype');
-  font-weight: bold;
-  font-style: italic;
-}
-
-/* Quicksand Fonts */
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Book.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Bold.otf') format('opentype');
-  font-weight: bold;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Book_Oblique.otf') format('opentype');
-  font-weight: normal;
-  font-style: oblique;
-}
-
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Light_Oblique.otf') format('opentype');
-  font-weight: 300;
-  font-style: oblique;
-}
-
-@font-face {
-  font-family: 'Quicksand';
-  src: url('/fonts/quicksand/Quicksand_Bold_Oblique.otf') format('opentype');
-  font-weight: bold;
-  font-style: oblique;
-}
-
-@font-face {
-  font-family: 'QuicksandDash';
-  src: url('/fonts/quicksand/Quicksand_Dash.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Stagera Font */
-@font-face {
-  font-family: 'Stagera';
-  src: url('/fonts/stagera/Stagera.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Times Sans Serif Font */
-@font-face {
-  font-family: 'TimesSansSerif';
-  src: url('/fonts/times_sans_serif/TIMESS__.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Font utility classes */
-.barber-font {
-  font-family: 'BarberChop', sans-serif;
-}
-
-.brunson-font {
-  font-family: 'Brunson', sans-serif;
-}
-
-.brunson-rough-font {
-  font-family: 'BrunsonRough', sans-serif;
-}
-
-.catchye-font {
-  font-family: 'Catchye', sans-serif;
-}
-
-.champagne-font {
-  font-family: 'ChampagneLimousines', sans-serif;
-}
-
-.dream-font {
-  font-family: 'DreamOrphans', sans-serif;
-}
-
-.kiona-font {
-  font-family: 'Kiona', sans-serif;
-}
-
-.louis-george-font {
-  font-family: 'LouisGeorgeCafe', sans-serif;
-}
-
-.quick-font {
-  font-family: 'Quicksand', sans-serif;
-}
-
-.quicksand-dash-font {
-  font-family: 'QuicksandDash', sans-serif;
-}
-
-.stagera-font {
-  font-family: 'Stagera', sans-serif;
-}
-
-.times-sans-serif-font {
-  font-family: 'TimesSansSerif', sans-serif;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
