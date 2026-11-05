@@ -12,15 +12,31 @@ export const profile = {
     },
     { label: "Email", href: "mailto:cgelin.pro@gmail.com" },
   ],
-  stack: [
-    "Python",
-    "TypeScript",
-    "LangGraph",
-    "RAG",
-    "MCP",
-    "Kubernetes",
-    "Docker",
-    "PyTorch",
+  skills: [
+    {
+      group: "LLM systems",
+      items: ["RAG", "Agents", "MCP", "LangChain", "LangGraph", "LoRA fine-tuning", "Ollama"],
+    },
+    {
+      group: "Machine learning",
+      items: ["PyTorch", "scikit-learn", "OpenCV", "YOLO"],
+    },
+    {
+      group: "Infrastructure",
+      items: ["Kubernetes", "K3s", "Argo CD", "Docker", "GitHub Actions"],
+    },
+    {
+      group: "Data and backend",
+      items: ["Qdrant", "Milvus", "PostgreSQL", "Redis", "FastAPI", "Django"],
+    },
+    {
+      group: "Languages",
+      items: ["Python", "TypeScript", "JavaScript", "SQL", "C", "C++"],
+    },
+    { group: "Frontend", items: ["React", "Next.js", "Tailwind"] },
   ],
-  languages: ["French", "Spanish", "English"],
+  languages: ["French (native)", "Spanish (C1)", "English (C1)"],
+  certifications: [
+    "Claude Academy, Anthropic: MCP Introduction and Advanced topics, Claude Code in action (Sep 2026)",
+  ],
 };

@@ -24,7 +24,7 @@ One page, with no intro animation and no separate project pages.
 1. **Header:** "Colas Gelin", "AI Engineer", a one-line summary of the work, "Available January 2027 · Málaga
    or remote EU", and links to GitHub, LinkedIn, and email.
 2. **Work area:** filter row, then the entry list on the left and the stage on the right.
-3. **Compact block:** two lines: main stack and languages.
+3. **Compact block:** skills, spoken languages, and certifications.
 
 The header starts large and shrinks to a thin sticky bar after a short scroll, or on the first click on a row or
 filter. It stays compact under reduced motion. Each entry has at most 3 short points and 4 stack tags.
@@ -134,7 +134,7 @@ sample has a text equivalent in the stage.
 
 - Skill filters, deep links to entries, separate project pages, a blog, and analytics.
 - French and Spanish versions. The site is English only.
-- Certifications and interests.
+- Interests.
 - A "Download CV" link, until a version without the phone number exists.
 - Changes to hosting or to `pizzapopote.colasgel.in`.
 - Fixing the CV itself. The differences found are recorded under Content rules.
