@@ -1,6 +1,8 @@
 # colasgel.in
 
-One-page portfolio, built with Next.js as a static export.
+Source code of my portfolio: **[colasgel.in](https://www.colasgel.in)**
+
+A one-page site built with Next.js, React and Three.js as a static export, with tests in Vitest.
 
 ```bash
 npm run dev     # http://localhost:3001
