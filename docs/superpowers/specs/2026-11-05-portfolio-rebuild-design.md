@@ -53,9 +53,9 @@ Listed in All order. Filter membership is in the last column.
 | Inception-of-Wisdom | 42 | Diagram | none | Projects, 42 |
 | Inception-of-Context | 42 | Diagram | none | Projects, 42 |
 | Re-Fresh, NASA Space Apps Málaga | 1st place | Live | github.com/ColasGelin/Re-fresh.earth | Hackathons |
-| Lanoria Hackathon | 1st place | Text, then recorded | github.com/ColasGelin/Hackathon-LaNoria | Hackathons |
+| Lanoria Hackathon | 1st place | Diagram | github.com/ColasGelin/Hackathon-LaNoria | Hackathons |
 | Supermarket-Queue-Manager | personal | Static images | github.com/ColasGelin/Supermarket-Queue-Manager | Projects |
-| jobcopilot | personal | Recorded run | github.com/ColasGelin/jobcopilot | Projects |
+| jobcopilot | personal | Diagram | github.com/ColasGelin/jobcopilot | Projects |
 | Learn2Slither | 42 | Live | github.com/ColasGelin/Learn2Slither | Projects, 42 |
 | AI Integration Developer, CumarAI (Sep 2024 – Mar 2025) | work | Text | none | Work |
 | Inception-of-Things | 42 | Text | github.com/ColasGelin/Inception-of-Things | Projects, 42 |
@@ -94,10 +94,10 @@ reduced motion enabled.
   fetched one month at a time. The sample's initial download, including any city model, stays under 3 MB. If
   the 17.7 MB model can't be compressed to fit, the heat grid renders without buildings. Three.js loads only
   with this sample. The processed grid values are sanity-checked before use.
-- **Diagram:** a small animation with its own form per entry (graph, loop, terminal, cluster, phone, documents, timeline).
+- **Diagram:** a small animation with its own form per entry (graph, loop, RAG motion, cluster, phone, agents, funnel, Holy Graph-style map).
   A recorded run can replace it later by changing that entry's content only.
-- **Recorded run:** plays a stored list of timestamped steps, with play, pause, and step controls. Used for
-  jobcopilot now, and for Lanoria when real outputs are captured. Recordings contain real output only, with
+- **Recorded run:** plays a stored list of timestamped steps, with play, pause, and step controls. Available for
+  Lanoria when real outputs are captured. Recordings contain real output only, with
   personal data removed.
 - **Static images (Supermarket-Queue-Manager):** the repo's validation images with predictions, plus a short
   description of the agent. Replaced by a recorded run if one is captured.

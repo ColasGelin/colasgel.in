@@ -74,7 +74,7 @@ export const entries: Entry[] = [
       kind: "diagram",
       id: "context",
       caption:
-        "A codebase is indexed into a vector store, questions are answered from retrieved code, and patches are validated or rolled back.",
+        "A question searches the vector store, matching code chunks light up, and they feed the answer.",
     },
   },
   {
@@ -179,9 +179,10 @@ export const entries: Entry[] = [
     ],
     link: repo("jobcopilot"),
     sample: {
-      kind: "replay",
-      src: "/samples/jobcopilot/run.json",
-      caption: "Totals from one real daily run, played back step by step.",
+      kind: "diagram",
+      id: "jobcopilot",
+      caption:
+        "Totals from one real daily run: 578 offers collected, 27 kept and scored, 5 drafted, none submitted automatically.",
     },
   },
   {
@@ -214,7 +215,7 @@ export const entries: Entry[] = [
     dates: "Rota, Cádiz · Sep 2024 – Mar 2025",
     filters: ["work"],
     built: [
-      "AI agents connected to backend APIs",
+      "Document, content and statistics agents",
       "RAG chatbot over clients' Google Drive documents",
       "PostgreSQL databases and Next.js features",
     ],
@@ -228,7 +229,7 @@ export const entries: Entry[] = [
       kind: "diagram",
       id: "cumarai",
       caption:
-        "Client documents are indexed into Milvus so a chatbot can answer from them.",
+        "LangGraph coordinates the document, content and statistics agents.",
     },
   },
   {
@@ -239,21 +240,21 @@ export const entries: Entry[] = [
     filters: ["projects", "42"],
     built: [
       "Kubernetes cluster with K3s, K3d and Vagrant",
-      "Multi-app ingress routing",
+      "Self-hosted GitLab running inside the cluster",
       "GitOps deployment with Argo CD",
     ],
     stack: [
       "Kubernetes",
       "K3s",
+      "GitLab",
       "Argo CD",
-      "Vagrant",
     ],
     link: repo("Inception-of-Things"),
     sample: {
       kind: "diagram",
       id: "iot",
       caption:
-        "Argo CD syncs a Git repo to a K3s cluster, rolling out apps behind one ingress.",
+        "A push goes to GitLab, and Argo CD rolls out apps behind one ingress, all inside a K3s cluster.",
     },
   },
   {
@@ -293,6 +294,7 @@ export const entries: Entry[] = [
     built: [
       "Peer-to-peer and project-based, with no teachers",
       "Every project meant learning something new alone",
+      "Progress by levels and peer review, not by years",
     ],
     stack: [
       "Python",
@@ -304,7 +306,7 @@ export const entries: Entry[] = [
       kind: "diagram",
       id: "school42",
       caption:
-        "A timeline from Lyon in November 2022, to Málaga, to the expected RNCP 7 in May 2027.",
+        "A map in the style of the 42 Holy Graph: the Piscine at the centre, then the inner circle and outer treks of projects.",
     },
   },
 ];

@@ -44,6 +44,16 @@ describe("entries", () => {
     expect(JSON.stringify(entries)).not.toContain("MLOps-Waiting-Queue");
   });
 
+  test("Inception-of-Things credits GitLab", () => {
+    const text = JSON.stringify(entries.find((e) => e.id === "iot"));
+    expect(text).toContain("GitLab");
+  });
+
+  test("CumarAI names its agents", () => {
+    const text = JSON.stringify(entries.find((e) => e.id === "cumarai"));
+    expect(text).toMatch(/document, content and statistics agents/i);
+  });
+
   test("every link is https", () => {
     for (const e of entries) {
       if (e.link) expect(e.link.href).toMatch(/^https:\/\//);

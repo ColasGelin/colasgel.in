@@ -5,12 +5,13 @@ import Diagram, { DIAGRAM_IDS } from "./Diagram";
 import { cyberbridgeGraph } from "./diagrams/graphData";
 
 describe("Diagram", () => {
-  test("covers all seven diagrams", () => {
+  test("covers all eight diagrams", () => {
     expect([...DIAGRAM_IDS].sort()).toEqual([
       "context",
       "cumarai",
       "cyberbridge",
       "iot",
+      "jobcopilot",
       "lanoria",
       "school42",
       "wisdom",
@@ -30,6 +31,32 @@ describe("Diagram", () => {
       "data-diagram",
       id,
     );
+  });
+
+  test.each([
+    ["iot", ["GitLab", "Argo CD", "K3s cluster"]],
+    ["cumarai", ["Document agent", "Content agent", "Statistics agent", "LangGraph"]],
+    ["jobcopilot", ["578", "27", "5", "0"]],
+    ["school42", ["Piscine", "Inner circle", "Outer treks", "No teachers"]],
+  ] as const)("%s shows its parts", (id, labels) => {
+    render(
+      <Diagram spec={{ kind: "diagram", id, caption: "c" }} onError={vi.fn()} />,
+    );
+    for (const label of labels) {
+      expect(screen.getAllByText(label).length).toBeGreaterThan(0);
+    }
+  });
+
+  test("context shows the RAG flow", () => {
+    render(
+      <Diagram
+        spec={{ kind: "diagram", id: "context", caption: "c" }}
+        onError={vi.fn()}
+      />,
+    );
+    for (const label of ["Question", "Vector store", "Answer"]) {
+      expect(screen.getByText(label)).toBeInTheDocument();
+    }
   });
 
   test("each diagram draws something different", () => {

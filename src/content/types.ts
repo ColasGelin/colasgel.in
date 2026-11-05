@@ -7,6 +7,7 @@ export type DiagramId =
   | "iot"
   | "lanoria"
   | "cumarai"
+  | "jobcopilot"
   | "school42";
 
 export type SampleSpec =

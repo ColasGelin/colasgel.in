@@ -1,22 +1,24 @@
 import type { ComponentType } from "react";
 import type { DiagramId, SampleSpec } from "@/content/types";
 import type { SampleProps } from ".";
+import { Agents } from "./diagrams/Agents";
 import { Cluster } from "./diagrams/Cluster";
-import { Documents } from "./diagrams/Documents";
+import { Funnel } from "./diagrams/Funnel";
 import { Graph } from "./diagrams/Graph";
 import { Loop } from "./diagrams/Loop";
 import { Phone } from "./diagrams/Phone";
-import { Steps } from "./diagrams/Steps";
-import { Timeline } from "./diagrams/Timeline";
+import { Rag } from "./diagrams/Rag";
+import { School } from "./diagrams/School";
 
 const views: Record<DiagramId, ComponentType> = {
   cyberbridge: Graph,
   wisdom: Loop,
-  context: Steps,
+  context: Rag,
   iot: Cluster,
   lanoria: Phone,
-  cumarai: Documents,
-  school42: Timeline,
+  cumarai: Agents,
+  jobcopilot: Funnel,
+  school42: School,
 };
 
 export const DIAGRAM_IDS = Object.keys(views) as DiagramId[];
