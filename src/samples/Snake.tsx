@@ -120,7 +120,7 @@ export default function Snake({
           aria-valuetext={`${sessions} sessions`}
           className="min-w-0 flex-1 accent-(--accent)"
         />
-        <span className="w-24 shrink-0 text-right">
+        <span className="shrink-0 text-right whitespace-nowrap">
           {sessions.toLocaleString("en-US")} session{sessions > 1 ? "s" : ""}
         </span>
       </div>

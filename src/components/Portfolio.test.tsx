@@ -44,7 +44,7 @@ describe("Portfolio", () => {
     expect(
       screen.getByRole("button", { name: /CyberBridge/ }),
     ).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByText(/An MCP server that lets agents/)).toBeVisible();
+    expect(screen.getByText(/RAG pipelines, agents and an MCP server/)).toBeVisible();
     expect(await screen.findByText("diagram sample")).toBeInTheDocument();
   });
 
@@ -85,10 +85,9 @@ describe("Portfolio", () => {
     );
   });
 
-  test("shows the Also built line with every filter", async () => {
+  test("has no Also built paragraph", () => {
     render(<Portfolio />);
-    await userEvent.click(screen.getByRole("button", { name: "Work" }));
-    expect(screen.getByText(/Also built:/)).toBeVisible();
+    expect(screen.queryByText(/Also built/)).not.toBeInTheDocument();
   });
 
   test("only the latest selected sample appears when loads finish out of order", async () => {
@@ -112,6 +111,74 @@ describe("Portfolio", () => {
     });
     expect(screen.getByText("snake sample")).toBeInTheDocument();
     expect(screen.queryByText("diagram sample")).not.toBeInTheDocument();
+  });
+});
+
+describe("name header", () => {
+  const scrollTo = vi.fn();
+  const scrollPageTo = (y: number) => {
+    Object.defineProperty(window, "scrollY", { value: y, configurable: true });
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+  };
+  const header = () => screen.getByRole("banner");
+
+  beforeEach(() => {
+    scrollTo.mockClear();
+    window.scrollTo = scrollTo;
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+  });
+
+  test("starts large", () => {
+    render(<Portfolio />);
+    expect(header()).toHaveAttribute("data-compact", "false");
+  });
+
+  test("shrinks on scroll and grows back at the top", () => {
+    render(<Portfolio />);
+    scrollPageTo(100);
+    expect(header()).toHaveAttribute("data-compact", "true");
+    scrollPageTo(0);
+    expect(header()).toHaveAttribute("data-compact", "false");
+  });
+
+  test("clicking a row at the top scrolls past the large header", async () => {
+    render(<Portfolio />);
+    await userEvent.click(screen.getByRole("button", { name: /CumarAI/ }));
+    expect(scrollTo).toHaveBeenCalledWith({ top: 144, behavior: "smooth" });
+  });
+
+  test("clicking a filter at the top scrolls past the large header", async () => {
+    render(<Portfolio />);
+    await userEvent.click(screen.getByRole("button", { name: "Work" }));
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  });
+
+  test("a click after scrolling does not move the page", async () => {
+    render(<Portfolio />);
+    scrollPageTo(300);
+    await userEvent.click(screen.getByRole("button", { name: /CumarAI/ }));
+    expect(scrollTo).not.toHaveBeenCalled();
+  });
+
+  test("reduced motion stays compact and never scrolls", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query.includes("reduced-motion"),
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+    render(<Portfolio />);
+    expect(header()).toHaveAttribute("data-compact", "true");
+    await userEvent.click(screen.getByRole("button", { name: /CumarAI/ }));
+    expect(scrollTo).not.toHaveBeenCalled();
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
   });
 });
 
@@ -182,6 +249,20 @@ describe("Portfolio on a phone", () => {
 });
 
 describe("Stage", () => {
+  test("the caption is for screen readers only", () => {
+    render(
+      <Stage
+        entry={{ ...stageTestEntry, sample: { kind: "snake", caption: "cap" } }}
+      />,
+    );
+    expect(screen.getByText("cap")).toHaveClass("sr-only");
+  });
+
+  test("the stack is shown as tags", () => {
+    render(<Stage entry={stageTestEntry} />);
+    expect(screen.getByRole("list", { name: "Stack" })).toHaveTextContent("Go");
+  });
+
   test("an entry with no sample shows text and no label", () => {
     render(<Stage entry={stageTestEntry} />);
     expect(screen.getByText("Built a thing")).toBeVisible();

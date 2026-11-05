@@ -22,7 +22,7 @@ export function EntryList({
           <li
             key={entry.id}
             id={`entry-${entry.id}`}
-            className="scroll-mt-2 border-b border-line"
+            className="scroll-mt-16 border-b border-line"
           >
             <button
               type="button"

@@ -21,6 +21,16 @@ describe("entries", () => {
     }
   });
 
+  test("every entry stays short", () => {
+    for (const e of entries) {
+      expect(e.built.length).toBeLessThanOrEqual(3);
+      expect(e.stack.length).toBeLessThanOrEqual(4);
+      for (const line of e.built) {
+        expect(line.length).toBeLessThanOrEqual(60);
+      }
+    }
+  });
+
   test("every link is https", () => {
     for (const e of entries) {
       if (e.link) expect(e.link.href).toMatch(/^https:\/\//);

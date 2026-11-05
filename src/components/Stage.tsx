@@ -56,13 +56,22 @@ export function Stage({ entry }: { entry: Entry }) {
         <p className="-mt-3 font-mono text-xs text-muted">{entry.dates}</p>
       )}
       {entry.sample && <Sample key={entry.id} spec={entry.sample} />}
-      {caption && <p className="text-sm text-muted">{caption}</p>}
+      {caption && <p className="sr-only">{caption}</p>}
       <ul className="flex list-disc flex-col gap-1.5 pl-4 text-sm leading-relaxed">
         {entry.built.map((line) => (
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <p className="font-mono text-xs text-muted">{entry.stack.join(" · ")}</p>
+      <ul aria-label="Stack" className="flex flex-wrap gap-1.5">
+        {entry.stack.map((item) => (
+          <li
+            key={item}
+            className="rounded border border-line px-2 py-0.5 font-mono text-xs text-muted"
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
       {entry.link && (
         <a
           href={entry.link.href}
