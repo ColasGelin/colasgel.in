@@ -1,19 +1,19 @@
 export const featured = [
   {
     entryId: "cyberbridge",
-    category: "WORK",
+    category: "Work",
     title: "CyberBridge",
     line: "Production AI engineering — RAG, agents, MCP, self-hosted models and end-to-end product development.",
   },
   {
     entryId: "wisdom",
-    category: "42 PROJECT",
+    category: "Project",
     title: "Inception-of-Wisdom",
     line: "Autonomous self-healing infrastructure combining local LLMs, retrieval, Docker, Git and automated verification.",
   },
   {
     entryId: "school42",
-    category: "42 SCHOOL",
+    category: "School",
     title: "42 School",
     line: "Peer-to-peer, project-based training where every project meant learning something new.",
   },

@@ -136,9 +136,9 @@ describe("featured work", () => {
       "#wisdom",
       "#school42",
     ]);
-    expect(links[0]).toHaveTextContent("WORK");
-    expect(links[1]).toHaveTextContent("42 PROJECT");
-    expect(links[2]).toHaveTextContent("42 SCHOOL");
+    expect(within(links[0]).getByText("Work")).toBeVisible();
+    expect(within(links[1]).getByText("Project")).toBeVisible();
+    expect(within(links[2]).getByText("School")).toBeVisible();
   });
 
   test("the rest of the work stays below the featured section", () => {
