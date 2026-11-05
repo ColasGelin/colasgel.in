@@ -1,40 +1,64 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 import type { DiagramId } from "@/content/types";
-import Diagram from "./Diagram";
-import { diagrams } from "./diagrams";
-
-const ids = Object.keys(diagrams) as DiagramId[];
+import Diagram, { DIAGRAM_IDS } from "./Diagram";
+import { cyberbridgeGraph } from "./diagrams/graphData";
 
 describe("Diagram", () => {
-  test.each(ids)("%s renders as a labelled image", (id) => {
-    render(
+  test("covers all seven diagrams", () => {
+    expect([...DIAGRAM_IDS].sort()).toEqual([
+      "context",
+      "cumarai",
+      "cyberbridge",
+      "iot",
+      "lanoria",
+      "school42",
+      "wisdom",
+    ]);
+  });
+
+  test.each(DIAGRAM_IDS)("%s renders as a labelled image", (id: DiagramId) => {
+    const { container } = render(
       <Diagram
         spec={{ kind: "diagram", id, caption: `caption ${id}` }}
         onError={vi.fn()}
       />,
     );
-    expect(
-      screen.getByRole("img", { name: `caption ${id}` }).tagName.toLowerCase(),
-    ).toBe("svg");
+    const image = screen.getByRole("img", { name: `caption ${id}` });
+    expect(image.textContent).not.toBe("");
+    expect(container.querySelector("[data-diagram]")).toHaveAttribute(
+      "data-diagram",
+      id,
+    );
+  });
+
+  test("each diagram draws something different", () => {
+    const shapes = DIAGRAM_IDS.map((id) => {
+      const { container, unmount } = render(
+        <Diagram
+          spec={{ kind: "diagram", id, caption: "c" }}
+          onError={vi.fn()}
+        />,
+      );
+      const html = container.innerHTML.replace(`data-diagram="${id}"`, "");
+      unmount();
+      return html;
+    });
+    expect(new Set(shapes).size).toBe(DIAGRAM_IDS.length);
   });
 });
 
-describe("diagrams data", () => {
-  test("covers all three diagrams", () => {
-    expect(ids.sort()).toEqual(["context", "cyberbridge", "wisdom"]);
-  });
-
-  test.each(ids)("%s edges reference real nodes", (id) => {
-    const nodeIds = new Set(diagrams[id].nodes.map((n) => n.id));
-    for (const [from, to] of diagrams[id].edges) {
-      expect(nodeIds.has(from)).toBe(true);
-      expect(nodeIds.has(to)).toBe(true);
+describe("CyberBridge graph", () => {
+  test("edges reference real nodes", () => {
+    const ids = new Set(cyberbridgeGraph.nodes.map((n) => n.id));
+    for (const [from, to] of cyberbridgeGraph.edges) {
+      expect(ids.has(from)).toBe(true);
+      expect(ids.has(to)).toBe(true);
     }
   });
 
-  test("cyberbridge names no product screens or customers", () => {
-    const text = JSON.stringify(diagrams.cyberbridge).toLowerCase();
+  test("names no product screens or customers", () => {
+    const text = JSON.stringify(cyberbridgeGraph).toLowerCase();
     for (const banned of ["client", "customer", "dashboard"]) {
       expect(text).not.toContain(banned);
     }

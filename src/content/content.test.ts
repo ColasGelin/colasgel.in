@@ -31,6 +31,19 @@ describe("entries", () => {
     }
   });
 
+  test("every entry has a visual", () => {
+    for (const e of entries) {
+      expect(e.sample, e.id).toBeDefined();
+    }
+  });
+
+  test("the supermarket project uses its new name", () => {
+    const entry = entries.find((e) => e.id === "supermarket");
+    expect(entry?.name).toBe("Supermarket-Queue-Manager");
+    expect(entry?.link?.href).toContain("/Supermarket-Queue-Manager");
+    expect(JSON.stringify(entries)).not.toContain("MLOps-Waiting-Queue");
+  });
+
   test("every link is https", () => {
     for (const e of entries) {
       if (e.link) expect(e.link.href).toMatch(/^https:\/\//);

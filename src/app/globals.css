@@ -60,3 +60,129 @@ body {
     display: none;
   }
 }
+
+.orbit-dot {
+  animation: orbit 6s linear infinite;
+}
+
+@keyframes orbit {
+  to {
+    offset-distance: 100%;
+  }
+}
+
+.step-line {
+  opacity: 0;
+  animation: step-in 0.4s ease-out forwards;
+}
+
+@keyframes step-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.rollout-pod {
+  background: var(--line);
+  animation: rollout 5s linear infinite;
+}
+
+@keyframes rollout {
+  0%,
+  5% {
+    background: var(--line);
+  }
+  15%,
+  100% {
+    background: var(--accent);
+  }
+}
+
+.voice-bar {
+  height: 25%;
+  animation: voice 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes voice {
+  to {
+    height: 90%;
+  }
+}
+
+.danger-flash {
+  animation: danger 4s steps(1) infinite;
+}
+
+@keyframes danger {
+  0%,
+  100% {
+    color: var(--muted);
+  }
+  70%,
+  90% {
+    color: #f87171;
+  }
+}
+
+.chunk-dot {
+  animation: flow-chunk 3s linear infinite;
+}
+
+@keyframes flow-chunk {
+  0% {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  60% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  61%,
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.answer-line {
+  animation: answer 3s ease-in-out infinite alternate;
+}
+
+@keyframes answer {
+  to {
+    fill: var(--accent);
+  }
+}
+
+.pulse-dot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    transform: scale(1.4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-dot,
+  .chunk-dot {
+    display: none;
+  }
+
+  .step-line,
+  .rollout-pod,
+  .voice-bar,
+  .danger-flash,
+  .answer-line,
+  .pulse-dot {
+    animation: none;
+    opacity: 1;
+  }
+
+  .rollout-pod {
+    background: var(--accent);
+  }
+}

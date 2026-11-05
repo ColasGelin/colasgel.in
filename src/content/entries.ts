@@ -119,10 +119,16 @@ export const entries: Entry[] = [
       "TypeScript",
     ],
     link: repo("Hackathon-LaNoria"),
+    sample: {
+      kind: "diagram",
+      id: "lanoria",
+      caption:
+        "The phone camera feeds Gemini, the description is spoken aloud in Spanish, and danger triggers a vibration.",
+    },
   },
   {
-    id: "mlops",
-    name: "MLOps-Waiting-Queue",
+    id: "supermarket",
+    name: "Supermarket-Queue-Manager",
     summary: "Self-hosted vision and agent pipeline for queues",
     tag: "personal",
     filters: ["projects"],
@@ -137,17 +143,17 @@ export const entries: Entry[] = [
       "Ollama",
       "Grafana",
     ],
-    link: repo("MLOps-Waiting-Queue"),
+    link: repo("Supermarket-Queue-Manager"),
     sample: {
       kind: "gallery",
       images: [
         {
-          src: "/samples/mlops/detections.webp",
+          src: "/samples/supermarket/detections.webp",
           alt: "Top-down supermarket frames with detection boxes drawn around customers",
           caption: "Detections from the fine-tuned model on validation frames.",
         },
         {
-          src: "/samples/mlops/training.webp",
+          src: "/samples/supermarket/training.webp",
           alt: "Training and validation curves from the YOLOv8 fine-tuning run",
           caption: "Loss and accuracy curves from the fine-tuning run.",
         },
@@ -218,6 +224,12 @@ export const entries: Entry[] = [
       "Milvus",
       "PostgreSQL",
     ],
+    sample: {
+      kind: "diagram",
+      id: "cumarai",
+      caption:
+        "Client documents are indexed into Milvus so a chatbot can answer from them.",
+    },
   },
   {
     id: "iot",
@@ -237,6 +249,12 @@ export const entries: Entry[] = [
       "Vagrant",
     ],
     link: repo("Inception-of-Things"),
+    sample: {
+      kind: "diagram",
+      id: "iot",
+      caption:
+        "Argo CD syncs a Git repo to a K3s cluster, rolling out apps behind one ingress.",
+    },
   },
   {
     id: "tpv",
@@ -254,6 +272,16 @@ export const entries: Entry[] = [
       "MNE",
     ],
     link: repo("Total-Perspective-Vortex"),
+    sample: {
+      kind: "gallery",
+      images: [
+        {
+          src: "/samples/tpv/psd.webp",
+          alt: "Power spectral density plot of EEG signal, raw against filtered, with the kept 8 to 30 Hz band shaded",
+          caption: "Real EEG power spectrum, keeping the 8 to 30 Hz band.",
+        },
+      ],
+    },
   },
   {
     id: "school42",
@@ -272,5 +300,11 @@ export const entries: Entry[] = [
       "C",
       "C++",
     ],
+    sample: {
+      kind: "diagram",
+      id: "school42",
+      caption:
+        "A timeline from Lyon in November 2022, to Málaga, to the expected RNCP 7 in May 2027.",
+    },
   },
 ];
