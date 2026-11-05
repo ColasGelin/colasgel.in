@@ -64,13 +64,13 @@ export function Portfolio() {
           />
         </div>
       </div>
-      {!isPhone && (
-        <div className="min-w-0 md:col-span-7">
-          <div className="md:sticky md:top-20">
-            <Stage entry={selected} />
-          </div>
+        <div className="hidden min-w-0 md:col-span-7 md:block">
+          {!isPhone && (
+            <div className="md:sticky md:top-20">
+              <Stage entry={selected} />
+            </div>
+          )}
         </div>
-      )}
       </div>
     </>
   );

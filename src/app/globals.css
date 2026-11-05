@@ -32,6 +32,16 @@ body {
   outline-offset: 2px;
 }
 
+.sample-in {
+  animation: sample-in 0.25s ease-out;
+}
+
+@keyframes sample-in {
+  from {
+    opacity: 0;
+  }
+}
+
 .flow-dot {
   opacity: 0;
   animation-name: flow;
@@ -280,6 +290,7 @@ body {
     display: none;
   }
 
+  .sample-in,
   .rag-hit,
   .rag-line,
   .rollout-pod,

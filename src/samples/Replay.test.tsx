@@ -130,7 +130,15 @@ describe("Gallery", () => {
       <Gallery
         spec={{
           kind: "gallery",
-          images: [{ src: "/a.webp", alt: "alt text", caption: "cap" }],
+          images: [
+            {
+              src: "/a.webp",
+              alt: "alt text",
+              caption: "cap",
+              width: 10,
+              height: 10,
+            },
+          ],
         }}
         onError={onError}
       />,

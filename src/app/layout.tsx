@@ -10,7 +10,7 @@ const jetbrains = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Colas Gelin",
-  description: "AI Engineer",
+  description: "Full-Stack AI Engineer",
 };
 
 export default function RootLayout({

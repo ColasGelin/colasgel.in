@@ -5,7 +5,6 @@ export const FILTERS: { id: Filter; label: string }[] = [
   { id: "work", label: "Work" },
   { id: "projects", label: "Projects" },
   { id: "hackathons", label: "Hackathons" },
-  { id: "42", label: "42" },
 ];
 
 export function filterEntries(list: Entry[], filter: Filter): Entry[] {

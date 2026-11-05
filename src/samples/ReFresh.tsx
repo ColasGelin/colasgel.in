@@ -6,8 +6,12 @@ import type { SampleSpec } from "@/content/types";
 import type { SampleProps } from ".";
 import { averageTemp, type Cell, type Zone } from "./refresh/cooling";
 import { fetchGrid, type Month } from "./refresh/grid";
+import { SampleSkeleton } from "./SampleSkeleton";
 
-const HeatScene = dynamic(() => import("./refresh/HeatScene"), { ssr: false });
+const HeatScene = dynamic(() => import("./refresh/HeatScene"), {
+  ssr: false,
+  loading: () => <SampleSkeleton className="aspect-[4/3]" />,
+});
 
 const controls =
   "cursor-pointer rounded border border-line bg-bg px-2 py-0.5 font-mono text-xs hover:text-accent";
@@ -60,13 +64,7 @@ export default function ReFresh({
     setPendingMonthId(null);
   }
 
-  if (!cells) {
-    return (
-      <p className="rounded border border-line bg-surface p-4 font-mono text-sm text-muted">
-        Loading sample
-      </p>
-    );
-  }
+  if (!cells) return <SampleSkeleton className="aspect-[4/3]" />;
 
   return (
     <div className="flex flex-col gap-2">

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { entries } from "./entries";
 import { profile } from "./profile";
-import { filterEntries, resolveSelection, sampleLabel } from "./select";
+import { FILTERS, filterEntries, resolveSelection, sampleLabel } from "./select";
 
 const ids = (filter: Parameters<typeof filterEntries>[1]) =>
   filterEntries(entries, filter).map((e) => e.id);
@@ -52,6 +52,7 @@ describe("entries", () => {
   test("CumarAI names its agents", () => {
     const text = JSON.stringify(entries.find((e) => e.id === "cumarai"));
     expect(text).toMatch(/document, content and statistics agents/i);
+    expect(text).toContain("LangSmith");
   });
 
   test("every link is https", () => {
@@ -62,6 +63,10 @@ describe("entries", () => {
 });
 
 describe("content rules", () => {
+  test("the title is Full-Stack AI Engineer", () => {
+    expect(profile.title).toBe("Full-Stack AI Engineer");
+  });
+
   test("no private data", () => {
     const text = JSON.stringify(entries) + JSON.stringify(profile);
     expect(text).not.toMatch(/salary/i);
@@ -87,8 +92,8 @@ describe("filterEntries", () => {
     expect(ids("all")).toHaveLength(12);
   });
 
-  test("work returns the two jobs", () => {
-    expect(ids("work")).toEqual(["cyberbridge", "cumarai"]);
+  test("work returns the jobs and the school", () => {
+    expect(ids("work")).toEqual(["cyberbridge", "school42", "cumarai"]);
   });
 
   test("hackathons returns 2", () => {
@@ -99,15 +104,26 @@ describe("filterEntries", () => {
     expect(ids("projects")).toHaveLength(7);
   });
 
-  test("42 returns 6 including the school", () => {
-    expect(ids("42")).toHaveLength(6);
-    expect(ids("42")).toContain("school42");
-    expect(ids("42")).toContain("wisdom");
+  test("there is no 42 filter", () => {
+    expect(FILTERS.map((f) => f.label)).toEqual([
+      "All",
+      "Work",
+      "Projects",
+      "Hackathons",
+    ]);
   });
 
-  test("an entry can sit in several filters", () => {
+  test("42 School leads its projects", () => {
+    expect(ids("all").slice(0, 3)).toEqual([
+      "cyberbridge",
+      "school42",
+      "wisdom",
+    ]);
+  });
+
+  test("42 projects stay under Projects with their tag", () => {
     expect(ids("projects")).toContain("wisdom");
-    expect(ids("42")).toContain("wisdom");
+    expect(entries.find((e) => e.id === "wisdom")?.tag).toBe("42");
   });
 });
 

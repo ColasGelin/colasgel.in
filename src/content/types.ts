@@ -1,4 +1,4 @@
-export type Filter = "all" | "work" | "projects" | "hackathons" | "42";
+export type Filter = "all" | "work" | "projects" | "hackathons";
 export type Tag = "work" | "42" | "personal" | "1st place";
 export type DiagramId =
   | "cyberbridge"
@@ -15,7 +15,13 @@ export type SampleSpec =
   | { kind: "replay"; src: string; caption: string }
   | {
       kind: "gallery";
-      images: { src: string; alt: string; caption: string }[];
+      images: {
+        src: string;
+        alt: string;
+        caption: string;
+        width: number;
+        height: number;
+      }[];
     }
   | { kind: "snake"; caption: string }
   | { kind: "refresh"; caption: string };

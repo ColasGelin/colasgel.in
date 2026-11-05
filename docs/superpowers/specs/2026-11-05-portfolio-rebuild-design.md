@@ -21,7 +21,7 @@ and full-stack with AI.
 
 One page, with no intro animation and no separate project pages.
 
-1. **Header:** "Colas Gelin", "AI Engineer", a one-line summary of the work, "Available January 2027 · Málaga
+1. **Header:** "Colas Gelin", "Full-Stack AI Engineer", a one-line summary of the work, "Available January 2027 · Málaga
    or remote EU", and links to GitHub, LinkedIn, and email.
 2. **Work area:** filter row, then the entry list on the left and the stage on the right.
 3. **Compact block:** skills, spoken languages, and certifications.
@@ -29,7 +29,7 @@ One page, with no intro animation and no separate project pages.
 The header starts large and shrinks to a thin sticky bar after a short scroll, or on the first click on a row or
 filter. It stays compact under reduced motion. Each entry has at most 3 short points and 4 stack tags.
 
-**Filters:** All · Work · Projects · Hackathons · 42. Filters are labels, so an entry can belong to several.
+**Filters:** All · Work · Projects · Hackathons. Filters are labels, so an entry can belong to several.
 All is the default, and CyberBridge is selected on load. Selecting a filter that hides the current entry
 selects the first visible entry.
 
@@ -50,17 +50,17 @@ Listed in All order. Filter membership is in the last column.
 | Entry | Tag | Stage | Link | Filters |
 |---|---|---|---|---|
 | CyberBridge, Sherpa Tribe (Dec 2025 – Present) | work | Diagram | none | Work |
-| Inception-of-Wisdom | 42 | Diagram | none | Projects, 42 |
-| Inception-of-Context | 42 | Diagram | none | Projects, 42 |
+| 42 School, RNCP 7 (Master's level), Lyon then Málaga, Nov 2022 – expected May 2027 | 42 | Text | none | Work |
+| Inception-of-Wisdom | 42 | Diagram | none | Projects |
+| Inception-of-Context | 42 | Diagram | none | Projects |
 | Re-Fresh, NASA Space Apps Málaga | 1st place | Live | github.com/ColasGelin/Re-fresh.earth | Hackathons |
 | Lanoria Hackathon | 1st place | Diagram | github.com/ColasGelin/Hackathon-LaNoria | Hackathons |
 | Supermarket-Queue-Manager | personal | Static images | github.com/ColasGelin/Supermarket-Queue-Manager | Projects |
 | jobcopilot | personal | Diagram | github.com/ColasGelin/jobcopilot | Projects |
-| Learn2Slither | 42 | Live | github.com/ColasGelin/Learn2Slither | Projects, 42 |
+| Learn2Slither | 42 | Live | github.com/ColasGelin/Learn2Slither | Projects |
 | AI Integration Developer, CumarAI (Sep 2024 – Mar 2025) | work | Text | none | Work |
-| Inception-of-Things | 42 | Text | github.com/ColasGelin/Inception-of-Things | Projects, 42 |
-| Total-Perspective-Vortex | 42 | Text | github.com/ColasGelin/Total-Perspective-Vortex | Projects, 42 |
-| 42 School, RNCP 7 (Master's level), Lyon then Málaga, Nov 2022 – expected May 2027 | 42 | Text | none | 42 |
+| Inception-of-Things | 42 | Text | github.com/ColasGelin/Inception-of-Things | Projects |
+| Total-Perspective-Vortex | 42 | Text | github.com/ColasGelin/Total-Perspective-Vortex | Projects |
 
 Pizza Popote and the old "Work in progress" entry are dropped.
 

@@ -23,7 +23,7 @@ export function Header({ compact }: { compact: boolean }) {
             className={`font-mono font-normal text-accent ${shared} ${
               compact
                 ? "ml-3 hidden text-sm sm:inline"
-                : "block text-base md:ml-4 md:inline md:text-xl"
+                : "block text-base md:text-xl lg:ml-4 lg:inline"
             }`}
           >
             {profile.title}

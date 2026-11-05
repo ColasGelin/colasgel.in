@@ -32,11 +32,36 @@ export const entries: Entry[] = [
     },
   },
   {
+    id: "school42",
+    name: "42 School",
+    summary: "RNCP 7 (Master's level) in Computer Science, in progress",
+    tag: "42",
+    dates: "Lyon, then Málaga · Nov 2022 – expected May 2027",
+    filters: ["work"],
+    built: [
+      "Peer-to-peer and project-based, with no teachers",
+      "Every project meant learning something new alone",
+      "Progress by levels and peer review, not by years",
+    ],
+    stack: [
+      "Python",
+      "TypeScript",
+      "C",
+      "C++",
+    ],
+    sample: {
+      kind: "diagram",
+      id: "school42",
+      caption:
+        "A map in the style of the 42 Holy Graph: the Piscine at the centre, then the inner circle and outer treks of projects.",
+    },
+  },
+  {
     id: "wisdom",
     name: "Inception-of-Wisdom",
     summary: "Autonomous agent that fixes production errors",
     tag: "42",
-    filters: ["projects", "42"],
+    filters: ["projects"],
     built: [
       "Watches production logs and detects errors",
       "Writes a fix and revises it until it passes",
@@ -58,7 +83,7 @@ export const entries: Entry[] = [
     name: "Inception-of-Context",
     summary: "Local AI coding assistant with no cloud dependency",
     tag: "42",
-    filters: ["projects", "42"],
+    filters: ["projects"],
     built: [
       "Indexes a codebase into a synced vector store",
       "Answers from the retrieved code",
@@ -149,11 +174,15 @@ export const entries: Entry[] = [
       images: [
         {
           src: "/samples/supermarket/detections.webp",
+          width: 960,
+          height: 550,
           alt: "Top-down supermarket frames with detection boxes drawn around customers",
           caption: "Detections from the fine-tuned model on validation frames.",
         },
         {
           src: "/samples/supermarket/training.webp",
+          width: 960,
+          height: 480,
           alt: "Training and validation curves from the YOLOv8 fine-tuning run",
           caption: "Loss and accuracy curves from the fine-tuning run.",
         },
@@ -190,7 +219,7 @@ export const entries: Entry[] = [
     name: "Learn2Slither",
     summary: "Snake agent trained with a Deep Q-Network",
     tag: "42",
-    filters: ["projects", "42"],
+    filters: ["projects"],
     built: [
       "Deep Q-Network that learns to play Snake",
       "Runs in your browser from saved checkpoints",
@@ -217,19 +246,19 @@ export const entries: Entry[] = [
     built: [
       "Document, content and statistics agents",
       "RAG chatbot over clients' Google Drive documents",
-      "PostgreSQL databases and Next.js features",
+      "LangGraph orchestration, monitored with LangSmith",
     ],
     stack: [
-      "FastAPI",
       "LangGraph",
+      "LangSmith",
+      "FastAPI",
       "Milvus",
-      "PostgreSQL",
     ],
     sample: {
       kind: "diagram",
       id: "cumarai",
       caption:
-        "LangGraph coordinates the document, content and statistics agents.",
+        "LangGraph coordinates the document, content and statistics agents, and LangSmith traces each run.",
     },
   },
   {
@@ -237,7 +266,7 @@ export const entries: Entry[] = [
     name: "Inception-of-Things",
     summary: "Kubernetes and self-hosted GitOps",
     tag: "42",
-    filters: ["projects", "42"],
+    filters: ["projects"],
     built: [
       "Kubernetes cluster with K3s, K3d and Vagrant",
       "Self-hosted GitLab running inside the cluster",
@@ -262,7 +291,7 @@ export const entries: Entry[] = [
     name: "Total-Perspective-Vortex",
     summary: "Brain-computer interface on EEG signals",
     tag: "42",
-    filters: ["projects", "42"],
+    filters: ["projects"],
     built: [
       "Classifies EEG signals with scikit-learn",
       "My own CSP implementation and visualisation tool",
@@ -278,35 +307,12 @@ export const entries: Entry[] = [
       images: [
         {
           src: "/samples/tpv/psd.webp",
+          width: 1000,
+          height: 424,
           alt: "Power spectral density plot of EEG signal, raw against filtered, with the kept 8 to 30 Hz band shaded",
           caption: "Real EEG power spectrum, keeping the 8 to 30 Hz band.",
         },
       ],
-    },
-  },
-  {
-    id: "school42",
-    name: "42 School",
-    summary: "RNCP 7 (Master's level) in Computer Science, in progress",
-    tag: "42",
-    dates: "Lyon, then Málaga · Nov 2022 – expected May 2027",
-    filters: ["42"],
-    built: [
-      "Peer-to-peer and project-based, with no teachers",
-      "Every project meant learning something new alone",
-      "Progress by levels and peer review, not by years",
-    ],
-    stack: [
-      "Python",
-      "TypeScript",
-      "C",
-      "C++",
-    ],
-    sample: {
-      kind: "diagram",
-      id: "school42",
-      caption:
-        "A map in the style of the 42 Holy Graph: the Piscine at the centre, then the inner circle and outer treks of projects.",
     },
   },
 ];

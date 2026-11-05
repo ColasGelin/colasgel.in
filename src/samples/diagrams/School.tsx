@@ -1,4 +1,10 @@
 const CENTER = { x: 130, y: 130 };
+const LOGO = [
+  "32,412.6 362.1,412.6 362.1,578 526.8,578 526.8,279.1 197.3,279.1 526.8,-51.1 362.1,-51.1 32,279.1",
+  "597.9,114.2 762.7,-51.1 597.9,-51.1",
+  "762.7,114.2 597.9,279.1 597.9,443.9 762.7,443.9 762.7,279.1 928,114.2 928,-51.1 762.7,-51.1",
+  "928,279.1 762.7,443.9 928,443.9",
+];
 const RINGS = [
   { radius: 58, count: 6 },
   { radius: 108, count: 10 },
@@ -51,17 +57,19 @@ export function School() {
           />
         ))}
         <circle cx={CENTER.x} cy={CENTER.y} r={26} fill="var(--accent)" />
-        <text
-          x={CENTER.x}
-          y={CENTER.y + 1}
-          textAnchor="middle"
-          dominantBaseline="middle"
+        <svg
+          data-logo="42"
+          x={CENTER.x - 19}
+          y={CENTER.y - 19}
+          width={38}
+          height={38}
+          viewBox="0 -200 960 960"
           fill="var(--bg)"
-          fontSize={24}
-          fontWeight={700}
         >
-          42
-        </text>
+          {LOGO.map((points) => (
+            <polygon key={points} points={points} />
+          ))}
+        </svg>
         {dots.map((dot) => (
           <circle
             key={dot.key}

@@ -1,6 +1,6 @@
 export const profile = {
   name: "Colas Gelin",
-  title: "AI Engineer",
+  title: "Full-Stack AI Engineer",
   tagline:
     "I build RAG pipelines, agents, MCP servers and self-hosted models, and ship them to production.",
   availability: "Available January 2027 · Málaga or remote EU",

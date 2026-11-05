@@ -1,37 +1,34 @@
 import dynamic from "next/dynamic";
 import { createElement, type ComponentType } from "react";
 import type { SampleSpec } from "@/content/types";
+import Diagram from "./Diagram";
+import Gallery from "./Gallery";
+import { SampleSkeleton } from "./SampleSkeleton";
 
 export type SampleProps<S extends SampleSpec = SampleSpec> = {
   spec: S;
   onError: (error: Error) => void;
 };
 
-function sample<K extends SampleSpec["kind"]>(
+function lazySample<K extends SampleSpec["kind"]>(
   load: () => Promise<{
     default: ComponentType<SampleProps<Extract<SampleSpec, { kind: K }>>>;
   }>,
+  skeleton: string,
 ) {
   return dynamic(load as () => Promise<{ default: ComponentType<SampleProps> }>, {
     ssr: false,
-    loading: () =>
-      createElement(
-        "p",
-        {
-          className:
-            "rounded border border-line bg-surface p-4 font-mono text-sm text-muted",
-        },
-        "Loading sample",
-      ),
+    loading: () => createElement(SampleSkeleton, { className: skeleton }),
   });
 }
 
+// Diagrams and images are light, so they ship with the page and never pop in.
 const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
-  diagram: sample<"diagram">(() => import("./Diagram")),
-  replay: sample<"replay">(() => import("./Replay")),
-  gallery: sample<"gallery">(() => import("./Gallery")),
-  snake: sample<"snake">(() => import("./Snake")),
-  refresh: sample<"refresh">(() => import("./ReFresh")),
+  diagram: Diagram as unknown as ComponentType<SampleProps>,
+  gallery: Gallery as unknown as ComponentType<SampleProps>,
+  replay: lazySample<"replay">(() => import("./Replay"), "h-60"),
+  snake: lazySample<"snake">(() => import("./Snake"), "h-97"),
+  refresh: lazySample<"refresh">(() => import("./ReFresh"), "aspect-[4/3]"),
 };
 
 export function loadSample(spec: SampleSpec) {

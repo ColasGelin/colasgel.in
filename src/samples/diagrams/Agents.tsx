@@ -40,8 +40,14 @@ const AGENTS = [
 export function Agents() {
   return (
     <div className="flex flex-col items-center gap-2 p-4 font-mono text-xs">
-      <div className="rounded border border-accent bg-bg px-4 py-2 text-accent">
-        LangGraph
+      <div className="flex items-center gap-2">
+        <div className="rounded border border-accent bg-bg px-4 py-2 text-accent">
+          LangGraph
+        </div>
+        <span className="text-muted">traces →</span>
+        <div className="rounded border border-line bg-bg px-4 py-2">
+          LangSmith
+        </div>
       </div>
       <div className="grid w-full grid-cols-3 gap-2">
         {AGENTS.map(({ name, Icon }, index) => (

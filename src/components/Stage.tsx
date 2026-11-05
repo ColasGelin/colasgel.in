@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { sampleLabel } from "@/content/select";
 import type { Entry, SampleSpec } from "@/content/types";
 import { loadSample } from "@/samples";
+import { SampleSkeleton } from "@/samples/SampleSkeleton";
 import { SampleBoundary } from "./SampleBoundary";
 
 const box = "rounded border border-line bg-surface";
@@ -20,13 +21,11 @@ function Sample({ spec }: { spec: SampleSpec }) {
     >
       {(onError) => (
         <Suspense
-          fallback={
-            <p className={`${box} p-4 font-mono text-sm text-muted`}>
-              Loading sample
-            </p>
-          }
+          fallback={<SampleSkeleton className="h-60" />}
         >
-          <Component spec={spec} onError={onError} />
+          <div className="sample-in">
+            <Component spec={spec} onError={onError} />
+          </div>
         </Suspense>
       )}
     </SampleBoundary>

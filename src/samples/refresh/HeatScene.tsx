@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useThree, type ThreeEvent } from "@react-three/fiber";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Color, Object3D, type InstancedMesh } from "three";
 import {
   CELL_DEPTH,
@@ -74,11 +74,16 @@ type SceneProps = {
 };
 
 export default function HeatScene({ cells, zones, onPlace }: SceneProps) {
+  const [ready, setReady] = useState(false);
+
   return (
     <Canvas
       frameloop="demand"
+      onCreated={() => setReady(true)}
       camera={{ position: [0, 235, 205], fov: 45 }}
-      className="aspect-[4/3] w-full rounded border border-line bg-surface"
+      className={`aspect-[4/3] w-full rounded border border-line bg-surface transition-opacity duration-300 motion-reduce:transition-none ${
+        ready ? "opacity-100" : "opacity-0"
+      }`}
     >
       <Cells cells={cells} zones={zones} onPlace={onPlace} />
       {zones.map((zone, index) => (
