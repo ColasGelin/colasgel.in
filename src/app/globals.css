@@ -30,3 +30,32 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+.flow-dot {
+  opacity: 0;
+  animation-name: flow;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes flow {
+  0% {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  20% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  21%,
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flow-dot {
+    display: none;
+  }
+}

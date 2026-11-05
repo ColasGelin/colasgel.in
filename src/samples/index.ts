@@ -8,7 +8,7 @@ export type SampleProps<S extends SampleSpec = SampleSpec> = {
 };
 
 const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
-  diagram: dynamic(() => import("./Stub"), { ssr: false }),
+  diagram: dynamic(() => import("./Diagram") as never, { ssr: false }),
   replay: dynamic(() => import("./Stub"), { ssr: false }),
   gallery: dynamic(() => import("./Stub"), { ssr: false }),
   snake: dynamic(() => import("./Stub"), { ssr: false }),
