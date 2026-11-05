@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
+import { createElement, type ComponentType } from "react";
 import type { SampleSpec } from "@/content/types";
 
 export type SampleProps<S extends SampleSpec = SampleSpec> = {
@@ -14,6 +14,15 @@ function sample<K extends SampleSpec["kind"]>(
 ) {
   return dynamic(load as () => Promise<{ default: ComponentType<SampleProps> }>, {
     ssr: false,
+    loading: () =>
+      createElement(
+        "p",
+        {
+          className:
+            "rounded border border-line bg-surface p-4 font-mono text-sm text-muted",
+        },
+        "Loading sample",
+      ),
   });
 }
 

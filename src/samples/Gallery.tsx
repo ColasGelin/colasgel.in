@@ -15,7 +15,6 @@ export default function Gallery({
           <img
             src={image.src}
             alt={image.alt}
-            loading="lazy"
             onError={() => onError(new Error(`Failed to load ${image.src}`))}
             className="w-full rounded border border-line"
           />

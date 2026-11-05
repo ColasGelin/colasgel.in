@@ -39,7 +39,7 @@ function Cells({ cells, zones, onPlace }: SceneProps) {
       const height = 0.5 + normalized * HEIGHT_SCALE;
       const { x, z } = cellPosition(cell);
       dummy.position.set(x, height / 2, z);
-      dummy.scale.set(CELL_WIDTH * 0.9, height, CELL_DEPTH * 0.9);
+      dummy.scale.set(CELL_WIDTH, height, CELL_DEPTH);
       dummy.updateMatrix();
       mesh.current!.setMatrixAt(index, dummy.matrix);
       color.setHSL(hue(normalized) / 360, 1, 0.5);
@@ -74,14 +74,14 @@ type SceneProps = {
 export default function HeatScene({ cells, zones, onPlace }: SceneProps) {
   return (
     <Canvas
-      camera={{ position: [0, 190, 170], fov: 45 }}
+      camera={{ position: [0, 235, 205], fov: 45 }}
       className="aspect-[4/3] w-full rounded border border-line bg-surface"
     >
       <Cells cells={cells} zones={zones} onPlace={onPlace} />
       {zones.map((zone, index) => (
         <mesh key={index} position={[zone.x, 16, zone.z]}>
-          <cylinderGeometry args={[2.5, 2.5, 32, 16]} />
-          <meshBasicMaterial color="#4ade80" />
+          <cylinderGeometry args={[4, 4, 32, 16]} />
+          <meshBasicMaterial color="#ffffff" />
         </mesh>
       ))}
     </Canvas>

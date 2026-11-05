@@ -14,7 +14,7 @@ export function Portfolio() {
   const isPhone = useIsPhone();
   const [filter, setFilter] = useState<Filter>("all");
   const [selectedId, setSelectedId] = useState(entries[0].id);
-  const [closed, setClosed] = useState(false);
+  const [closed, setClosed] = useState(true);
 
   const selected = entries.find((entry) => entry.id === selectedId)!;
 

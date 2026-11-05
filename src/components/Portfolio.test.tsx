@@ -124,9 +124,20 @@ describe("Portfolio on a phone", () => {
       }));
   });
 
+  test("starts closed so every row is visible", () => {
+    render(<Portfolio />);
+    expect(
+      screen.queryByRole("heading", { level: 2 }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(screen.getByRole("list", { name: "Work" })).getAllByRole("button"),
+    ).toHaveLength(12);
+  });
+
   test("the sample opens inside its row, one at a time", async () => {
     render(<Portfolio />);
     const list = screen.getByRole("list", { name: "Work" });
+    await userEvent.click(screen.getByRole("button", { name: /CyberBridge/ }));
     expect(
       within(list).getByRole("heading", { name: "CyberBridge" }),
     ).toBeVisible();
@@ -139,7 +150,9 @@ describe("Portfolio on a phone", () => {
 
   test("tapping the open row closes it", async () => {
     render(<Portfolio />);
-    await userEvent.click(screen.getByRole("button", { name: /CyberBridge/ }));
+    const row = screen.getByRole("button", { name: /CyberBridge/ });
+    await userEvent.click(row);
+    await userEvent.click(row);
     expect(
       screen.queryByRole("heading", { level: 2 }),
     ).not.toBeInTheDocument();
