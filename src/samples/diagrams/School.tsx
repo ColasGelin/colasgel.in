@@ -31,56 +31,62 @@ const STAGES = [
 
 const FACTS = ["No teachers", "Peer-graded projects", "Levels, not years"];
 
+export function SchoolMap() {
+  return (
+    <svg viewBox="0 0 260 260" className="mx-auto h-full max-h-64 w-full max-w-64">
+      {RINGS.map(({ radius }) => (
+        <circle
+          key={radius}
+          cx={CENTER.x}
+          cy={CENTER.y}
+          r={radius}
+          fill="none"
+          stroke="var(--line)"
+        />
+      ))}
+      {dots.map((dot) => (
+        <line
+          key={dot.key}
+          x1={CENTER.x}
+          y1={CENTER.y}
+          x2={dot.x}
+          y2={dot.y}
+          stroke="var(--line)"
+          strokeOpacity={0.5}
+        />
+      ))}
+      <circle cx={CENTER.x} cy={CENTER.y} r={26} fill="var(--accent)" />
+      <svg
+        data-logo="42"
+        x={CENTER.x - 19}
+        y={CENTER.y - 19}
+        width={38}
+        height={38}
+        viewBox="0 -200 960 960"
+        fill="var(--bg)"
+      >
+        {LOGO.map((points) => (
+          <polygon key={points} points={points} />
+        ))}
+      </svg>
+      {dots.map((dot) => (
+        <circle
+          key={dot.key}
+          cx={dot.x}
+          cy={dot.y}
+          r={dot.ring === 0 ? 8 : 9}
+          className="graph-node"
+          style={{ animationDelay: `${dot.delay}s` }}
+        />
+      ))}
+    </svg>
+  );
+}
+
 export function School() {
   return (
     <div className="grid items-center gap-2 p-3 sm:grid-cols-[17rem_1fr]">
-      <svg viewBox="0 0 260 260" className="mx-auto w-full max-w-64">
-        {RINGS.map(({ radius }) => (
-          <circle
-            key={radius}
-            cx={CENTER.x}
-            cy={CENTER.y}
-            r={radius}
-            fill="none"
-            stroke="var(--line)"
-          />
-        ))}
-        {dots.map((dot) => (
-          <line
-            key={dot.key}
-            x1={CENTER.x}
-            y1={CENTER.y}
-            x2={dot.x}
-            y2={dot.y}
-            stroke="var(--line)"
-            strokeOpacity={0.5}
-          />
-        ))}
-        <circle cx={CENTER.x} cy={CENTER.y} r={26} fill="var(--accent)" />
-        <svg
-          data-logo="42"
-          x={CENTER.x - 19}
-          y={CENTER.y - 19}
-          width={38}
-          height={38}
-          viewBox="0 -200 960 960"
-          fill="var(--bg)"
-        >
-          {LOGO.map((points) => (
-            <polygon key={points} points={points} />
-          ))}
-        </svg>
-        {dots.map((dot) => (
-          <circle
-            key={dot.key}
-            cx={dot.x}
-            cy={dot.y}
-            r={dot.ring === 0 ? 8 : 9}
-            className="graph-node"
-            style={{ animationDelay: `${dot.delay}s` }}
-          />
-        ))}
-      </svg>
+      <SchoolMap />
       <div className="flex flex-col gap-3 font-mono text-xs">
         <dl className="flex flex-col gap-2">
           {STAGES.map(([name, detail]) => (

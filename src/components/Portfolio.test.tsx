@@ -22,6 +22,7 @@ const named = (label: string) =>
   };
 
 beforeEach(() => {
+  history.replaceState(null, "", "/");
   for (const kind of ["diagram", "snake", "refresh", "replay", "gallery"]) {
     mock.components[kind] = named(`${kind} sample`);
   }
@@ -114,6 +115,105 @@ describe("Portfolio", () => {
   });
 });
 
+describe("featured work", () => {
+  const scroll = vi.fn();
+  const card = (name: RegExp) => screen.getByRole("link", { name });
+
+  beforeEach(() => {
+    scroll.mockClear();
+    Element.prototype.scrollIntoView = scroll;
+    window.scrollTo = vi.fn();
+    history.replaceState(null, "", "/");
+  });
+
+  test("shows the three featured cards in order, with labels", () => {
+    render(<Portfolio />);
+    const links = within(
+      screen.getByRole("region", { name: "Featured work" }),
+    ).getAllByRole("link");
+    expect(links.slice(0, 3).map((l) => l.getAttribute("href"))).toEqual([
+      "#cyberbridge",
+      "#wisdom",
+      "#school42",
+    ]);
+    expect(links[0]).toHaveTextContent("WORK");
+    expect(links[1]).toHaveTextContent("42 PROJECT");
+    expect(links[2]).toHaveTextContent("42 SCHOOL");
+  });
+
+  test("the rest of the work stays below the featured section", () => {
+    render(<Portfolio />);
+    const list = within(screen.getByRole("region", { name: "All work" }));
+    expect(list.getAllByRole("listitem").length).toBeGreaterThanOrEqual(12);
+    expect(list.getByRole("button", { name: /Total-Perspective/ })).toBeVisible();
+  });
+
+  test("clicking a card opens that entry, scrolls, and keeps the hash", async () => {
+    render(<Portfolio />);
+    await userEvent.click(card(/Inception-of-Wisdom/));
+    expect(screen.getByRole("heading", { name: "Inception-of-Wisdom" })).toBeVisible();
+    expect(window.location.hash).toBe("#wisdom");
+    expect(scroll.mock.contexts[0]).toBe(document.getElementById("showcase"));
+    expect(scroll).toHaveBeenCalledWith({ block: "start", behavior: "smooth" });
+  });
+
+  test("the destination is briefly highlighted", async () => {
+    render(<Portfolio />);
+    await userEvent.click(card(/42 School/));
+    expect(document.querySelector("[data-landed='true']")).toHaveTextContent(
+      "42 School",
+    );
+  });
+
+  test("a card still works when a filter hides its entry", async () => {
+    render(<Portfolio />);
+    await userEvent.click(screen.getByRole("button", { name: "Hackathons" }));
+    await userEvent.click(card(/Inception-of-Wisdom/));
+    expect(screen.getByRole("button", { name: "All" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(screen.getByRole("heading", { name: "Inception-of-Wisdom" })).toBeVisible();
+  });
+
+  test("cards work from the keyboard", async () => {
+    render(<Portfolio />);
+    card(/42 School/).focus();
+    await userEvent.keyboard("{Enter}");
+    expect(window.location.hash).toBe("#school42");
+  });
+
+  test("the hackathon line links to both wins", async () => {
+    render(<Portfolio />);
+    const strip = screen.getByRole("region", { name: "Hackathon wins" });
+    expect(strip).toHaveTextContent("Re-Fresh — 1st place");
+    expect(strip).toHaveTextContent("Lanoria — 1st place");
+    await userEvent.click(within(strip).getByRole("link", { name: /Lanoria/ }));
+    expect(screen.getByRole("heading", { name: "Lanoria Hackathon" })).toBeVisible();
+  });
+
+  test("a hash in the URL opens that entry", () => {
+    history.replaceState(null, "", "/#tpv");
+    render(<Portfolio />);
+    expect(screen.getByRole("heading", { name: "Total-Perspective-Vortex" })).toBeVisible();
+  });
+
+  test("an unknown hash is ignored", () => {
+    history.replaceState(null, "", "/#nope");
+    render(<Portfolio />);
+    expect(screen.getByRole("heading", { name: "CyberBridge" })).toBeVisible();
+  });
+
+  test("going back follows the hash", () => {
+    render(<Portfolio />);
+    history.replaceState(null, "", "/#iot");
+    act(() => {
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    });
+    expect(screen.getByRole("heading", { name: "Inception-of-Things" })).toBeVisible();
+  });
+});
+
 describe("name header", () => {
   const scrollTo = vi.fn();
   const scrollPageTo = (y: number) => {
@@ -141,6 +241,11 @@ describe("name header", () => {
     expect(header()).toHaveAttribute("data-compact", "true");
     scrollPageTo(0);
     expect(header()).toHaveAttribute("data-compact", "false");
+  });
+
+  test("starts with the hero positioning", () => {
+    render(<Portfolio />);
+    expect(header()).toHaveTextContent("systems that actually run");
   });
 
   test("clicking a row at the top scrolls past the large header", async () => {
@@ -202,7 +307,7 @@ describe("Portfolio on a phone", () => {
   test("starts closed so every row is visible", () => {
     render(<Portfolio />);
     expect(
-      screen.queryByRole("heading", { level: 2 }),
+      screen.queryByRole("heading", { level: 3 }),
     ).not.toBeInTheDocument();
     expect(
       within(screen.getByRole("list", { name: "Work" })).getAllByRole("button"),
@@ -217,10 +322,22 @@ describe("Portfolio on a phone", () => {
       within(list).getByRole("heading", { name: "CyberBridge" }),
     ).toBeVisible();
     await userEvent.click(screen.getByRole("button", { name: /CumarAI/ }));
-    expect(within(list).getAllByRole("heading", { level: 2 })).toHaveLength(1);
+    expect(within(list).getAllByRole("heading", { level: 3 })).toHaveLength(1);
     expect(
       within(list).getByRole("heading", { name: "CumarAI" }),
     ).toBeVisible();
+  });
+
+  test("a featured card opens its row", async () => {
+    const scroll = vi.fn();
+    Element.prototype.scrollIntoView = scroll;
+    history.replaceState(null, "", "/");
+    render(<Portfolio />);
+    await userEvent.click(screen.getByRole("link", { name: /42 School/ }));
+    const list = screen.getByRole("list", { name: "Work" });
+    expect(within(list).getByRole("heading", { name: "42 School" })).toBeVisible();
+    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(scroll.mock.contexts[0]).toBe(document.getElementById("entry-school42"));
   });
 
   test("opening a row scrolls that row to the top", async () => {
@@ -243,7 +360,7 @@ describe("Portfolio on a phone", () => {
     await userEvent.click(row);
     await userEvent.click(row);
     expect(
-      screen.queryByRole("heading", { level: 2 }),
+      screen.queryByRole("heading", { level: 3 }),
     ).not.toBeInTheDocument();
   });
 });

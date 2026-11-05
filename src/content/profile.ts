@@ -2,7 +2,7 @@ export const profile = {
   name: "Colas Gelin",
   title: "Full-Stack AI Engineer",
   tagline:
-    "I build RAG pipelines, agents, MCP servers and self-hosted models, and ship them to production.",
+    "Building systems that actually run: production AI, autonomous agents, self-hosted models and the infrastructure under them.",
   availability: "Available January 2027 · Málaga or remote EU",
   links: [
     { label: "GitHub", href: "https://github.com/ColasGelin" },

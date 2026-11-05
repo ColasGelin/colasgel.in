@@ -23,8 +23,9 @@ One page, with no intro animation and no separate project pages.
 
 1. **Header:** "Colas Gelin", "Full-Stack AI Engineer", a one-line summary of the work, "Available January 2027 · Málaga
    or remote EU", and links to GitHub, LinkedIn, and email.
-2. **Work area:** filter row, then the entry list on the left and the stage on the right.
-3. **Compact block:** skills, spoken languages, and certifications.
+2. **Featured work:** three cards (CyberBridge, Inception-of-Wisdom, 42 School) and one line of hackathon wins. Each opens its entry below, scrolls there, highlights it, and sets the URL hash.
+3. **All work:** filter row, then the entry list on the left and the stage on the right.
+4. **Compact block:** skills, spoken languages, and certifications.
 
 The header starts large and shrinks to a thin sticky bar after a short scroll, or on the first click on a row or
 filter. It stays compact under reduced motion. Each entry has at most 3 short points and 4 stack tags.

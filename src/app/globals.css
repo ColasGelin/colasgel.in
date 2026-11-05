@@ -32,6 +32,59 @@ body {
   outline-offset: 2px;
 }
 
+.feature-visual svg {
+  max-height: 100%;
+}
+
+.feature-visual text,
+.feature-visual [data-logo],
+.feature-visual .flow-dot,
+.feature-visual .orbit-dot {
+  display: none;
+}
+
+.feature-visual * {
+  animation: none !important;
+}
+
+.feature-visual .graph-node {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+
+.feature-visual svg rect,
+.feature-visual svg line,
+.feature-visual svg path {
+  stroke: var(--accent);
+  stroke-opacity: 0.65;
+  transition: stroke-opacity 0.2s;
+}
+
+.feature-visual svg rect {
+  fill: color-mix(in srgb, var(--accent) 12%, var(--bg));
+}
+
+a:hover .feature-visual svg rect,
+a:hover .feature-visual svg line,
+a:hover .feature-visual svg path {
+  stroke-opacity: 1;
+}
+
+.stage-landed {
+  border-radius: 0.5rem;
+  animation: landed 1.8s ease-out;
+}
+
+@keyframes landed {
+  0%,
+  45% {
+    box-shadow: 0 0 0 8px var(--surface), 0 0 0 9px var(--accent);
+  }
+  100% {
+    box-shadow: 0 0 0 8px transparent, 0 0 0 9px transparent;
+  }
+}
+
 .sample-in {
   animation: sample-in 0.25s ease-out;
 }
@@ -284,6 +337,11 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .stage-landed {
+    animation: none;
+    box-shadow: 0 0 0 8px var(--surface), 0 0 0 9px var(--accent);
+  }
+
   .orbit-dot,
   .rag-query,
   .rag-chunk {

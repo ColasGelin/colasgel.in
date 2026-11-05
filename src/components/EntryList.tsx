@@ -4,6 +4,7 @@ import { Stage } from "./Stage";
 type Props = {
   entries: Entry[];
   selectedId: string | null;
+  landedId: string | null;
   showStageInRow: boolean;
   onSelect: (id: string) => void;
 };
@@ -11,6 +12,7 @@ type Props = {
 export function EntryList({
   entries,
   selectedId,
+  landedId,
   showStageInRow,
   onSelect,
 }: Props) {
@@ -48,7 +50,7 @@ export function EntryList({
             </button>
             {showStageInRow && selected && (
               <div className="px-2 pt-2 pb-5">
-                <Stage entry={entry} />
+                <Stage entry={entry} landed={entry.id === landedId} />
               </div>
             )}
           </li>

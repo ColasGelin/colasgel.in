@@ -32,7 +32,13 @@ function Sample({ spec }: { spec: SampleSpec }) {
   );
 }
 
-export function Stage({ entry }: { entry: Entry }) {
+export function Stage({
+  entry,
+  landed = false,
+}: {
+  entry: Entry;
+  landed?: boolean;
+}) {
   const label = sampleLabel(entry.sample);
   const caption =
     entry.sample && "caption" in entry.sample && entry.sample.kind !== "diagram"
@@ -40,11 +46,14 @@ export function Stage({ entry }: { entry: Entry }) {
       : null;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div
+      data-landed={landed}
+      className={`flex flex-col gap-4 ${landed ? "stage-landed" : ""}`}
+    >
       <div className="flex items-baseline justify-between gap-4">
-        <h2 aria-live="polite" className="text-lg font-medium">
+        <h3 aria-live="polite" className="text-lg font-medium">
           {entry.name}
-        </h2>
+        </h3>
         {label && (
           <span className="shrink-0 rounded border border-line px-2 py-0.5 font-mono text-xs text-accent">
             {label}
