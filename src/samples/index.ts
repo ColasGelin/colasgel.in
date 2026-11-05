@@ -21,7 +21,7 @@ const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
   diagram: sample<"diagram">(() => import("./Diagram")),
   replay: sample<"replay">(() => import("./Replay")),
   gallery: sample<"gallery">(() => import("./Gallery")),
-  snake: dynamic(() => import("./Stub"), { ssr: false }),
+  snake: sample<"snake">(() => import("./Snake")),
   refresh: dynamic(() => import("./Stub"), { ssr: false }),
 };
 
