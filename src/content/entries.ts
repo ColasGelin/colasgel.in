@@ -112,6 +112,21 @@ export const entries: Entry[] = [
     ],
     stack: ["YOLOv8", "LangGraph", "Ollama", "Docker", "Grafana"],
     link: repo("MLOps-Waiting-Queue"),
+    sample: {
+      kind: "gallery",
+      images: [
+        {
+          src: "/samples/mlops/detections.webp",
+          alt: "Top-down supermarket frames with detection boxes drawn around customers",
+          caption: "Detections from the fine-tuned model on validation frames.",
+        },
+        {
+          src: "/samples/mlops/training.webp",
+          alt: "Training and validation curves from the YOLOv8 fine-tuning run",
+          caption: "Loss and accuracy curves from the fine-tuning run.",
+        },
+      ],
+    },
   },
   {
     id: "jobcopilot",
@@ -127,6 +142,11 @@ export const entries: Entry[] = [
     ],
     stack: ["Python", "FastAPI", "Claude API", "Playwright", "Docker"],
     link: repo("jobcopilot"),
+    sample: {
+      kind: "replay",
+      src: "/samples/jobcopilot/run.json",
+      caption: "Totals from one real daily run, played back step by step.",
+    },
   },
   {
     id: "learn2slither",

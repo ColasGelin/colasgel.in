@@ -1,0 +1,9 @@
+{
+  "steps": [
+    { "t": 0, "label": "Collect", "output": "578 offers fetched, 570 of them new" },
+    { "t": 1.2, "label": "Filter", "output": "27 kept by the location, level and phrase rules" },
+    { "t": 2.4, "label": "Score", "output": "27 scored with Claude: lowest 2, highest 84, three at 70 or above" },
+    { "t": 3.6, "label": "Draft", "output": "5 applications drafted for review" },
+    { "t": 4.8, "label": "Done", "output": "Finished in 1 min 43 s. Nothing was submitted." }
+  ]
+}
