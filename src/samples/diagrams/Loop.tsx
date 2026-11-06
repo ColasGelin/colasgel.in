@@ -1,77 +1,60 @@
-const CENTER = { x: 320, y: 135 };
-const RADIUS = 85;
-const STOPS = [
-  { label: "Patch", x: 320, y: 50 },
-  { label: "Verify", x: 394, y: 177 },
-  { label: "Retry", x: 246, y: 177 },
+const LLM = "#c4b5fd";
+const STEPS = [
+  { label: "Observe", x: 16 },
+  { label: "Diagnose", x: 96, llm: true },
+  { label: "Patch", x: 176, llm: true },
+  { label: "Verify", x: 256 },
 ];
 
-function Pill({
-  x,
-  y,
-  label,
-  accent,
-}: {
-  x: number;
-  y: number;
-  label: string;
-  accent?: boolean;
-}) {
-  const width = label.length * 8 + 28;
+export function Loop() {
   return (
-    <g>
-      <rect
-        x={x - width / 2}
-        y={y - 17}
-        width={width}
-        height={34}
-        rx={17}
-        fill="var(--bg)"
-        stroke={accent ? "var(--accent)" : "var(--line)"}
+    <svg viewBox="0 0 340 170" className="h-full w-full" fontSize={11}>
+      <path d="M96 34H244" stroke={LLM} strokeWidth={2} />
+      <text x={170} y={26} fill={LLM} fontSize={10} textAnchor="middle">
+        local LLM
+      </text>
+      <path
+        d="M84 76H96M164 76H176M244 76H256"
+        stroke="var(--muted)"
+        strokeWidth={2}
+      />
+      {STEPS.map(({ label, x, llm }, index) => (
+        <g key={label}>
+          <rect
+            x={x}
+            y={52}
+            width={68}
+            height={48}
+            rx={6}
+            strokeWidth={2}
+            className={llm ? "workflow-step-llm" : "workflow-step"}
+            style={{ animationDelay: `${index * 2}s` }}
+          />
+          <text
+            x={x + 34}
+            y={80}
+            textAnchor="middle"
+            fill={llm ? LLM : "var(--text)"}
+          >
+            {label}
+          </text>
+        </g>
+      ))}
+      <path
+        d="M290 100V126H130V100"
+        fill="none"
+        stroke="var(--muted)"
+        strokeDasharray="4 4"
       />
       <text
-        x={x}
-        y={y}
+        x={210}
+        y={144}
+        fill="var(--muted)"
+        fontSize={10}
         textAnchor="middle"
-        dominantBaseline="middle"
-        fill={accent ? "var(--accent)" : "var(--text)"}
-        fontSize={14}
       >
-        {label}
+        retry, up to 3
       </text>
-    </g>
-  );
-}
-
-export function Loop() {
-  const circle = `M ${CENTER.x} ${CENTER.y - RADIUS} a ${RADIUS} ${RADIUS} 0 1 1 -0.01 0`;
-
-  return (
-    <svg viewBox="0 0 640 260" className="w-full">
-      <path d="M 70 50 H 320" stroke="var(--line)" strokeWidth={1.5} />
-      <path d="M 394 177 H 540 V 90" stroke="var(--line)" strokeWidth={1.5} fill="none" />
-      <circle
-        cx={CENTER.x}
-        cy={CENTER.y}
-        r={RADIUS}
-        fill="none"
-        stroke="var(--line)"
-        strokeWidth={1.5}
-        strokeDasharray="6 6"
-      />
-      <circle
-        r={6}
-        fill="var(--accent)"
-        className="orbit-dot"
-        style={{ offsetPath: `path("${circle}")` }}
-      />
-      <Pill x={80} y={50} label="Crash" />
-      <Pill x={186} y={50} label="Diagnosis" />
-      {STOPS.map((stop) => (
-        <Pill key={stop.label} {...stop} />
-      ))}
-      <Pill x={500} y={177} label="Healed" accent />
-      <Pill x={540} y={70} label="Auto-heal branch" />
     </svg>
   );
 }

@@ -34,6 +34,7 @@ describe("Diagram", () => {
   });
 
   test.each([
+    ["wisdom", ["Observe", "Diagnose", "Patch", "Verify", "local LLM"]],
     ["iot", ["GitLab", "Argo CD", "K3s cluster"]],
     ["cumarai", ["Document agent", "Content agent", "Statistics agent", "LangGraph", "LangSmith"]],
     ["jobcopilot", ["578", "27", "5", "0"]],

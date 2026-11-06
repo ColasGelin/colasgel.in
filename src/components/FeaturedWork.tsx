@@ -1,13 +1,19 @@
-import type { ComponentType, MouseEvent } from "react";
+import type { ComponentType, CSSProperties, MouseEvent } from "react";
 import { featured, hackathons } from "@/content/featured";
-import { Graph } from "@/samples/diagrams/Graph";
+import { Bridge } from "@/samples/diagrams/Bridge";
 import { Loop } from "@/samples/diagrams/Loop";
 import { SchoolMap } from "@/samples/diagrams/School";
 
 const visuals: Record<string, ComponentType> = {
-  cyberbridge: Graph,
+  cyberbridge: Bridge,
   wisdom: Loop,
   school42: SchoolMap,
+};
+
+const colors: Record<string, string> = {
+  cyberbridge: "#93c5fd",
+  wisdom: "#c4b5fd",
+  school42: "var(--accent)",
 };
 
 type Props = {
@@ -32,16 +38,17 @@ export function FeaturedWork({ onOpen }: Props) {
                 key={entryId}
                 href={`#${entryId}`}
                 onClick={(event) => onOpen(entryId, event)}
-                className="group flex flex-col overflow-hidden rounded-lg border border-line bg-surface transition-colors hover:border-accent"
+                style={{ "--card": colors[entryId] } as CSSProperties}
+                className="group flex flex-col overflow-hidden rounded-lg border border-line bg-surface transition-colors hover:border-(--card)"
               >
                 <span
                   aria-hidden="true"
-                  className="feature-visual flex h-40 items-center justify-center overflow-hidden border-b border-line p-3"
+                  className={`${entryId === "school42" ? "feature-visual " : ""}flex h-40 items-center justify-center overflow-hidden border-b border-line p-3`}
                 >
                   <Visual />
                 </span>
                 <span className="flex flex-1 flex-col gap-1.5 p-4">
-                  <span className="font-mono text-xs text-accent">
+                  <span className="font-mono text-xs text-(--card)">
                     {category}
                   </span>
                   <span className="text-lg font-semibold">{title}</span>
@@ -50,7 +57,7 @@ export function FeaturedWork({ onOpen }: Props) {
                   </span>
                   <span className="mt-2 font-mono text-xs text-text">
                     View details
-                    <span className="ml-1.5 inline-block transition-transform group-hover:translate-x-1 motion-reduce:transition-none">
+                    <span className="ml-1.5 inline-block text-(--card) transition-transform group-hover:translate-x-1 motion-reduce:transition-none">
                       →
                     </span>
                   </span>

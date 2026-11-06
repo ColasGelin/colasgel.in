@@ -38,8 +38,7 @@ body {
 
 .feature-visual text,
 .feature-visual [data-logo],
-.feature-visual .flow-dot,
-.feature-visual .orbit-dot {
+.feature-visual .flow-dot {
   display: none;
 }
 
@@ -124,13 +123,74 @@ a:hover .feature-visual svg path {
   }
 }
 
-.orbit-dot {
-  animation: orbit 6s linear infinite;
+.bridge-dot {
+  animation: bridge-signal 2.4s linear infinite;
 }
 
-@keyframes orbit {
+@keyframes bridge-signal {
   to {
     offset-distance: 100%;
+  }
+}
+
+.bridge-rec {
+  animation: bridge-rec 1.5s infinite;
+}
+
+@keyframes bridge-rec {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.bridge-led {
+  fill: #93c5fd;
+  animation: bridge-led 1.6s infinite;
+}
+
+@keyframes bridge-led {
+  0%,
+  100% {
+    fill: #1e3a5f;
+  }
+  50% {
+    fill: #93c5fd;
+  }
+}
+
+.workflow-step {
+  fill: var(--surface);
+  stroke: var(--line);
+  animation: workflow-step 8s infinite;
+}
+
+.workflow-step-llm {
+  fill: var(--surface);
+  stroke: #c4b5fd;
+  animation: workflow-step-llm 8s infinite;
+}
+
+@keyframes workflow-step {
+  0%,
+  20% {
+    fill: color-mix(in srgb, var(--text) 10%, var(--surface));
+    stroke: var(--text);
+  }
+  26%,
+  100% {
+    fill: var(--surface);
+    stroke: var(--line);
+  }
+}
+
+@keyframes workflow-step-llm {
+  0%,
+  20% {
+    fill: color-mix(in srgb, #c4b5fd 14%, var(--surface));
+  }
+  26%,
+  100% {
+    fill: var(--surface);
   }
 }
 
@@ -342,7 +402,7 @@ a:hover .feature-visual svg path {
     box-shadow: 0 0 0 8px var(--surface), 0 0 0 9px var(--accent);
   }
 
-  .orbit-dot,
+  .bridge-dot,
   .rag-query,
   .rag-chunk {
     display: none;
@@ -356,6 +416,10 @@ a:hover .feature-visual svg path {
   .danger-flash,
   .agent-card,
   .funnel-bar,
+  .bridge-rec,
+  .bridge-led,
+  .workflow-step,
+  .workflow-step-llm,
   .graph-node {
     animation: none;
     opacity: 1;
