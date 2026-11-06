@@ -38,7 +38,7 @@ describe("Diagram", () => {
     ["iot", ["GitLab", "Argo CD", "K3s cluster"]],
     ["cumarai", ["Document agent", "Content agent", "Statistics agent", "LangGraph", "LangSmith"]],
     ["jobcopilot", ["578", "27", "5", "0"]],
-    ["school42", ["Piscine", "Inner circle", "Outer treks", "No teachers"]],
+    ["school42", ["Lyon, then Málaga", "Foundations", "AI and data", "No teachers"]],
   ] as const)("%s shows its parts", (id, labels) => {
     render(
       <Diagram spec={{ kind: "diagram", id, caption: "c" }} onError={vi.fn()} />,

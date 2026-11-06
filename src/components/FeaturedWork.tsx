@@ -13,7 +13,7 @@ const visuals: Record<string, ComponentType> = {
 const colors: Record<string, string> = {
   cyberbridge: "#93c5fd",
   wisdom: "#c4b5fd",
-  school42: "var(--accent)",
+  school42: "#fcd34d",
 };
 
 type Props = {

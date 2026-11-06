@@ -47,20 +47,20 @@ body {
 }
 
 .feature-visual .graph-node {
-  fill: var(--accent);
-  stroke: var(--accent);
+  fill: var(--card);
+  stroke: var(--card);
 }
 
 .feature-visual svg rect,
 .feature-visual svg line,
 .feature-visual svg path {
-  stroke: var(--accent);
+  stroke: var(--card);
   stroke-opacity: 0.65;
   transition: stroke-opacity 0.2s;
 }
 
 .feature-visual svg rect {
-  fill: color-mix(in srgb, var(--accent) 12%, var(--bg));
+  fill: color-mix(in srgb, var(--card) 12%, var(--bg));
 }
 
 a:hover .feature-visual svg rect,

@@ -24,9 +24,15 @@ const dots = RINGS.flatMap(({ radius, count }, ring) =>
 );
 
 const STAGES = [
-  ["Piscine", "the selection stage"],
-  ["Inner circle", "shell, threads, raytracer, IRC, C++"],
-  ["Outer treks", "ML, Kubernetes, AI agents, full stack"],
+  ["Campuses", "Lyon, then Málaga"],
+  [
+    "Foundations",
+    "Libft, push_swap, minishell, Philosophers, miniRT, ft_irc, CPP Modules, Inception, ft_transcendence",
+  ],
+  [
+    "AI and data",
+    "ft_linear_regression, dslr, multilayer-perceptron, Leaffliction",
+  ],
 ];
 
 const FACTS = ["No teachers", "Peer-graded projects", "Levels, not years"];
@@ -55,7 +61,12 @@ export function SchoolMap() {
           strokeOpacity={0.5}
         />
       ))}
-      <circle cx={CENTER.x} cy={CENTER.y} r={26} fill="var(--accent)" />
+      <circle
+        cx={CENTER.x}
+        cy={CENTER.y}
+        r={26}
+        fill="var(--card, var(--accent))"
+      />
       <svg
         data-logo="42"
         x={CENTER.x - 19}
