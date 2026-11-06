@@ -138,6 +138,7 @@ export default function Walkthrough({}: SampleProps<
   const shown = step.lines.slice(0, progress.lines);
   const typing = progress.chars > 0 ? step.lines[progress.lines] : null;
   const items = step.checks?.items ?? [];
+  const plain = step.checks?.plain;
 
   return (
     <div className="flex flex-col gap-3 rounded border border-line bg-surface p-3">
@@ -232,7 +233,7 @@ export default function Walkthrough({}: SampleProps<
         <div className="flex min-w-0 flex-col rounded border border-line">
           <div className="flex justify-between gap-2 border-b border-line px-3 py-1.5 font-mono text-xs text-muted">
             <span>{step.checks?.title ?? "Checks"}</span>
-            {items.length > 0 && (
+            {items.length > 0 && !plain && (
               <span>
                 {progress.checks} of {items.length}
               </span>
@@ -248,18 +249,20 @@ export default function Walkthrough({}: SampleProps<
                   key={item}
                   className={`flex gap-2 ${done ? "text-text" : "text-muted"}`}
                 >
-                  <span
-                    aria-label={failed ? "Failed" : done ? "Passed" : "Pending"}
-                    className={`flex size-4 shrink-0 items-center justify-center rounded-sm border font-mono text-[0.65rem] ${
-                      failed
-                        ? "border-red-400 text-red-400"
-                        : done
-                          ? "border-accent text-accent"
-                          : "border-muted"
-                    }`}
-                  >
-                    {failed ? "✕" : done ? "✓" : ""}
-                  </span>
+                  {!plain && (
+                    <span
+                      aria-label={failed ? "Failed" : done ? "Passed" : "Pending"}
+                      className={`flex size-4 shrink-0 items-center justify-center rounded-sm border font-mono text-[0.65rem] ${
+                        failed
+                          ? "border-red-400 text-red-400"
+                          : done
+                            ? "border-accent text-accent"
+                            : "border-muted"
+                      }`}
+                    >
+                      {failed ? "✕" : done ? "✓" : ""}
+                    </span>
+                  )}
                   {item}
                 </li>
               );

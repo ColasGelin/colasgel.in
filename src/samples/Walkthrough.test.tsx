@@ -116,6 +116,17 @@ describe("Walkthrough", () => {
     expect(screen.getByLabelText("Failed")).toBeInTheDocument();
   });
 
+  test("only real checks get boxes", async () => {
+    renderIt();
+    await click("Start workflow");
+    await click(/Commit/);
+    await tick(6000);
+    expect(screen.getByText("Original commit saved")).toBeInTheDocument();
+    expect(screen.queryByLabelText(/Passed|Pending/)).not.toBeInTheDocument();
+    await click(/Detect/);
+    expect(screen.getAllByLabelText("Pending")).toHaveLength(4);
+  });
+
   test("announces the step for screen readers", async () => {
     renderIt();
     await click("Start workflow");

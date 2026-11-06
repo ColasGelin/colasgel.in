@@ -12,7 +12,12 @@ export type Step = {
   attempt: string;
   say: string;
   lines: Line[];
-  checks?: { title: string; items: string[]; lastFails?: boolean };
+  checks?: {
+    title: string;
+    items: string[];
+    lastFails?: boolean;
+    plain?: boolean;
+  };
   grace?: number;
 };
 
@@ -119,6 +124,7 @@ const commit = (message: string): Step => ({
   ],
   checks: {
     title: "Git",
+    plain: true,
     items: [
       "Original commit saved",
       "Patch applied atomically",
@@ -177,6 +183,7 @@ const pullRequest: Step = {
   lines: [{ tag: "git", text: "pull request: iow/auto-heal -> main" }],
   checks: {
     title: "Result",
+    plain: true,
     items: [
       "Service healed",
       "Pull request opened",
