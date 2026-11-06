@@ -2,7 +2,7 @@ import { act, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import type { SampleSpec } from "@/content/types";
 import Walkthrough from "./Walkthrough";
-import { SCENARIOS } from "./wisdomRun";
+import { STEPS } from "./wisdomRun";
 
 const spec: Extract<SampleSpec, { kind: "walkthrough" }> = {
   kind: "walkthrough",
@@ -17,20 +17,13 @@ const click = (name: string | RegExp) =>
   act(async () => {
     screen.getByRole("button", { name }).click();
   });
-const stepNames = () =>
-  within(screen.getByRole("list", { name: "Steps" }))
-    .getAllByRole("button")
-    .map((button) => button.textContent?.replace(/Uses the local LLM/, ""));
 const current = () =>
   screen.getByRole("button", { current: "step" }).textContent;
 const renderIt = () => render(<Walkthrough spec={spec} onError={vi.fn()} />);
 
-describe("wisdom scenarios", () => {
-  const scenario = (id: string) => SCENARIOS.find((s) => s.id === id)!;
-  const names = (id: string) => scenario(id).steps.map((step) => step.name);
-
-  test("each bug has its own path", () => {
-    expect(names("import")).toEqual([
+describe("wisdom run", () => {
+  test("retries once, then heals and opens a pull request", () => {
+    expect(STEPS.map((step) => step.name)).toEqual([
       "Crash",
       "Detect",
       "Diagnose",
@@ -41,42 +34,15 @@ describe("wisdom scenarios", () => {
       "Verify",
       "PR",
     ]);
-    expect(names("env")).toEqual([
-      "Crash",
-      "Detect",
-      "Diagnose",
-      "Patch",
-      "Commit",
-      "Verify",
-      "Try 2",
-      "Try 3",
-      "Rollback",
-    ]);
-    expect(names("syntax")).toEqual([
-      "Crash",
-      "Detect",
-      "Diagnose",
-      "Patch",
-      "Commit",
-      "Verify",
-      "PR",
-    ]);
+    expect(STEPS.at(-1)?.target).toBe("healed");
   });
 
   test("only thinking steps use the LLM", () => {
-    for (const { steps } of SCENARIOS) {
-      for (const step of steps) {
-        expect(Boolean(step.llm), step.name).toBe(
-          ["Diagnose", "Patch", "Try 2", "Try 3"].includes(step.name),
-        );
-      }
+    for (const step of STEPS) {
+      expect(Boolean(step.llm), step.name).toBe(
+        ["Diagnose", "Patch", "Try 2"].includes(step.name),
+      );
     }
-  });
-
-  test("the rollback leaves the service crashed for a human", () => {
-    expect(scenario("env").steps.at(-1)?.target).toBe("crashed");
-    expect(scenario("import").steps.at(-1)?.target).toBe("healed");
-    expect(scenario("syntax").steps.at(-1)?.target).toBe("healed");
   });
 });
 
@@ -95,70 +61,66 @@ describe("Walkthrough", () => {
     }));
   });
 
-  test("waits for a bug and has no extra controls", () => {
+  test("waits for one start button", () => {
     renderIt();
-    expect(screen.getByText("Plant a bug")).toBeInTheDocument();
     expect(screen.queryByTestId("target")).not.toBeInTheDocument();
     expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual([
-      "missing import",
-      "bad env var",
-      "syntax error",
+      "Start workflow",
     ]);
   });
 
-  test("picking a bug types the crash into the terminal", async () => {
+  test("starting types the crash into the terminal", async () => {
     renderIt();
-    await click("syntax error");
+    await click("Start workflow");
     expect(current()).toContain("Crash");
     await tick(6000);
-    expect(screen.getByText(/SyntaxError: expected ':'/)).toBeInTheDocument();
+    expect(screen.getByText(/ModuleNotFoundError/)).toBeInTheDocument();
   });
 
-  test.each([
-    ["missing import", "PR", "healed"],
-    ["bad env var", "Rollback", "crashed"],
-    ["syntax error", "PR", "healed"],
-  ])("%s plays through to %s", async (bug, last, target) => {
+  test("plays through to the pull request", async () => {
     renderIt();
-    await click(bug);
+    await click("Start workflow");
     for (let i = 0; i < 80; i++) await tick(2000);
-    expect(current()).toContain(last);
-    expect(screen.getByTestId("target")).toHaveTextContent(target);
+    expect(current()).toContain("PR");
+    expect(screen.getByTestId("target")).toHaveTextContent("healed");
   });
 
   test("clicking a step jumps there and shows the earlier output", async () => {
     renderIt();
-    await click("syntax error");
+    await click("Start workflow");
     await click(/Patch/);
     expect(current()).toContain("Patch");
-    expect(screen.getByText(/SyntaxError/)).toBeInTheDocument();
+    expect(screen.getByText(/ModuleNotFoundError/)).toBeInTheDocument();
     expect(screen.getByText("Local LLM")).toBeInTheDocument();
     await click(/Commit/);
     expect(screen.getByText("Plain code")).toBeInTheDocument();
   });
 
-  test("a new bug replaces the steps", async () => {
+  test("clicking the current step keeps it playing", async () => {
     renderIt();
-    await click("syntax error");
-    expect(stepNames()).toHaveLength(7);
-    await click("bad env var");
-    expect(stepNames()).toHaveLength(9);
-    expect(stepNames().at(-1)).toContain("Rollback");
+    await click("Start workflow");
+    await tick(6000);
+    await click(/Crash/);
+    expect(screen.getByText(/ModuleNotFoundError/)).toBeInTheDocument();
   });
 
   test("a failed verification crosses out its last check", async () => {
     renderIt();
-    await click("bad env var");
-    await click(/Verify/);
+    await click("Start workflow");
+    await act(async () => {
+      within(screen.getByRole("list", { name: "Steps" }))
+        .getAllByRole("button", { name: /Verify/ })[0]
+        .click();
+    });
     await tick(7000);
     expect(screen.getByLabelText("Failed")).toBeInTheDocument();
   });
 
   test("announces the step for screen readers", async () => {
     renderIt();
-    await click("syntax error");
+    await click("Start workflow");
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Step 1 of 7: Crash. A bug is planted",
+      "Step 1 of 9: Crash. A bug is planted",
     );
   });
 
@@ -170,8 +132,8 @@ describe("Walkthrough", () => {
       removeEventListener: () => {},
     }));
     renderIt();
-    await click("syntax error");
-    expect(screen.getByText(/SyntaxError/)).toBeInTheDocument();
+    await click("Start workflow");
+    expect(screen.getByText(/ModuleNotFoundError/)).toBeInTheDocument();
     await tick(60000);
     expect(current()).toContain("Crash");
     await click(/Detect/);

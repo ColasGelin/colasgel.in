@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import type { SampleSpec } from "@/content/types";
 import type { SampleProps } from ".";
-import { SCENARIOS, type Line, type Scenario } from "./wisdomRun";
+import { STEPS, type Line } from "./wisdomRun";
 
-type Run = { scenario: Scenario; index: number };
 type Progress = { lines: number; chars: number; grace: number; checks: number };
 
 const EMPTY: Progress = { lines: 0, chars: 0, grace: 0, checks: 0 };
@@ -16,8 +15,8 @@ const toneClass = {
   success: "text-accent",
 };
 
-function wholeStep({ scenario, index }: Run): Progress {
-  const step = scenario.steps[index];
+function wholeStep(index: number): Progress {
+  const step = STEPS[index];
   return {
     lines: step.lines.length,
     chars: 0,
@@ -58,17 +57,18 @@ function TerminalLine({ line, text }: { line: Line; text: string }) {
 export default function Walkthrough({}: SampleProps<
   Extract<SampleSpec, { kind: "walkthrough" }>
 >) {
-  const [run, setRun] = useState<Run | null>(null);
+  const [index, setIndex] = useState<number | null>(null);
   const [progress, setProgress] = useState(EMPTY);
 
-  function open(next: Run) {
+  function open(next: number) {
+    if (next === index) return;
     setProgress(reducedMotion() ? wholeStep(next) : EMPTY);
-    setRun(next);
+    setIndex(next);
   }
 
   useEffect(() => {
-    if (!run || reducedMotion()) return;
-    const step = run.scenario.steps[run.index];
+    if (index === null || reducedMotion()) return;
+    const step = STEPS[index];
     let timer: ReturnType<typeof setTimeout>;
     let cancelled = false;
     const sleep = (ms: number) =>
@@ -96,11 +96,11 @@ export default function Walkthrough({}: SampleProps<
         await sleep(520);
         setProgress((p) => ({ ...p, checks: done }));
       }
-      if (run && run.index < run.scenario.steps.length - 1) {
+      if (index !== null && index < STEPS.length - 1) {
         await sleep(2200);
         if (!cancelled) {
           setProgress(EMPTY);
-          setRun({ ...run, index: run.index + 1 });
+          setIndex(index + 1);
         }
       }
     }
@@ -110,76 +110,52 @@ export default function Walkthrough({}: SampleProps<
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [run]);
+  }, [index]);
 
-  if (!run) {
+  if (index === null) {
     return (
-      <div className="flex flex-col items-center gap-4 rounded border border-line bg-surface px-4 py-12 text-center">
-        <p className="text-3xl font-semibold">Plant a bug</p>
+      <div className="flex flex-col items-center gap-3 rounded border border-line bg-surface px-4 py-12 text-center">
+        <p className="text-2xl font-semibold">See the agent in action</p>
         <p className="text-sm text-muted">
-          Start the simulation by choosing a bug to plant, and see the agentic system in action.
+          A simulated run: a bug crashes the service and the agent fixes it.
         </p>
-        <div className="flex flex-wrap justify-center gap-3 font-mono">
-          {SCENARIOS.map((scenario) => (
-            <button
-              key={scenario.id}
-              type="button"
-              onClick={() => open({ scenario, index: 0 })}
-              className="flex cursor-pointer items-center gap-2 rounded bg-accent px-5 py-3 font-medium text-bg transition-transform hover:brightness-110 motion-safe:hover:scale-105"
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3 fill-current">
-                <path d="M3 1l11 7-11 7z" />
-              </svg>
-              {scenario.label}
-            </button>
-          ))}
-        </div>
+        <button
+          type="button"
+          onClick={() => open(0)}
+          className="mt-2 flex cursor-pointer items-center gap-2.5 rounded bg-accent px-6 py-3 font-mono text-lg font-medium text-bg transition-transform hover:brightness-110 motion-safe:hover:scale-105"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 fill-current">
+            <path d="M3 1l11 7-11 7z" />
+          </svg>
+          Start workflow
+        </button>
       </div>
     );
   }
 
-  const { steps } = run.scenario;
-  const step = steps[run.index];
-  const earlier = steps.slice(0, run.index).flatMap((s) => s.lines);
+  const step = STEPS[index];
+  const earlier = STEPS.slice(0, index).flatMap((s) => s.lines);
   const shown = step.lines.slice(0, progress.lines);
   const typing = progress.chars > 0 ? step.lines[progress.lines] : null;
   const items = step.checks?.items ?? [];
 
   return (
     <div className="flex flex-col gap-3 rounded border border-line bg-surface p-3">
-      <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-        <span className="text-muted">Plant a bug</span>
-        {SCENARIOS.map((scenario) => (
-          <button
-            key={scenario.id}
-            type="button"
-            onClick={() => open({ scenario, index: 0 })}
-            className={`cursor-pointer rounded border px-2 py-1 transition-colors ${
-              run.scenario.id === scenario.id
-                ? "border-accent bg-accent text-bg"
-                : "border-line hover:text-accent"
-            }`}
-          >
-            {scenario.label}
-          </button>
-        ))}
-      </div>
-
       <ol
         aria-label="Steps"
         className="grid grid-cols-[repeat(auto-fit,minmax(4.25rem,1fr))] gap-1.5 lg:auto-cols-fr lg:grid-flow-col lg:grid-cols-none lg:gap-1"
       >
-        {steps.map((item, index) => {
-          const now = index === run.index;
+        {STEPS.map((item, position) => {
+          const now = position === index;
           const highlight = item.llm
             ? "border-violet-300 bg-violet-300/10 text-violet-300"
             : "border-accent bg-accent/10 text-accent";
           return (
-            <li key={`${item.name}-${index}`} className="min-w-0">
+            <li key={`${item.name}-${position}`} className="min-w-0">
               <button
                 type="button"
                 aria-current={now ? "step" : undefined}
-                onClick={() => open({ ...run, index })}
+                onClick={() => open(position)}
                 className={`relative h-full w-full cursor-pointer rounded border-2 px-1.5 py-1.5 text-left lg:px-1 transition-colors duration-300 ${
                   now
                     ? highlight
@@ -188,7 +164,7 @@ export default function Walkthrough({}: SampleProps<
               >
                 {item.llm && (
                   <span
-                    className={`absolute top-0.5 right-0.5 ${now ? "" : "text-violet-300"}`}
+                    className={`absolute -top-1.5 -right-1.5 rounded-full bg-surface p-px ${now ? "" : "text-violet-300"}`}
                   >
                     <Sparkle />
                     <span className="sr-only">Uses the local LLM</span>
@@ -223,7 +199,7 @@ export default function Walkthrough({}: SampleProps<
       </div>
 
       <p role="status" className="sr-only">
-        {`Step ${run.index + 1} of ${steps.length}: ${step.name}. ${step.say}`}
+        {`Step ${index + 1} of ${STEPS.length}: ${step.name}. ${step.say}`}
       </p>
 
       <div className="grid gap-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -274,7 +250,13 @@ export default function Walkthrough({}: SampleProps<
                 >
                   <span
                     aria-label={failed ? "Failed" : done ? "Passed" : "Pending"}
-                    className={`w-3 shrink-0 font-mono ${failed ? "text-red-400" : "text-accent"}`}
+                    className={`flex size-4 shrink-0 items-center justify-center rounded-sm border font-mono text-[0.65rem] ${
+                      failed
+                        ? "border-red-400 text-red-400"
+                        : done
+                          ? "border-accent text-accent"
+                          : "border-muted"
+                    }`}
                   >
                     {failed ? "✕" : done ? "✓" : ""}
                   </span>

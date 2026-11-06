@@ -16,11 +16,8 @@ export type Step = {
   grace?: number;
 };
 
-export type Scenario = { id: string; label: string; steps: Step[] };
-
 const ATTEMPT_1 = "attempt 1 of 3";
 const ATTEMPT_2 = "attempt 2 of 3";
-const ATTEMPT_3 = "attempt 3 of 3";
 const BY_CODE = "Validated by code";
 const CRASH_DURING_GRACE: Line = {
   tag: "verify",
@@ -188,161 +185,47 @@ const pullRequest: Step = {
   },
 };
 
-const BAD_URL = "ValueError: invalid database URL";
-
-const failedRetry = (
-  name: string,
-  part: Step["part"],
-  attempt: string,
-  say: string,
-  llmLine: string,
-  grace: number,
-): Step => ({
-  name,
-  part,
-  llm: true,
-  target: "crashed",
-  attempt,
-  say,
-  lines: [
-    { tag: "llm", text: llmLine },
-    { tag: "loop", text: "patch checks passed, committed" },
-    { text: BAD_URL, tone: "error" },
-    CRASH_DURING_GRACE,
-  ],
-  checks: {
-    title: BY_CODE,
-    items: ["Patch checks passed", "Stayed up for grace period"],
-    lastFails: true,
-  },
-  grace,
-});
-
-export const SCENARIOS: Scenario[] = [
+export const STEPS: Step[] = [
+  crash("ModuleNotFoundError: No module named 'helpers'"),
+  detect,
+  diagnose(
+    "helpers, greet",
+    "app/main.py",
+    "app/utils.py",
+    "imports a module that does not exist",
+  ),
+  patch(
+    "app/main.py",
+    "from helpers import greet",
+    "from utils import greet",
+  ),
+  commit("fix import in main.py"),
+  stillCrashing(
+    "ImportError: cannot import name 'greet' from 'utils'",
+    "The first fix was wrong: a new error appears.",
+  ),
   {
-    id: "import",
-    label: "missing import",
-    steps: [
-      crash("ModuleNotFoundError: No module named 'helpers'"),
-      detect,
-      diagnose(
-        "helpers, greet",
-        "app/main.py",
-        "app/utils.py",
-        "imports a module that does not exist",
-      ),
-      patch(
-        "app/main.py",
-        "from helpers import greet",
-        "from utils import greet",
-      ),
-      commit("fix import in main.py"),
-      stillCrashing(
-        "ImportError: cannot import name 'greet' from 'utils'",
-        "The first fix was wrong: a new error appears.",
-      ),
-      {
-        name: "Try 2",
-        part: "analyst",
-        llm: true,
-        target: "crashed",
-        attempt: ATTEMPT_2,
-        say: "The new error goes back to the model, which writes a second fix.",
-        lines: [
-          { tag: "llm", text: "new error: greet lives in app/text.py" },
-          { text: "- from utils import greet", tone: "error" },
-          { text: "+ from text import greet", tone: "success" },
-          { tag: "git", text: "commit on iow/auto-heal: fix greet import" },
-        ],
-        checks: {
-          title: BY_CODE,
-          items: [
-            "Valid JSON",
-            "File exists in the index",
-            "Patch checks passed",
-          ],
-        },
-      },
-      healed(ATTEMPT_2, 2),
-      pullRequest,
+    name: "Try 2",
+    part: "analyst",
+    llm: true,
+    target: "crashed",
+    attempt: ATTEMPT_2,
+    say: "The new error goes back to the model, which writes a second fix.",
+    lines: [
+      { tag: "llm", text: "new error: greet lives in app/text.py" },
+      { text: "- from utils import greet", tone: "error" },
+      { text: "+ from text import greet", tone: "success" },
+      { tag: "git", text: "commit on iow/auto-heal: fix greet import" },
     ],
+    checks: {
+      title: BY_CODE,
+      items: [
+        "Valid JSON",
+        "File exists in the index",
+        "Patch checks passed",
+      ],
+    },
   },
-  {
-    id: "env",
-    label: "bad env var",
-    steps: [
-      crash("KeyError: 'DATABASE_URL'"),
-      detect,
-      diagnose(
-        "DATABASE_URL, environ",
-        "app/config.py",
-        "app/main.py",
-        "reads DATABASE_URL, which is not set",
-      ),
-      patch(
-        "app/config.py",
-        'DB = os.environ["DATABASE_URL"]',
-        'DB = os.environ.get("DATABASE_URL", "")',
-      ),
-      commit("default DATABASE_URL in config.py"),
-      stillCrashing(
-        BAD_URL,
-        "An empty value does not help: the service needs the real secret.",
-      ),
-      failedRetry(
-        "Try 2",
-        "analyst",
-        ATTEMPT_2,
-        "The model tries again from the new error.",
-        "new diagnosis and patch from the latest log",
-        30,
-      ),
-      failedRetry(
-        "Try 3",
-        "loop",
-        ATTEMPT_3,
-        "One last try. Three is the hard limit.",
-        "third diagnosis and patch",
-        55,
-      ),
-      {
-        name: "Rollback",
-        part: "git",
-        target: "crashed",
-        attempt: "gave up",
-        say: "A missing secret can't be fixed from code, so Git restores the original and a human takes over.",
-        lines: [
-          { tag: "git", text: "restoring 4f2a91c" },
-          { tag: "loop", text: "target restarted on the original code" },
-          { tag: "loop", text: "CLEAN FAILURE: human needed", tone: "error" },
-        ],
-        checks: {
-          title: "Rollback",
-          items: [
-            "Tree matches the original commit",
-            "Auto-heal commits unreachable",
-            "Failure shown on the dashboard",
-          ],
-        },
-      },
-    ],
-  },
-  {
-    id: "syntax",
-    label: "syntax error",
-    steps: [
-      crash("SyntaxError: expected ':'"),
-      detect,
-      diagnose(
-        "health, routes",
-        "app/routes.py",
-        "app/main.py",
-        "function is missing its colon",
-      ),
-      patch("app/routes.py", "def health()", "def health():"),
-      commit("fix syntax in routes.py"),
-      healed(ATTEMPT_1, 1),
-      pullRequest,
-    ],
-  },
+  healed(ATTEMPT_2, 2),
+  pullRequest,
 ];

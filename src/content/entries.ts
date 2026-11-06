@@ -51,7 +51,7 @@ export const entries: Entry[] = [
     sample: {
       kind: "walkthrough",
       caption:
-        "A simulation with illustrative output. Pick one of three planted bugs and follow the agent: it detects the crash, diagnoses it with a local model, patches and commits the code, then verifies the service, with up to three attempts before rolling back through Git.",
+        "A simulation with illustrative output. A bug crashes the service, then the agent detects it, diagnoses it with a local model, patches and commits the code, and verifies the service, retrying once before opening a pull request.",
     },
   },
   {
