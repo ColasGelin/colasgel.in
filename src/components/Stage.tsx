@@ -70,16 +70,18 @@ export function Stage({
           <li key={line}>{line}</li>
         ))}
       </ul>
-      <ul aria-label="Stack" className="flex flex-wrap gap-1.5">
-        {entry.stack.map((item) => (
-          <li
-            key={item}
-            className="rounded border border-line px-2 py-0.5 font-mono text-xs text-muted"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+      {entry.stack.length > 0 && (
+        <ul aria-label="Stack" className="flex flex-wrap gap-1.5">
+          {entry.stack.map((item) => (
+            <li
+              key={item}
+              className="rounded border border-line px-2 py-0.5 font-mono text-xs text-muted"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
       {entry.link && (
         <a
           href={entry.link.href}

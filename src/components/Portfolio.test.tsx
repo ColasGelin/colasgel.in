@@ -43,7 +43,7 @@ describe("Portfolio", () => {
   test("opens on CyberBridge", async () => {
     render(<Portfolio />);
     expect(
-      screen.getByRole("button", { name: /CyberBridge/ }),
+      screen.getByRole("button", { name: /^CyberBridge/ }),
     ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText(/RAG pipelines, agents and an MCP server/)).toBeVisible();
     expect(await screen.findByText("diagram sample")).toBeInTheDocument();
@@ -311,13 +311,13 @@ describe("Portfolio on a phone", () => {
     ).not.toBeInTheDocument();
     expect(
       within(screen.getByRole("list", { name: "Work" })).getAllByRole("button"),
-    ).toHaveLength(12);
+    ).toHaveLength(13);
   });
 
   test("the sample opens inside its row, one at a time", async () => {
     render(<Portfolio />);
     const list = screen.getByRole("list", { name: "Work" });
-    await userEvent.click(screen.getByRole("button", { name: /CyberBridge/ }));
+    await userEvent.click(screen.getByRole("button", { name: /^CyberBridge/ }));
     expect(
       within(list).getByRole("heading", { name: "CyberBridge" }),
     ).toBeVisible();
@@ -356,7 +356,7 @@ describe("Portfolio on a phone", () => {
 
   test("tapping the open row closes it", async () => {
     render(<Portfolio />);
-    const row = screen.getByRole("button", { name: /CyberBridge/ });
+    const row = screen.getByRole("button", { name: /^CyberBridge/ });
     await userEvent.click(row);
     await userEvent.click(row);
     expect(

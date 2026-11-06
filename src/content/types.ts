@@ -2,6 +2,7 @@ export type Filter = "all" | "work" | "projects" | "hackathons";
 export type Tag = "work" | "42" | "personal" | "1st place";
 export type DiagramId =
   | "cyberbridge"
+  | "benchmark"
   | "wisdom"
   | "context"
   | "iot"

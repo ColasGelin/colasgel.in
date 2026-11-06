@@ -5,8 +5,9 @@ import Diagram, { DIAGRAM_IDS } from "./Diagram";
 import { cyberbridgeGraph } from "./diagrams/graphData";
 
 describe("Diagram", () => {
-  test("covers all eight diagrams", () => {
+  test("covers all nine diagrams", () => {
     expect([...DIAGRAM_IDS].sort()).toEqual([
+      "benchmark",
       "context",
       "cumarai",
       "cyberbridge",
@@ -34,6 +35,7 @@ describe("Diagram", () => {
   });
 
   test.each([
+    ["benchmark", ["Cloud", "On-prem", "Report", "IOC", "quality", "cost"]],
     ["wisdom", ["Observe", "Diagnose", "Patch", "Verify", "local LLM"]],
     ["iot", ["GitLab", "Argo CD", "K3s cluster"]],
     ["cumarai", ["Document agent", "Content agent", "Statistics agent", "LangGraph", "LangSmith"]],

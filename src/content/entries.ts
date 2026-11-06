@@ -55,6 +55,31 @@ export const entries: Entry[] = [
     },
   },
   {
+    id: "benchmark",
+    name: "AI Benchmark",
+    summary: "Compares LLMs across CyberBridge's AI features",
+    tag: "work",
+    dates: "Sherpa Tribe · CyberBridge",
+    filters: ["projects"],
+    built: [
+      "Ten AI tasks scored on quality, tokens, speed and cost",
+      "Cloud against on-prem, compared case by case",
+      "Captures every LLM call at the HTTP layer",
+    ],
+    stack: [
+      "Python",
+      "Ollama",
+      "OpenAI",
+      "Docker",
+    ],
+    sample: {
+      kind: "diagram",
+      id: "benchmark",
+      caption:
+        "Ten AI tasks run on cloud and on-prem models, each measured on quality, tokens, speed and cost. It shows the comparison, not real results.",
+    },
+  },
+  {
     id: "context",
     name: "Inception-of-Context",
     summary: "Local AI coding assistant with no cloud dependency",

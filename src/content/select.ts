@@ -9,13 +9,14 @@ export const FILTERS: { id: Filter; label: string }[] = [
 
 export const KIND_COLORS = {
   work: "#93c5fd",
-  projects: "#c4b5fd",
+  projects: "#6ee7b7",
   hackathons: "#fda4af",
   school: "#fcd34d",
 };
 
 export function entryColor(entry: Entry): string {
   if (entry.id === "school42") return KIND_COLORS.school;
+  if (entry.tag === "work") return KIND_COLORS.work;
   return KIND_COLORS[entry.filters[0]];
 }
 

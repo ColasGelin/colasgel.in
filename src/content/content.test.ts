@@ -14,8 +14,8 @@ const ids = (filter: Parameters<typeof filterEntries>[1]) =>
   filterEntries(entries, filter).map((e) => e.id);
 
 describe("entries", () => {
-  test("lists 12 entries with CyberBridge first", () => {
-    expect(entries).toHaveLength(12);
+  test("lists 13 entries with CyberBridge first", () => {
+    expect(entries).toHaveLength(13);
     expect(entries[0].id).toBe("cyberbridge");
   });
 
@@ -96,7 +96,7 @@ describe("content rules", () => {
 
 describe("filterEntries", () => {
   test("all returns everything", () => {
-    expect(ids("all")).toHaveLength(12);
+    expect(ids("all")).toHaveLength(13);
   });
 
   test("work returns the jobs and the school", () => {
@@ -107,8 +107,8 @@ describe("filterEntries", () => {
     expect(ids("hackathons")).toHaveLength(2);
   });
 
-  test("projects returns 7", () => {
-    expect(ids("projects")).toHaveLength(7);
+  test("projects returns 8", () => {
+    expect(ids("projects")).toHaveLength(8);
   });
 
   test("there is no 42 filter", () => {
@@ -139,6 +139,12 @@ describe("entryColor", () => {
     expect(color("cumarai")).toBe(KIND_COLORS.work);
     expect(color("wisdom")).toBe(KIND_COLORS.projects);
     expect(color("lanoria")).toBe(KIND_COLORS.hackathons);
+  });
+
+  test("keeps work done inside a job blue under Projects", () => {
+    expect(ids("projects")).toContain("benchmark");
+    expect(ids("work")).not.toContain("benchmark");
+    expect(color("benchmark")).toBe(KIND_COLORS.work);
   });
 
   test("gives 42 School its own colour", () => {
