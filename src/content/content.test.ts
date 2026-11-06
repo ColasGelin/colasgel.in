@@ -149,6 +149,9 @@ describe("sampleLabel", () => {
     expect(
       sampleLabel({ kind: "diagram", id: "wisdom", caption: "" }),
     ).toBe("Diagram");
+    expect(sampleLabel({ kind: "walkthrough", caption: "" })).toBe(
+      "Example run",
+    );
   });
 
   test("gallery and no sample have no label", () => {

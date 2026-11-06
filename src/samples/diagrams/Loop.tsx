@@ -1,9 +1,9 @@
 const CENTER = { x: 320, y: 135 };
 const RADIUS = 85;
 const STOPS = [
-  { label: "Write fix", x: 320, y: 50 },
+  { label: "Patch", x: 320, y: 50 },
   { label: "Verify", x: 394, y: 177 },
-  { label: "Revise", x: 246, y: 177 },
+  { label: "Retry", x: 246, y: 177 },
 ];
 
 function Pill({
@@ -65,13 +65,13 @@ export function Loop() {
         className="orbit-dot"
         style={{ offsetPath: `path("${circle}")` }}
       />
-      <Pill x={80} y={50} label="Logs" />
-      <Pill x={186} y={50} label="Error found" />
+      <Pill x={80} y={50} label="Crash" />
+      <Pill x={186} y={50} label="Diagnosis" />
       {STOPS.map((stop) => (
         <Pill key={stop.label} {...stop} />
       ))}
-      <Pill x={500} y={177} label="Passed" accent />
-      <Pill x={540} y={70} label="Decision trace" />
+      <Pill x={500} y={177} label="Healed" accent />
+      <Pill x={540} y={70} label="Auto-heal branch" />
     </svg>
   );
 }

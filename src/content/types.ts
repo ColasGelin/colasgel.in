@@ -23,6 +23,7 @@ export type SampleSpec =
         height: number;
       }[];
     }
+  | { kind: "walkthrough"; caption: string }
   | { kind: "snake"; caption: string }
   | { kind: "refresh"; caption: string };
 

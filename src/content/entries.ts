@@ -59,23 +59,24 @@ export const entries: Entry[] = [
   {
     id: "wisdom",
     name: "Inception-of-Wisdom",
-    summary: "Autonomous agent that fixes production errors",
+    summary: "Local agent that heals a crashing service",
     tag: "42",
     filters: ["projects"],
     built: [
-      "Watches production logs and detects errors",
-      "Writes a fix and revises it until it passes",
-      "Records every decision the LLM makes",
+      "Detects crashes from Docker state and HTTP checks",
+      "Patches, commits, restarts and verifies the service",
+      "Three attempts, then a clean Git rollback",
     ],
     stack: [
-      "LLM agents",
-      "Observability",
+      "Python",
+      "Docker",
+      "ChromaDB",
+      "Local LLM",
     ],
     sample: {
-      kind: "diagram",
-      id: "wisdom",
+      kind: "walkthrough",
       caption:
-        "The agent detects an error in the logs, writes a fix, verifies it, and revises it until it passes, recording each decision.",
+        "An example run with illustrative output. Pick one of three planted bugs and follow the agent: it detects the crash, diagnoses it with a local model, patches and commits the code, then verifies the service, with up to three attempts before rolling back through Git.",
     },
   },
   {

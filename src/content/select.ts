@@ -24,13 +24,15 @@ export function resolveSelection(
 
 export function sampleLabel(
   sample?: SampleSpec,
-): "Live" | "Recorded run" | "Diagram" | null {
+): "Live" | "Recorded run" | "Example run" | "Diagram" | null {
   switch (sample?.kind) {
     case "snake":
     case "refresh":
       return "Live";
     case "replay":
       return "Recorded run";
+    case "walkthrough":
+      return "Example run";
     case "diagram":
       return "Diagram";
     default:

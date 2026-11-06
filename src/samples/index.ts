@@ -4,6 +4,7 @@ import type { SampleSpec } from "@/content/types";
 import Diagram from "./Diagram";
 import Gallery from "./Gallery";
 import { SampleSkeleton } from "./SampleSkeleton";
+import Walkthrough from "./Walkthrough";
 
 export type SampleProps<S extends SampleSpec = SampleSpec> = {
   spec: S;
@@ -26,6 +27,7 @@ function lazySample<K extends SampleSpec["kind"]>(
 const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
   diagram: Diagram as unknown as ComponentType<SampleProps>,
   gallery: Gallery as unknown as ComponentType<SampleProps>,
+  walkthrough: Walkthrough as unknown as ComponentType<SampleProps>,
   replay: lazySample<"replay">(() => import("./Replay"), "h-60"),
   snake: lazySample<"snake">(() => import("./Snake"), "h-97"),
   refresh: lazySample<"refresh">(() => import("./ReFresh"), "aspect-[4/3]"),

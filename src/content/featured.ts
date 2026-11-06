@@ -9,7 +9,7 @@ export const featured = [
     entryId: "wisdom",
     category: "Project",
     title: "Inception-of-Wisdom",
-    line: "Autonomous self-healing infrastructure combining local LLMs, retrieval, Docker, Git and automated verification.",
+    line: "Self-healing loop on a local model: detects a crash, patches the code, verifies the fix and rolls back through Git if it fails.",
   },
   {
     entryId: "school42",
