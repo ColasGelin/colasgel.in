@@ -62,7 +62,7 @@ export function FeaturedWork({ onOpen }: Props) {
       </section>
       <section
         aria-labelledby="hackathon-heading"
-        className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-line px-4 py-2.5 font-mono text-xs"
+        className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-lg border border-line px-4 py-2.5 font-mono text-xs"
       >
         <svg
           viewBox="0 0 24 24"
@@ -84,7 +84,7 @@ export function FeaturedWork({ onOpen }: Props) {
             onClick={(event) => onOpen(entryId, event)}
             className="hover:text-accent"
           >
-            <span aria-hidden="true" className="mr-3 text-muted">
+            <span aria-hidden="true" className="mr-3 hidden text-muted sm:inline">
               ·
             </span>
             {label} — 1st place
