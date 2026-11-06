@@ -141,14 +141,16 @@ describe("entryColor", () => {
     expect(color("lanoria")).toBe(KIND_COLORS.hackathons);
   });
 
-  test("keeps work done inside a job blue under Projects", () => {
+  test("colours a work project as a project", () => {
     expect(ids("projects")).toContain("benchmark");
     expect(ids("work")).not.toContain("benchmark");
-    expect(color("benchmark")).toBe(KIND_COLORS.work);
+    expect(entries.find((e) => e.id === "benchmark")?.tag).toBe("work");
+    expect(color("benchmark")).toBe(KIND_COLORS.projects);
   });
 
-  test("gives 42 School its own colour", () => {
-    expect(color("school42")).toBe(KIND_COLORS.school);
+  test("files 42 School under education with its own colour", () => {
+    expect(entries.find((e) => e.id === "school42")?.tag).toBe("education");
+    expect(color("school42")).toBe(KIND_COLORS.education);
   });
 });
 
@@ -175,7 +177,7 @@ describe("sampleLabel", () => {
       sampleLabel({ kind: "diagram", id: "wisdom", caption: "" }),
     ).toBe("Diagram");
     expect(sampleLabel({ kind: "walkthrough", caption: "" })).toBe(
-      "Example run",
+      "Simulation",
     );
   });
 

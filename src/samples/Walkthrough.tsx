@@ -10,10 +10,6 @@ type Progress = { lines: number; chars: number; grace: number; checks: number };
 
 const EMPTY: Progress = { lines: 0, chars: 0, grace: 0, checks: 0 };
 const MAX_LINES = 13;
-const IDLE_LINES: Line[] = [
-  { tag: "$", text: "docker compose ps" },
-  { text: "target running" },
-];
 
 const toneClass = {
   error: "text-red-400",
@@ -116,14 +112,38 @@ export default function Walkthrough({}: SampleProps<
     };
   }, [run]);
 
-  const steps = run?.scenario.steps ?? [];
-  const step = run ? steps[run.index] : null;
-  const earlier = run
-    ? steps.slice(0, run.index).flatMap((s) => s.lines)
-    : IDLE_LINES;
-  const shown = step ? step.lines.slice(0, progress.lines) : [];
-  const typing = step && progress.chars > 0 ? step.lines[progress.lines] : null;
-  const items = step?.checks?.items ?? [];
+  if (!run) {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded border border-line bg-surface px-4 py-12 text-center">
+        <p className="text-3xl font-semibold">Plant a bug</p>
+        <p className="text-sm text-muted">
+          Start the simulation by choosing a bug to plant, and see the agentic system in action.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3 font-mono">
+          {SCENARIOS.map((scenario) => (
+            <button
+              key={scenario.id}
+              type="button"
+              onClick={() => open({ scenario, index: 0 })}
+              className="flex cursor-pointer items-center gap-2 rounded bg-accent px-5 py-3 font-medium text-bg transition-transform hover:brightness-110 motion-safe:hover:scale-105"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3 fill-current">
+                <path d="M3 1l11 7-11 7z" />
+              </svg>
+              {scenario.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const { steps } = run.scenario;
+  const step = steps[run.index];
+  const earlier = steps.slice(0, run.index).flatMap((s) => s.lines);
+  const shown = step.lines.slice(0, progress.lines);
+  const typing = progress.chars > 0 ? step.lines[progress.lines] : null;
+  const items = step.checks?.items ?? [];
 
   return (
     <div className="flex flex-col gap-3 rounded border border-line bg-surface p-3">
@@ -135,8 +155,8 @@ export default function Walkthrough({}: SampleProps<
             type="button"
             onClick={() => open({ scenario, index: 0 })}
             className={`cursor-pointer rounded border px-2 py-1 transition-colors ${
-              run?.scenario.id === scenario.id
-                ? "border-accent text-accent"
+              run.scenario.id === scenario.id
+                ? "border-accent bg-accent text-bg"
                 : "border-line hover:text-accent"
             }`}
           >
@@ -145,79 +165,65 @@ export default function Walkthrough({}: SampleProps<
         ))}
       </div>
 
-      {run && step ? (
-        <>
-          <ol
-            aria-label="Steps"
-            className="grid grid-cols-[repeat(auto-fit,minmax(4.25rem,1fr))] gap-1.5 lg:auto-cols-fr lg:grid-flow-col lg:grid-cols-none lg:gap-1"
-          >
-            {steps.map((item, index) => {
-              const now = index === run.index;
-              const highlight = item.llm
-                ? "border-violet-300 bg-violet-300/10 text-violet-300"
-                : "border-accent bg-accent/10 text-accent";
-              return (
-                <li key={`${item.name}-${index}`} className="min-w-0">
-                  <button
-                    type="button"
-                    aria-current={now ? "step" : undefined}
-                    onClick={() => open({ ...run, index })}
-                    className={`relative h-full w-full cursor-pointer rounded border-2 px-1.5 py-1.5 text-left lg:px-1 transition-colors duration-300 ${
-                      now
-                        ? highlight
-                        : "border-line hover:border-muted text-muted"
-                    }`}
+      <ol
+        aria-label="Steps"
+        className="grid grid-cols-[repeat(auto-fit,minmax(4.25rem,1fr))] gap-1.5 lg:auto-cols-fr lg:grid-flow-col lg:grid-cols-none lg:gap-1"
+      >
+        {steps.map((item, index) => {
+          const now = index === run.index;
+          const highlight = item.llm
+            ? "border-violet-300 bg-violet-300/10 text-violet-300"
+            : "border-accent bg-accent/10 text-accent";
+          return (
+            <li key={`${item.name}-${index}`} className="min-w-0">
+              <button
+                type="button"
+                aria-current={now ? "step" : undefined}
+                onClick={() => open({ ...run, index })}
+                className={`relative h-full w-full cursor-pointer rounded border-2 px-1.5 py-1.5 text-left lg:px-1 transition-colors duration-300 ${
+                  now
+                    ? highlight
+                    : "border-line hover:border-muted text-muted"
+                }`}
+              >
+                {item.llm && (
+                  <span
+                    className={`absolute top-0.5 right-0.5 ${now ? "" : "text-violet-300"}`}
                   >
-                    {item.llm && (
-                      <span
-                        className={`absolute top-0.5 right-0.5 ${now ? "" : "text-violet-300"}`}
-                      >
-                        <Sparkle />
-                        <span className="sr-only">Uses the local LLM</span>
-                      </span>
-                    )}
-                    <span className="block truncate text-xs font-medium lg:text-[0.7rem]">
-                      {item.name}
-                    </span>
-                    <span
-                      aria-hidden="true"
-                      className="block truncate font-mono text-[0.65rem]"
-                    >
-                      {item.part}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-          <div className="flex min-h-7 items-center gap-2.5 text-sm text-muted">
-            <span
-              className={`inline-flex shrink-0 items-center gap-1 rounded border px-2 py-0.5 font-mono text-xs ${
-                step.llm
-                  ? "border-violet-300 text-violet-300"
-                  : "border-line"
-              }`}
-            >
-              {step.llm && <Sparkle />}
-              {step.llm ? "Local LLM" : "Plain code"}
-            </span>
-            <span aria-hidden="true">{step.say}</span>
-          </div>
-        </>
-      ) : (
-        <p className="flex min-h-13 items-center gap-1.5 rounded border border-dashed border-line px-3 text-sm text-muted">
-          Pick a bug to start.
-          <span className="inline-flex items-center gap-1 text-violet-300">
-            <Sparkle />
-          </span>
-          marks the steps that use the local model.
-        </p>
-      )}
+                    <Sparkle />
+                    <span className="sr-only">Uses the local LLM</span>
+                  </span>
+                )}
+                <span className="block truncate text-xs font-medium lg:text-[0.7rem]">
+                  {item.name}
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="block truncate font-mono text-[0.65rem]"
+                >
+                  {item.part}
+                </span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+      <div className="flex min-h-7 items-center gap-2.5 text-sm text-muted">
+        <span
+          className={`inline-flex shrink-0 items-center gap-1 rounded border px-2 py-0.5 font-mono text-xs ${
+            step.llm
+              ? "border-violet-300 text-violet-300"
+              : "border-line"
+          }`}
+        >
+          {step.llm && <Sparkle />}
+          {step.llm ? "Local LLM" : "Plain code"}
+        </span>
+        <span aria-hidden="true">{step.say}</span>
+      </div>
 
       <p role="status" className="sr-only">
-        {run && step
-          ? `Step ${run.index + 1} of ${steps.length}: ${step.name}. ${step.say}`
-          : ""}
+        {`Step ${run.index + 1} of ${steps.length}: ${step.name}. ${step.say}`}
       </p>
 
       <div className="grid gap-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -227,13 +233,13 @@ export default function Walkthrough({}: SampleProps<
               target:{" "}
               <span
                 className={
-                  step?.target === "crashed" ? "text-red-400" : "text-accent"
+                  step.target === "crashed" ? "text-red-400" : "text-accent"
                 }
               >
-                {step?.target ?? "running"}
+                {step.target}
               </span>
             </span>
-            <span>{step?.attempt ?? "idle"}</span>
+            <span>{step.attempt}</span>
           </div>
           <div className="flex h-60 flex-col justify-end overflow-hidden p-3 font-mono text-xs leading-relaxed">
             {[...earlier, ...shown].slice(-MAX_LINES).map((line, index) => (
@@ -249,7 +255,7 @@ export default function Walkthrough({}: SampleProps<
         </div>
         <div className="flex min-w-0 flex-col rounded border border-line">
           <div className="flex justify-between gap-2 border-b border-line px-3 py-1.5 font-mono text-xs text-muted">
-            <span>{step?.checks?.title ?? "Checks"}</span>
+            <span>{step.checks?.title ?? "Checks"}</span>
             {items.length > 0 && (
               <span>
                 {progress.checks} of {items.length}
@@ -260,7 +266,7 @@ export default function Walkthrough({}: SampleProps<
             {items.map((item, index) => {
               const done = index < progress.checks;
               const failed =
-                done && step?.checks?.lastFails && index === items.length - 1;
+                done && step.checks?.lastFails && index === items.length - 1;
               return (
                 <li
                   key={item}
@@ -277,7 +283,7 @@ export default function Walkthrough({}: SampleProps<
               );
             })}
           </ul>
-          {step?.grace !== undefined && (
+          {step.grace !== undefined && (
             <div className="px-3 pb-3">
               <p className="mb-1 font-mono text-xs text-muted">grace period</p>
               <div className="h-1 overflow-hidden rounded bg-line">

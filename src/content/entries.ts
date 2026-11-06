@@ -51,7 +51,7 @@ export const entries: Entry[] = [
     sample: {
       kind: "walkthrough",
       caption:
-        "An example run with illustrative output. Pick one of three planted bugs and follow the agent: it detects the crash, diagnoses it with a local model, patches and commits the code, then verifies the service, with up to three attempts before rolling back through Git.",
+        "A simulation with illustrative output. Pick one of three planted bugs and follow the agent: it detects the crash, diagnoses it with a local model, patches and commits the code, then verifies the service, with up to three attempts before rolling back through Git.",
     },
   },
   {
@@ -266,7 +266,7 @@ export const entries: Entry[] = [
     id: "school42",
     name: "42 School",
     summary: "RNCP 7 (Master's level) in Computer Science, in progress",
-    tag: "42",
+    tag: "education",
     dates: "Lyon, then Málaga · Nov 2022 – expected May 2027",
     filters: ["work"],
     built: [

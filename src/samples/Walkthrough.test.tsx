@@ -97,8 +97,8 @@ describe("Walkthrough", () => {
 
   test("waits for a bug and has no extra controls", () => {
     renderIt();
-    expect(screen.getByText(/Pick a bug to start/)).toBeInTheDocument();
-    expect(screen.getByText(/target running/)).toBeInTheDocument();
+    expect(screen.getByText("Plant a bug")).toBeInTheDocument();
+    expect(screen.queryByTestId("target")).not.toBeInTheDocument();
     expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual([
       "missing import",
       "bad env var",

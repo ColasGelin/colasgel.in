@@ -14,7 +14,7 @@ const visuals: Record<string, ComponentType> = {
 const colors: Record<string, string> = {
   cyberbridge: KIND_COLORS.work,
   wisdom: KIND_COLORS.projects,
-  school42: KIND_COLORS.school,
+  school42: KIND_COLORS.education,
 };
 
 type Props = {

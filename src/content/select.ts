@@ -11,12 +11,11 @@ export const KIND_COLORS = {
   work: "#93c5fd",
   projects: "#6ee7b7",
   hackathons: "#fda4af",
-  school: "#fcd34d",
+  education: "#fcd34d",
 };
 
 export function entryColor(entry: Entry): string {
-  if (entry.id === "school42") return KIND_COLORS.school;
-  if (entry.tag === "work") return KIND_COLORS.work;
+  if (entry.tag === "education") return KIND_COLORS.education;
   return KIND_COLORS[entry.filters[0]];
 }
 
@@ -37,7 +36,7 @@ export function resolveSelection(
 
 export function sampleLabel(
   sample?: SampleSpec,
-): "Live" | "Recorded run" | "Example run" | "Diagram" | null {
+): "Live" | "Recorded run" | "Simulation" | "Diagram" | null {
   switch (sample?.kind) {
     case "snake":
     case "refresh":
@@ -45,7 +44,7 @@ export function sampleLabel(
     case "replay":
       return "Recorded run";
     case "walkthrough":
-      return "Example run";
+      return "Simulation";
     case "diagram":
       return "Diagram";
     default:

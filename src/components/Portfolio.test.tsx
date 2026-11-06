@@ -138,7 +138,7 @@ describe("featured work", () => {
     ]);
     expect(within(links[0]).getByText("Experience")).toBeVisible();
     expect(within(links[1]).getByText("Project")).toBeVisible();
-    expect(within(links[2]).getByText("School")).toBeVisible();
+    expect(within(links[2]).getByText("Education")).toBeVisible();
   });
 
   test("the rest of the work stays below the featured section", () => {

@@ -13,7 +13,7 @@ export const featured = [
   },
   {
     entryId: "school42",
-    category: "School",
+    category: "Education",
     title: "42 School",
     line: "Peer-to-peer, project-based training where every project meant learning something new.",
   },
