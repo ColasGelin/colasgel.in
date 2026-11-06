@@ -1,4 +1,5 @@
-import { FILTERS } from "@/content/select";
+import type { CSSProperties } from "react";
+import { FILTERS, KIND_COLORS } from "@/content/select";
 import type { Filter } from "@/content/types";
 
 type Props = {
@@ -15,9 +16,15 @@ export function Filters({ active, onChange }: Props) {
           type="button"
           aria-pressed={filter.id === active}
           onClick={() => onChange(filter.id)}
+          style={
+            {
+              "--kind":
+                filter.id === "all" ? "var(--accent)" : KIND_COLORS[filter.id],
+            } as CSSProperties
+          }
           className={`cursor-pointer rounded px-2.5 py-1 font-mono text-xs transition-colors ${
             filter.id === active
-              ? "bg-accent text-bg"
+              ? "bg-(--kind) text-bg"
               : "text-muted hover:text-text"
           }`}
         >

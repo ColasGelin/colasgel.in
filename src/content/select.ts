@@ -2,10 +2,22 @@ import type { Entry, Filter, SampleSpec } from "./types";
 
 export const FILTERS: { id: Filter; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "work", label: "Work" },
+  { id: "work", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "hackathons", label: "Hackathons" },
 ];
+
+export const KIND_COLORS = {
+  work: "#93c5fd",
+  projects: "#c4b5fd",
+  hackathons: "#fda4af",
+  school: "#fcd34d",
+};
+
+export function entryColor(entry: Entry): string {
+  if (entry.id === "school42") return KIND_COLORS.school;
+  return KIND_COLORS[entry.filters[0]];
+}
 
 export function filterEntries(list: Entry[], filter: Filter): Entry[] {
   if (filter === "all") return list;

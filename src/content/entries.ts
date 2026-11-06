@@ -32,31 +32,6 @@ export const entries: Entry[] = [
     },
   },
   {
-    id: "school42",
-    name: "42 School",
-    summary: "RNCP 7 (Master's level) in Computer Science, in progress",
-    tag: "42",
-    dates: "Lyon, then Málaga · Nov 2022 – expected May 2027",
-    filters: ["work"],
-    built: [
-      "Peer-to-peer and project-based, with no teachers",
-      "Every project meant learning something new alone",
-      "Progress by levels and peer review, not by years",
-    ],
-    stack: [
-      "Python",
-      "TypeScript",
-      "C",
-      "C++",
-    ],
-    sample: {
-      kind: "diagram",
-      id: "school42",
-      caption:
-        "A map in the style of the 42 Holy Graph: the Piscine at the centre, then the inner circle and outer treks of projects.",
-    },
-  },
-  {
     id: "wisdom",
     name: "Inception-of-Wisdom",
     summary: "Local agent that heals a crashing service",
@@ -260,6 +235,31 @@ export const entries: Entry[] = [
       id: "cumarai",
       caption:
         "LangGraph coordinates the document, content and statistics agents, and LangSmith traces each run.",
+    },
+  },
+  {
+    id: "school42",
+    name: "42 School",
+    summary: "RNCP 7 (Master's level) in Computer Science, in progress",
+    tag: "42",
+    dates: "Lyon, then Málaga · Nov 2022 – expected May 2027",
+    filters: ["work"],
+    built: [
+      "Peer-to-peer and project-based, with no teachers",
+      "Every project meant learning something new alone",
+      "Progress by levels and peer review, not by years",
+    ],
+    stack: [
+      "Python",
+      "TypeScript",
+      "C",
+      "C++",
+    ],
+    sample: {
+      kind: "diagram",
+      id: "school42",
+      caption:
+        "A map in the style of the 42 Holy Graph: the Piscine at the centre, then the inner circle and outer treks of projects.",
     },
   },
   {

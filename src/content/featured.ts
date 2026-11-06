@@ -1,7 +1,7 @@
 export const featured = [
   {
     entryId: "cyberbridge",
-    category: "Work",
+    category: "Experience",
     title: "CyberBridge",
     line: "Production AI engineering — RAG, agents, MCP, self-hosted models and end-to-end product development.",
   },

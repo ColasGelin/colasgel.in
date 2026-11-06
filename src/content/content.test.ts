@@ -1,7 +1,14 @@
 import { describe, expect, test } from "vitest";
 import { entries } from "./entries";
 import { profile } from "./profile";
-import { FILTERS, filterEntries, resolveSelection, sampleLabel } from "./select";
+import {
+  FILTERS,
+  KIND_COLORS,
+  entryColor,
+  filterEntries,
+  resolveSelection,
+  sampleLabel,
+} from "./select";
 
 const ids = (filter: Parameters<typeof filterEntries>[1]) =>
   filterEntries(entries, filter).map((e) => e.id);
@@ -93,7 +100,7 @@ describe("filterEntries", () => {
   });
 
   test("work returns the jobs and the school", () => {
-    expect(ids("work")).toEqual(["cyberbridge", "school42", "cumarai"]);
+    expect(ids("work")).toEqual(["cyberbridge", "cumarai", "school42"]);
   });
 
   test("hackathons returns 2", () => {
@@ -107,23 +114,35 @@ describe("filterEntries", () => {
   test("there is no 42 filter", () => {
     expect(FILTERS.map((f) => f.label)).toEqual([
       "All",
-      "Work",
+      "Experience",
       "Projects",
       "Hackathons",
     ]);
   });
 
-  test("42 School leads its projects", () => {
-    expect(ids("all").slice(0, 3)).toEqual([
-      "cyberbridge",
-      "school42",
-      "wisdom",
-    ]);
+  test("42 School comes right after CumarAI", () => {
+    const all = ids("all");
+    expect(all.indexOf("school42")).toBe(all.indexOf("cumarai") + 1);
   });
 
   test("42 projects stay under Projects with their tag", () => {
     expect(ids("projects")).toContain("wisdom");
     expect(entries.find((e) => e.id === "wisdom")?.tag).toBe("42");
+  });
+});
+
+describe("entryColor", () => {
+  const color = (id: string) =>
+    entryColor(entries.find((e) => e.id === id) as (typeof entries)[number]);
+
+  test("colours an entry by its kind", () => {
+    expect(color("cumarai")).toBe(KIND_COLORS.work);
+    expect(color("wisdom")).toBe(KIND_COLORS.projects);
+    expect(color("lanoria")).toBe(KIND_COLORS.hackathons);
+  });
+
+  test("gives 42 School its own colour", () => {
+    expect(color("school42")).toBe(KIND_COLORS.school);
   });
 });
 

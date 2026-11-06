@@ -78,9 +78,9 @@ describe("Portfolio", () => {
     render(<Portfolio />);
     screen.getByRole("button", { name: "All" }).focus();
     await userEvent.tab();
-    expect(screen.getByRole("button", { name: "Work" })).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Experience" })).toHaveFocus();
     await userEvent.keyboard("{Enter}");
-    expect(screen.getByRole("button", { name: "Work" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Experience" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -136,7 +136,7 @@ describe("featured work", () => {
       "#wisdom",
       "#school42",
     ]);
-    expect(within(links[0]).getByText("Work")).toBeVisible();
+    expect(within(links[0]).getByText("Experience")).toBeVisible();
     expect(within(links[1]).getByText("Project")).toBeVisible();
     expect(within(links[2]).getByText("School")).toBeVisible();
   });
@@ -256,7 +256,7 @@ describe("name header", () => {
 
   test("clicking a filter at the top scrolls past the large header", async () => {
     render(<Portfolio />);
-    await userEvent.click(screen.getByRole("button", { name: "Work" }));
+    await userEvent.click(screen.getByRole("button", { name: "Experience" }));
     expect(scrollTo).toHaveBeenCalledTimes(1);
   });
 

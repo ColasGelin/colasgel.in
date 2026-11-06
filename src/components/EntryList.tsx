@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { entryColor } from "@/content/select";
 import type { Entry } from "@/content/types";
 import { Stage } from "./Stage";
 
@@ -24,6 +26,7 @@ export function EntryList({
           <li
             key={entry.id}
             id={`entry-${entry.id}`}
+            style={{ "--kind": entryColor(entry) } as CSSProperties}
             className="scroll-mt-16 border-b border-line"
           >
             <button
@@ -36,7 +39,7 @@ export function EntryList({
             >
               <span className="min-w-0">
                 <span
-                  className={`block text-sm font-medium ${selected ? "text-accent" : ""}`}
+                  className={`block text-sm font-medium ${selected ? "text-(--kind)" : ""}`}
                 >
                   {entry.name}
                 </span>
@@ -44,7 +47,7 @@ export function EntryList({
                   {entry.summary}
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-xs text-muted">
+              <span className="shrink-0 font-mono text-xs text-(--kind)">
                 {entry.tag}
               </span>
             </button>

@@ -1,5 +1,6 @@
 import type { ComponentType, CSSProperties, MouseEvent } from "react";
 import { featured, hackathons } from "@/content/featured";
+import { KIND_COLORS } from "@/content/select";
 import { Bridge } from "@/samples/diagrams/Bridge";
 import { Loop } from "@/samples/diagrams/Loop";
 import { SchoolMap } from "@/samples/diagrams/School";
@@ -11,9 +12,9 @@ const visuals: Record<string, ComponentType> = {
 };
 
 const colors: Record<string, string> = {
-  cyberbridge: "#93c5fd",
-  wisdom: "#c4b5fd",
-  school42: "#fcd34d",
+  cyberbridge: KIND_COLORS.work,
+  wisdom: KIND_COLORS.projects,
+  school42: KIND_COLORS.school,
 };
 
 type Props = {
