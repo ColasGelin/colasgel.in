@@ -90,6 +90,37 @@ export function Stage({
           {entry.link.label}
         </a>
       )}
+      {entry.visuals && (
+        <section
+          aria-labelledby={`visuals-${entry.id}`}
+          className="border-t border-line pt-3"
+        >
+          <h4
+            id={`visuals-${entry.id}`}
+            className="mb-2 font-mono text-xs text-muted"
+          >
+            From the real project
+          </h4>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {entry.visuals.map((image) => (
+              <li key={image.src}>
+                <a href={image.src} target="_blank" rel="noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    width={image.width}
+                    height={image.height}
+                    loading="lazy"
+                    className="h-auto w-full rounded border border-line bg-surface transition-colors hover:border-accent"
+                  />
+                </a>
+                <p className="mt-1 text-xs text-muted">{image.caption}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

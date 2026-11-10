@@ -60,6 +60,12 @@ describe("entries", () => {
     }
   });
 
+  test("simulated entries still show their real output", () => {
+    const visuals = (id: string) => entries.find((e) => e.id === id)?.visuals ?? [];
+    expect(visuals("tpv").map((image) => image.src)).toEqual(["/samples/tpv/psd.webp"]);
+    expect(visuals("supermarket")).toHaveLength(2);
+  });
+
   test("Inception-of-Things credits GitLab", () => {
     const text = JSON.stringify(entries.find((e) => e.id === "iot"));
     expect(text).toContain("GitLab");

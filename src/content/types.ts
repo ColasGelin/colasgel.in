@@ -9,19 +9,18 @@ export type DiagramId =
   | "jobcopilot"
   | "school42";
 
+export type Image = {
+  src: string;
+  alt: string;
+  caption: string;
+  width: number;
+  height: number;
+};
+
 export type SampleSpec =
   | { kind: "diagram"; id: DiagramId; caption: string }
   | { kind: "replay"; src: string; caption: string }
-  | {
-      kind: "gallery";
-      images: {
-        src: string;
-        alt: string;
-        caption: string;
-        width: number;
-        height: number;
-      }[];
-    }
+  | { kind: "gallery"; images: Image[] }
   | { kind: "walkthrough"; caption: string }
   | { kind: "snake"; caption: string }
   | { kind: "refresh"; caption: string }
@@ -41,4 +40,6 @@ export type Entry = {
   stack: string[];
   link?: { label: string; href: string };
   sample?: SampleSpec;
+  // Real output from the project, shown small under everything else.
+  visuals?: Image[];
 };

@@ -174,6 +174,22 @@ export const entries: Entry[] = [
       caption:
         "A simulation with illustrative thresholds. The model counts customers per till, the agent suggests opening or closing a till, and nothing changes until the operator approves.",
     },
+    visuals: [
+      {
+        src: "/samples/supermarket/detections.webp",
+        width: 960,
+        height: 550,
+        alt: "Top-down supermarket frames with detection boxes drawn around customers",
+        caption: "Detections from the fine-tuned model on validation frames.",
+      },
+      {
+        src: "/samples/supermarket/training.webp",
+        width: 960,
+        height: 480,
+        alt: "Training and validation curves from the YOLOv8 fine-tuning run",
+        caption: "Loss and accuracy curves from the fine-tuning run.",
+      },
+    ],
   },
   {
     id: "jobcopilot",
@@ -317,5 +333,14 @@ export const entries: Entry[] = [
       caption:
         "A simulation on synthetic signals. Removing noise keeps the 8 to 30 Hz band, then CSP separates the two imagined movements and the classifier predicts the hand.",
     },
+    visuals: [
+      {
+        src: "/samples/tpv/psd.webp",
+        width: 1000,
+        height: 424,
+        alt: "Power spectral density plot of EEG signal, raw against filtered, with the kept 8 to 30 Hz band shaded",
+        caption: "Real EEG power spectrum, keeping the 8 to 30 Hz band.",
+      },
+    ],
   },
 ];
