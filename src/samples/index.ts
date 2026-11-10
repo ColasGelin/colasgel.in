@@ -31,6 +31,10 @@ const samples: Record<SampleSpec["kind"], ComponentType<SampleProps>> = {
   replay: lazySample<"replay">(() => import("./Replay"), "h-60"),
   snake: lazySample<"snake">(() => import("./Snake"), "h-97"),
   refresh: lazySample<"refresh">(() => import("./ReFresh"), "aspect-[4/3]"),
+  eeg: lazySample<"eeg">(() => import("./Eeg"), "h-112"),
+  gitops: lazySample<"gitops">(() => import("./GitOps"), "h-72"),
+  queue: lazySample<"queue">(() => import("./Queue"), "h-120"),
+  codesearch: lazySample<"codesearch">(() => import("./CodeSearch"), "h-96"),
 };
 
 export function loadSample(spec: SampleSpec) {

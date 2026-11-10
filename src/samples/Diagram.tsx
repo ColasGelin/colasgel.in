@@ -3,20 +3,16 @@ import type { DiagramId, SampleSpec } from "@/content/types";
 import type { SampleProps } from ".";
 import { Agents } from "./diagrams/Agents";
 import { Benchmark } from "./diagrams/Benchmark";
-import { Cluster } from "./diagrams/Cluster";
 import { Funnel } from "./diagrams/Funnel";
 import { Graph } from "./diagrams/Graph";
 import { Loop } from "./diagrams/Loop";
 import { Phone } from "./diagrams/Phone";
-import { Rag } from "./diagrams/Rag";
 import { School } from "./diagrams/School";
 
 const views: Record<DiagramId, ComponentType> = {
   cyberbridge: Graph,
   benchmark: Benchmark,
   wisdom: Loop,
-  context: Rag,
-  iot: Cluster,
   lanoria: Phone,
   cumarai: Agents,
   jobcopilot: Funnel,

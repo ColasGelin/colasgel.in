@@ -44,6 +44,10 @@ export function sampleLabel(
     case "replay":
       return "Recorded run";
     case "walkthrough":
+    case "eeg":
+    case "gitops":
+    case "queue":
+    case "codesearch":
       return "Simulation";
     case "diagram":
       return "Diagram";

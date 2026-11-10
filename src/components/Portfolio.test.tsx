@@ -23,7 +23,17 @@ const named = (label: string) =>
 
 beforeEach(() => {
   history.replaceState(null, "", "/");
-  for (const kind of ["diagram", "snake", "refresh", "replay", "gallery"]) {
+  for (const kind of [
+    "diagram",
+    "snake",
+    "refresh",
+    "replay",
+    "gallery",
+    "eeg",
+    "gitops",
+    "queue",
+    "codesearch",
+  ]) {
     mock.components[kind] = named(`${kind} sample`);
   }
 });
@@ -378,6 +388,22 @@ describe("Stage", () => {
   test("the stack is shown as tags", () => {
     render(<Stage entry={stageTestEntry} />);
     expect(screen.getByRole("list", { name: "Stack" })).toHaveTextContent("Go");
+  });
+
+  test("real project visuals sit small under everything else", () => {
+    const image = { src: "/a.webp", alt: "A real plot", caption: "Real output.", width: 10, height: 5 };
+    render(<Stage entry={{ ...stageTestEntry, visuals: [image] }} />);
+    const section = screen.getByRole("region", { name: "From the real project" });
+    expect(within(section).getByRole("img", { name: "A real plot" })).toBeInTheDocument();
+    expect(within(section).getByRole("link")).toHaveAttribute("href", "/a.webp");
+    expect(within(section).getByText("Real output.")).toBeInTheDocument();
+    const link = screen.getByRole("link", { name: "View on GitHub" });
+    expect(link.compareDocumentPosition(section)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  test("an entry without real visuals has no such section", () => {
+    render(<Stage entry={stageTestEntry} />);
+    expect(screen.queryByText("From the real project")).not.toBeInTheDocument();
   });
 
   test("an entry with no sample shows text and no label", () => {

@@ -194,125 +194,6 @@ a:hover .feature-visual svg path {
   }
 }
 
-.rag-query,
-.rag-chunk,
-.rag-hit,
-.rag-line {
-  animation-duration: 8s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-.rag-query {
-  animation-name: rag-query;
-}
-
-@keyframes rag-query {
-  0% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  3% {
-    opacity: 1;
-  }
-  18% {
-    offset-distance: 100%;
-    opacity: 1;
-  }
-  20%,
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-.rag-hit {
-  animation-name: rag-hit;
-}
-
-@keyframes rag-hit {
-  0%,
-  20% {
-    fill: var(--bg);
-    stroke: var(--line);
-  }
-  28%,
-  88% {
-    fill: var(--accent);
-    stroke: var(--accent);
-  }
-  96%,
-  100% {
-    fill: var(--bg);
-    stroke: var(--line);
-  }
-}
-
-.rag-chunk {
-  animation-name: rag-chunk;
-}
-
-@keyframes rag-chunk {
-  0%,
-  34% {
-    offset-distance: 0%;
-    opacity: 0;
-  }
-  36% {
-    offset-distance: 0%;
-    opacity: 1;
-  }
-  58% {
-    offset-distance: 100%;
-    opacity: 1;
-  }
-  60%,
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
-  }
-}
-
-.rag-line {
-  transform-box: fill-box;
-  transform-origin: left;
-  animation-name: rag-line;
-}
-
-@keyframes rag-line {
-  0%,
-  58% {
-    transform: scaleX(0);
-    opacity: 1;
-  }
-  72%,
-  88% {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-  96%,
-  100% {
-    transform: scaleX(1);
-    opacity: 0;
-  }
-}
-
-.rollout-pod {
-  background: var(--line);
-  animation: rollout 5s linear infinite;
-}
-
-@keyframes rollout {
-  0%,
-  5% {
-    background: var(--line);
-  }
-  15%,
-  100% {
-    background: var(--accent);
-  }
-}
-
 .voice-bar {
   height: 25%;
   animation: voice 1.2s ease-in-out infinite alternate;
@@ -402,16 +283,11 @@ a:hover .feature-visual svg path {
     box-shadow: 0 0 0 8px var(--surface), 0 0 0 9px var(--accent);
   }
 
-  .bridge-dot,
-  .rag-query,
-  .rag-chunk {
+  .bridge-dot {
     display: none;
   }
 
   .sample-in,
-  .rag-hit,
-  .rag-line,
-  .rollout-pod,
   .voice-bar,
   .danger-flash,
   .agent-card,
@@ -433,14 +309,5 @@ a:hover .feature-visual svg path {
   .graph-node {
     fill: var(--accent);
     stroke: var(--accent);
-  }
-
-  .rag-hit {
-    fill: var(--accent);
-    stroke: var(--accent);
-  }
-
-  .rollout-pod {
-    background: var(--accent);
   }
 }
