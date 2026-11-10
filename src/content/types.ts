@@ -4,8 +4,6 @@ export type DiagramId =
   | "cyberbridge"
   | "benchmark"
   | "wisdom"
-  | "context"
-  | "iot"
   | "lanoria"
   | "cumarai"
   | "jobcopilot"
@@ -26,7 +24,11 @@ export type SampleSpec =
     }
   | { kind: "walkthrough"; caption: string }
   | { kind: "snake"; caption: string }
-  | { kind: "refresh"; caption: string };
+  | { kind: "refresh"; caption: string }
+  | { kind: "eeg"; caption: string }
+  | { kind: "gitops"; caption: string }
+  | { kind: "queue"; caption: string }
+  | { kind: "codesearch"; caption: string };
 
 export type Entry = {
   id: string;

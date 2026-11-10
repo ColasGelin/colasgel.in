@@ -23,7 +23,17 @@ const named = (label: string) =>
 
 beforeEach(() => {
   history.replaceState(null, "", "/");
-  for (const kind of ["diagram", "snake", "refresh", "replay", "gallery"]) {
+  for (const kind of [
+    "diagram",
+    "snake",
+    "refresh",
+    "replay",
+    "gallery",
+    "eeg",
+    "gitops",
+    "queue",
+    "codesearch",
+  ]) {
     mock.components[kind] = named(`${kind} sample`);
   }
 });

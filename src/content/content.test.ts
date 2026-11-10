@@ -51,6 +51,15 @@ describe("entries", () => {
     expect(JSON.stringify(entries)).not.toContain("MLOps-Waiting-Queue");
   });
 
+  test("the four simulations say what is simulated", () => {
+    const kinds = { tpv: "eeg", iot: "gitops", supermarket: "queue", context: "codesearch" };
+    for (const [id, kind] of Object.entries(kinds)) {
+      const sample = entries.find((e) => e.id === id)?.sample;
+      expect(sample?.kind, id).toBe(kind);
+      expect(JSON.stringify(sample), id).toMatch(/simulation/i);
+    }
+  });
+
   test("Inception-of-Things credits GitLab", () => {
     const text = JSON.stringify(entries.find((e) => e.id === "iot"));
     expect(text).toContain("GitLab");
@@ -179,6 +188,9 @@ describe("sampleLabel", () => {
     expect(sampleLabel({ kind: "walkthrough", caption: "" })).toBe(
       "Simulation",
     );
+    for (const kind of ["eeg", "gitops", "queue", "codesearch"] as const) {
+      expect(sampleLabel({ kind, caption: "" })).toBe("Simulation");
+    }
   });
 
   test("gallery and no sample have no label", () => {
