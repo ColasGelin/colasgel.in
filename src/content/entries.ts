@@ -320,7 +320,7 @@ export const entries: Entry[] = [
     filters: ["projects"],
     built: [
       "Classifies EEG signals with scikit-learn",
-      "My own CSP implementation and visualisation tool",
+      "My own PCA and LDA, on Morlet wavelet features",
     ],
     stack: [
       "Python",
@@ -331,9 +331,16 @@ export const entries: Entry[] = [
     sample: {
       kind: "eeg",
       caption:
-        "A simulation on synthetic signals. Removing noise keeps the 8 to 30 Hz band, then CSP separates the two imagined movements and the classifier predicts the hand.",
+        "A simulation on synthetic signals. Removing noise keeps the 8 to 30 Hz band, then PCA and LDA tell the two imagined movements apart and predict the fist.",
     },
     visuals: [
+      {
+        src: "/samples/tpv/traces.webp",
+        width: 1200,
+        height: 531,
+        alt: "Nine motor-cortex EEG channels over six seconds, the noisy raw recording beside the same channels after the 8 to 30 Hz filter",
+        caption: "Real EEG from nine motor channels, before and after the filter.",
+      },
       {
         src: "/samples/tpv/psd.webp",
         width: 1000,

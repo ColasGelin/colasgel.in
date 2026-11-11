@@ -21,8 +21,8 @@ const TRACES = [
   { label: "C4 · 8 to 30 Hz", clean: true, gain: 1.5 },
 ];
 const HANDS: { id: Hand; label: string }[] = [
-  { id: "left", label: "Left hand" },
-  { id: "right", label: "Right hand" },
+  { id: "left", label: "Left fist" },
+  { id: "right", label: "Right fist" },
 ];
 
 function draw(
@@ -156,7 +156,7 @@ export default function Eeg({}: SampleProps<Extract<SampleSpec, { kind: "eeg" }>
       <div className="grid grid-cols-[auto_1fr_2rem] items-center gap-x-3 gap-y-1.5">
         {[bands.c3, bands.c4].map((band, index) => (
           <div key={index} className="contents">
-            <span className="text-muted">CSP {index + 1}</span>
+            <span className="text-muted">{index === 0 ? "C3" : "C4"} power</span>
             <div className="h-2.5 overflow-hidden rounded-full border border-line bg-bg">
               <div
                 className="h-full bg-accent"
@@ -168,7 +168,7 @@ export default function Eeg({}: SampleProps<Extract<SampleSpec, { kind: "eeg" }>
         ))}
       </div>
       <div className="flex items-center justify-between gap-3 border-t border-line pt-3">
-        <span className="text-muted">Classifier</span>
+        <span className="text-muted">PCA + LDA</span>
         <span
           aria-live="polite"
           className={`font-sans text-sm font-medium ${clean ? "text-accent" : "text-muted"}`}
