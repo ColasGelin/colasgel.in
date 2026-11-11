@@ -26,27 +26,30 @@ describe("Eeg", () => {
     expect(screen.getAllByText(/noise not removed yet/)).toHaveLength(2);
   });
 
-  test("removing the noise comes before the hand choice", () => {
+  test("removing the noise comes before the fist choice", () => {
     render(<Eeg spec={spec} onError={vi.fn()} />);
     const names = screen.getAllByRole("button").map((button) => button.textContent);
-    expect(names.slice(0, 3)).toEqual(["Remove noise", "Left hand", "Right hand"]);
+    expect(names.slice(0, 3)).toEqual(["Remove noise", "Left fist", "Right fist"]);
   });
 
-  test("removing the noise predicts the imagined hand", async () => {
+  test("removing the noise predicts the imagined fist", async () => {
     render(<Eeg spec={spec} onError={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "Remove noise" }));
     await tick(500);
-    expect(screen.getByText("Left hand", { selector: "[aria-live]" })).toBeInTheDocument();
+    expect(screen.getByText("Left fist", { selector: "[aria-live]" })).toBeInTheDocument();
     expect(screen.getByText(/% sure/)).toBeInTheDocument();
     expect(screen.queryByText(/noise not removed yet/)).not.toBeInTheDocument();
+    expect(screen.getByText("PCA + LDA")).toBeInTheDocument();
+    expect(screen.getByText("C3 power")).toBeInTheDocument();
+    expect(screen.queryByText(/CSP/)).not.toBeInTheDocument();
   });
 
-  test("the prediction follows the imagined hand", async () => {
+  test("the prediction follows the imagined fist", async () => {
     render(<Eeg spec={spec} onError={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "Remove noise" }));
-    fireEvent.click(screen.getByRole("button", { name: "Right hand" }));
+    fireEvent.click(screen.getByRole("button", { name: "Right fist" }));
     await tick(6000);
-    expect(screen.getByText("Right hand", { selector: "[aria-live]" })).toBeInTheDocument();
+    expect(screen.getByText("Right fist", { selector: "[aria-live]" })).toBeInTheDocument();
   });
 
   test("unmounting clears the timer", async () => {

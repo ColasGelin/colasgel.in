@@ -62,8 +62,17 @@ describe("entries", () => {
 
   test("simulated entries still show their real output", () => {
     const visuals = (id: string) => entries.find((e) => e.id === id)?.visuals ?? [];
-    expect(visuals("tpv").map((image) => image.src)).toEqual(["/samples/tpv/psd.webp"]);
+    expect(visuals("tpv").map((image) => image.src)).toEqual([
+      "/samples/tpv/traces.webp",
+      "/samples/tpv/psd.webp",
+    ]);
     expect(visuals("supermarket")).toHaveLength(2);
+  });
+
+  test("Total-Perspective-Vortex names the method the repo uses", () => {
+    const tpv = JSON.stringify(entries.find((e) => e.id === "tpv"));
+    expect(tpv).toMatch(/PCA and LDA/);
+    expect(tpv).not.toMatch(/CSP/);
   });
 
   test("Inception-of-Things credits GitLab", () => {
