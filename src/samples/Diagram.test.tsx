@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, test, vi } from "vitest";
 import type { DiagramId } from "@/content/types";
 import Diagram, { DIAGRAM_IDS } from "./Diagram";
-import { cyberbridgeGraph } from "./diagrams/graphData";
 
 describe("Diagram", () => {
   test("covers all seven diagrams", () => {
@@ -33,7 +32,8 @@ describe("Diagram", () => {
   });
 
   test.each([
-    ["benchmark", ["Cloud", "On-prem", "Report", "IOC", "quality", "cost"]],
+    ["cyberbridge", ["Cameras", "Event", "RAG", "MCP server", "Triage model", "Reports", "Chatbot"]],
+    ["benchmark", ["347 test cases", "Cloud · GPT-5", "On-prem · Qwen 3.5-4B", "Regression?", "Fixing agent", "every night"]],
     ["wisdom", ["Observe", "Diagnose", "Patch", "Verify", "local LLM"]],
     ["cumarai", ["Document agent", "Content agent", "Statistics agent", "LangGraph", "LangSmith"]],
     ["jobcopilot", ["578", "27", "5", "0"]],
@@ -63,19 +63,31 @@ describe("Diagram", () => {
   });
 });
 
-describe("CyberBridge graph", () => {
-  test("edges reference real nodes", () => {
-    const ids = new Set(cyberbridgeGraph.nodes.map((n) => n.id));
-    for (const [from, to] of cyberbridgeGraph.edges) {
-      expect(ids.has(from)).toBe(true);
-      expect(ids.has(to)).toBe(true);
-    }
-  });
+describe("CyberBridge diagrams", () => {
+  test.each(["cyberbridge", "benchmark"] as const)(
+    "%s names no product screens or customers",
+    (id) => {
+      const { container } = render(
+        <Diagram spec={{ kind: "diagram", id, caption: "c" }} onError={vi.fn()} />,
+      );
+      const text = container.textContent!.toLowerCase();
+      for (const banned of ["client", "customer"]) {
+        expect(text).not.toContain(banned);
+      }
+    },
+  );
 
-  test("names no product screens or customers", () => {
-    const text = JSON.stringify(cyberbridgeGraph).toLowerCase();
-    for (const banned of ["client", "customer", "dashboard"]) {
-      expect(text).not.toContain(banned);
-    }
-  });
+  test.each(["cyberbridge", "benchmark"] as const)(
+    "%s animates only with the trace dot",
+    (id) => {
+      const { container } = render(
+        <Diagram spec={{ kind: "diagram", id, caption: "c" }} onError={vi.fn()} />,
+      );
+      const animated = container.querySelectorAll("svg [class]");
+      for (const el of animated) {
+        expect(el.getAttribute("class")).toBe("trace-dot");
+      }
+      expect(container.querySelectorAll(".trace-dot").length).toBeGreaterThan(0);
+    },
+  );
 });

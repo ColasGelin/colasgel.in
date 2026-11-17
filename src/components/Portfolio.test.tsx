@@ -55,7 +55,7 @@ describe("Portfolio", () => {
     expect(
       screen.getByRole("button", { name: /^CyberBridge/ }),
     ).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByText(/RAG pipelines, agents and an MCP server/)).toBeVisible();
+    expect(screen.getByText(/RAG over the docs, and an MCP server/)).toBeVisible();
     expect(await screen.findByText("diagram sample")).toBeInTheDocument();
   });
 

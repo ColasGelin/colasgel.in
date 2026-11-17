@@ -14,9 +14,9 @@ export const entries: Entry[] = [
     dates: "Sherpa Tribe · Dec 2025 – Present",
     filters: ["work"],
     built: [
-      "Sole AI engineer, backend to frontend",
-      "RAG pipelines, agents and an MCP server",
-      "Self-hosted, fine-tuned alert triage model",
+      "Reports, briefings, IOC labels and a chatbot, end to end",
+      "RAG over the docs, and an MCP server for the agents",
+      "LoRA fine-tuned Qwen 3.5-4B for self-hosted alert triage",
     ],
     stack: [
       "LangGraph",
@@ -28,7 +28,7 @@ export const entries: Entry[] = [
       kind: "diagram",
       id: "cyberbridge",
       caption:
-        "Physical and network events are correlated, then the AI layer turns them into reports, briefings and chatbot answers.",
+        "Cameras, switches and networks feed event correlation. The AI layer I built alone (RAG, an MCP server, LangGraph agents and a fine-tuned triage model) turns events into reports, briefings, correlations, IOC labels, chatbot answers and triaged alerts.",
     },
   },
   {
@@ -56,27 +56,27 @@ export const entries: Entry[] = [
   },
   {
     id: "benchmark",
-    name: "AI Benchmark",
-    summary: "Compares LLMs across CyberBridge's AI features",
+    name: "aibench",
+    summary: "Nightly evaluation of every CyberBridge AI feature",
     tag: "work",
     dates: "Sherpa Tribe · CyberBridge",
     filters: ["projects"],
     built: [
-      "Ten AI tasks scored on quality, tokens, speed and cost",
-      "Cloud against on-prem, compared case by case",
-      "Captures every LLM call at the HTTP layer",
+      "347 test cases, GPT-5 against self-hosted Qwen 3.5-4B",
+      "LLM judges and a noise band, so only real drops count",
+      "Fixing agent and red team run every night",
     ],
     stack: [
       "Python",
-      "Ollama",
-      "OpenAI",
-      "Docker",
+      "Claude Code",
+      "promptfoo",
+      "Langfuse",
     ],
     sample: {
       kind: "diagram",
       id: "benchmark",
       caption:
-        "Ten AI tasks run on cloud and on-prem models, each measured on quality, tokens, speed and cost. It shows the comparison, not real results.",
+        "Every night, 347 test cases run across the 10 AI features on a cloud and a self-hosted model. LLM judges score quality next to tokens, speed and cost. A regression beyond the 95% noise band starts a fixing agent, whose fix must pass a 30% held-out set and my review. A promptfoo red team attacks every feature.",
     },
   },
   {

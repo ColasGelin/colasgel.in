@@ -37,8 +37,7 @@ body {
 }
 
 .feature-visual text,
-.feature-visual [data-logo],
-.feature-visual .flow-dot {
+.feature-visual [data-logo] {
   display: none;
 }
 
@@ -94,31 +93,18 @@ a:hover .feature-visual svg path {
   }
 }
 
-.flow-dot {
-  opacity: 0;
-  animation-name: flow;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+.trace-dot {
+  animation: trace 6s linear infinite;
 }
 
-@keyframes flow {
-  0% {
-    offset-distance: 0%;
-    opacity: 1;
-  }
-  20% {
+@keyframes trace {
+  to {
     offset-distance: 100%;
-    opacity: 1;
-  }
-  21%,
-  100% {
-    offset-distance: 100%;
-    opacity: 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-dot {
+  .trace-dot {
     display: none;
   }
 }
