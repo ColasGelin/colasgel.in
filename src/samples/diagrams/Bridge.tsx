@@ -5,7 +5,6 @@ const PALE = "#dbeafe";
 const NIGHT = "#132238";
 const WATER = "#1e3a5f";
 
-const SIGNALS = ["M 56 100 H 170", "M 284 100 H 170"];
 const LEDS = [72, 88, 104, 120];
 
 export function Bridge() {
@@ -21,16 +20,6 @@ export function Bridge() {
         strokeWidth={2.5}
       />
       <path d="M100 94V104M130 80V104M210 80V104M240 94V104" stroke={STEEL} />
-      {SIGNALS.map((path) => (
-        <circle
-          key={path}
-          r={4}
-          fill={PALE}
-          className="bridge-dot"
-          style={{ offsetPath: `path("${path}")` }}
-        />
-      ))}
-
       <path
         d="M170 14l20 8v16c0 13-9 21-20 26-11-5-20-13-20-26V22z"
         fill={NIGHT}
@@ -48,7 +37,7 @@ export function Bridge() {
         stroke={CABLE}
         strokeWidth={3}
       />
-      <circle cx={20} cy={85} r={2.5} fill={STEEL} className="bridge-rec" />
+      <circle cx={20} cy={85} r={2.5} fill={STEEL} />
       <path d="M26 98V142" stroke={STEEL} strokeWidth={4} />
 
       <rect
@@ -60,16 +49,10 @@ export function Bridge() {
         fill={NIGHT}
         stroke={STEEL}
       />
-      {LEDS.map((y, index) => (
+      {LEDS.map((y) => (
         <g key={y}>
           <rect x={296} y={y} width={28} height={12} rx={1} fill="var(--bg)" />
-          <circle
-            cx={302}
-            cy={y + 6}
-            r={2.5}
-            className="bridge-led"
-            style={{ animationDelay: `${index * 0.35}s` }}
-          />
+          <circle cx={302} cy={y + 6} r={2.5} fill={DECK} />
         </g>
       ))}
     </svg>

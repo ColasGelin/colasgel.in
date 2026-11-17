@@ -123,41 +123,6 @@ a:hover .feature-visual svg path {
   }
 }
 
-.bridge-dot {
-  animation: bridge-signal 2.4s linear infinite;
-}
-
-@keyframes bridge-signal {
-  to {
-    offset-distance: 100%;
-  }
-}
-
-.bridge-rec {
-  animation: bridge-rec 1.5s infinite;
-}
-
-@keyframes bridge-rec {
-  50% {
-    opacity: 0.25;
-  }
-}
-
-.bridge-led {
-  fill: #93c5fd;
-  animation: bridge-led 1.6s infinite;
-}
-
-@keyframes bridge-led {
-  0%,
-  100% {
-    fill: #1e3a5f;
-  }
-  50% {
-    fill: #93c5fd;
-  }
-}
-
 .workflow-step {
   fill: var(--surface);
   stroke: var(--line);
@@ -283,17 +248,11 @@ a:hover .feature-visual svg path {
     box-shadow: 0 0 0 8px var(--surface), 0 0 0 9px var(--accent);
   }
 
-  .bridge-dot {
-    display: none;
-  }
-
   .sample-in,
   .voice-bar,
   .danger-flash,
   .agent-card,
   .funnel-bar,
-  .bridge-rec,
-  .bridge-led,
   .workflow-step,
   .workflow-step-llm,
   .graph-node {
